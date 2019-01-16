@@ -1,0 +1,3485 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "REST API",
+    "version" : "2.0.7",
+    "title" : "Forrester REST Services",
+    "contact" : {
+      "email" : "websupport@forrester.com"
+    },
+    "license" : {
+      "name" : "Forrester terms of use",
+      "url" : "https://www.forrester.com/marketing/policies/terms-of-use.html"
+    }
+  },
+  "host" : "services.forrester.com",
+  "basePath" : "/ForrREST/v2/",
+  "tags" : [ {
+    "name" : "public",
+    "description" : "Secured Admin-only calls"
+  }, {
+    "name" : "developers",
+    "description" : "Operations available to regular developers"
+  }, {
+    "name" : "User",
+    "description" : "Everything about Forrester Users"
+  }, {
+    "name" : "Products",
+    "description" : "Everything about Forrester Products"
+  }, {
+    "name" : "Contact",
+    "description" : "Contact Information for Forrester Users"
+  }, {
+    "name" : "Bulk",
+    "description" : "Asynchronous operations jobs"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/user" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Retrieves profile information for the current user",
+        "description" : "Retrieves profile information for the current user",
+        "operationId" : "getUserProfileRecords",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "includeNotifications",
+          "in" : "query",
+          "description" : "Indicates if notification data should be returned",
+          "required" : false,
+          "type" : "string",
+          "default" : "No"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "user" : {
+                  "emailAddress" : "user@forrester.com",
+                  "fullName" : "First Last",
+                  "primaryRole" : {
+                    "roleID" : "64",
+                    "roleName" : "Customer Experience",
+                    "filterID" : "200507"
+                  },
+                  "notifications" : {
+                    "userType" : "Client",
+                    "industry" : "Business Services"
+                  },
+                  "uniqueID" : "123456"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "registers a new client User to forrester.Com",
+        "description" : "Registers a client user to Forrester.com.",
+        "operationId" : "addUser",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "formData",
+          "description" : "Email Address",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "prefix",
+          "in" : "formData",
+          "description" : "Prefix",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "firstName",
+          "in" : "formData",
+          "description" : "First Name",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "lastName",
+          "in" : "formData",
+          "description" : "Last Name",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "title",
+          "in" : "formData",
+          "description" : "Job title",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "address",
+          "in" : "formData",
+          "description" : "Street Address",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "city",
+          "in" : "formData",
+          "description" : "city",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "state",
+          "in" : "formData",
+          "description" : "State",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "country",
+          "in" : "formData",
+          "description" : "Country",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "otherRegion",
+          "in" : "formData",
+          "description" : "Other Region  (Non US Countries)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "zipcode",
+          "in" : "formData",
+          "description" : "zipcode",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "phone",
+          "in" : "formData",
+          "description" : "Phone",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "phoneExtn",
+          "in" : "formData",
+          "description" : "Phone Extension",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "regId",
+          "in" : "formData",
+          "description" : "Registration Id",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "password",
+          "in" : "formData",
+          "description" : "Password (Required only for non enterprise customers)",
+          "required" : false,
+          "type" : "string",
+          "format" : "password"
+        }, {
+          "name" : "extId",
+          "in" : "formData",
+          "description" : "Unique ID assigned by external IDP (Required only for enterprise customers)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "specialRegJSON",
+          "in" : "formData",
+          "description" : "JSON data of Special Reg fields and associated values. example, {[{\"fieldId\":\"52\",\"value\":\"value1\"},{\"fieldId\":\"53\",\"value\":\"value2\"}]}",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "User registered."
+          },
+          "400" : {
+            "description" : "Invalid registration id or iusermetaid."
+          },
+          "401" : {
+            "description" : "Not authorized. Bad authorization header is provided or the authorization header is missing."
+          },
+          "402" : {
+            "description" : "Access group seats limit reached."
+          },
+          "403" : {
+            "description" : "The operation is forbidden for the user."
+          },
+          "409" : {
+            "description" : "Access group assignment already exists."
+          },
+          "500" : {
+            "description" : "An error occurred while creating new user."
+          }
+        }
+      }
+    },
+    "/user/contentaccess" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Retrieve content access information",
+        "description" : "Retrieve content access information",
+        "operationId" : "getUserContentAccessRecords",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0 (Basic Authorization header). Requird if ForresterAuth is not present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "contentIds",
+          "in" : "formData",
+          "description" : "content ids separated by comma. The maximum number of items is 20. For example RES12345,RES23456",
+          "required" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi",
+          "maxItems" : 20
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ContentAccessRecord"
+              }
+            }
+          },
+          "400" : {
+            "description" : "An error occurred while checking access for the user. ContentId parameter is empty."
+          },
+          "401" : {
+            "description" : "invalid access token"
+          },
+          "413" : {
+            "description" : "Invalid contentId list. Maximum %s contentIds can be checked."
+          },
+          "500" : {
+            "description" : "An error occurred while checking access for the user."
+          }
+        }
+      }
+    },
+    "/user/{iuserMetaID}" : {
+      "put" : {
+        "tags" : [ "User" ],
+        "summary" : "Replaces existing client user",
+        "description" : "Updates client user",
+        "operationId" : "replaceUser",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "iuserMetaID",
+          "in" : "path",
+          "description" : "UserMetaId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "formData",
+          "description" : "Email Address",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "prefix",
+          "in" : "formData",
+          "description" : "Prefix",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "firstName",
+          "in" : "formData",
+          "description" : "First Name",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "lastName",
+          "in" : "formData",
+          "description" : "Last Name",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "title",
+          "in" : "formData",
+          "description" : "Job title",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "address",
+          "in" : "formData",
+          "description" : "Street Address",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "city",
+          "in" : "formData",
+          "description" : "city",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "state",
+          "in" : "formData",
+          "description" : "State",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "country",
+          "in" : "formData",
+          "description" : "Country",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "otherRegion",
+          "in" : "formData",
+          "description" : "other Region",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "zipcode",
+          "in" : "formData",
+          "description" : "zipcode",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "phone",
+          "in" : "formData",
+          "description" : "Phone",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "phoneExtn",
+          "in" : "formData",
+          "description" : "Phone Extension",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "formData",
+          "description" : "Password (Required only for non enterprise customers)",
+          "required" : false,
+          "type" : "string",
+          "format" : "password"
+        }, {
+          "name" : "extId",
+          "in" : "formData",
+          "description" : "Unique ID assigned by external IDP (Required only for enterprise customers)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "specialRegJSON",
+          "in" : "formData",
+          "description" : "JSON data of Special Reg fields and associated values. example, {[{\"fieldId\":\"52\",\"value\":\"value1\"},{\"fieldId\":\"53\",\"value\":\"value2\"}]}",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User Updated."
+          },
+          "400" : {
+            "description" : "Missing required information. Missing fields&#58; &lt;missing fields&gt;"
+          },
+          "401" : {
+            "description" : "Invalid iuserMetaID or wrong accessToken."
+          },
+          "500" : {
+            "description" : "An error occurred while updating user profile."
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "User" ],
+        "summary" : "Updates existing client user information",
+        "description" : "Updates client user information",
+        "operationId" : "updateUser",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "iuserMetaID",
+          "in" : "path",
+          "description" : "UserMetaId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "formData",
+          "description" : "Email Address",
+          "required" : false,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "prefix",
+          "in" : "formData",
+          "description" : "Prefix",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "firstName",
+          "in" : "formData",
+          "description" : "First Name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "lastName",
+          "in" : "formData",
+          "description" : "Last Name",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "title",
+          "in" : "formData",
+          "description" : "Job title",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "address",
+          "in" : "formData",
+          "description" : "Street Address",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "city",
+          "in" : "formData",
+          "description" : "city",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "state",
+          "in" : "formData",
+          "description" : "State",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "country",
+          "in" : "formData",
+          "description" : "Country",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "otherRegion",
+          "in" : "formData",
+          "description" : "other Region",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "zipcode",
+          "in" : "formData",
+          "description" : "zipcode",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "phone",
+          "in" : "formData",
+          "description" : "Phone",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "phoneExtn",
+          "in" : "formData",
+          "description" : "Phone Extension",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "extId",
+          "in" : "formData",
+          "description" : "Unique ID assigned by external IDP (Required only for enterprise customers)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "specialRegJSON",
+          "in" : "formData",
+          "description" : "JSON data of Special Reg fields and associated values. example, {[{\"fieldId\":\"52\",\"value\":\"value1\"},{\"fieldId\":\"53\",\"value\":\"value2\"}]}",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User Updated."
+          },
+          "400" : {
+            "description" : "Invalid email address&#58; &lt;field data&gt;"
+          },
+          "401" : {
+            "description" : "Invalid iuserMetaID or wrong accessToken."
+          },
+          "500" : {
+            "description" : "An error occurred while updating user profile."
+          }
+        }
+      }
+    },
+    "/user/{iuserMetaID}/forrestercontacts" : {
+      "get" : {
+        "tags" : [ "Contact" ],
+        "summary" : "Gets ForresterContacts for a user",
+        "description" : "get Forrester contacts for given user.",
+        "operationId" : "getForresterContacts",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0 (Basic Authorization header). Requird if ForresterAuth is not present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "iuserMetaID",
+          "in" : "path",
+          "description" : "UserMetaId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ForresterContact"
+              }
+            }
+          },
+          "401" : {
+            "description" : "invalid access token"
+          },
+          "500" : {
+            "description" : "An error occurred while looking up user's product information."
+          }
+        }
+      }
+    },
+    "/user/products" : {
+      "get" : {
+        "tags" : [ "Products" ],
+        "summary" : "get Products for the logged in user",
+        "description" : "get Products for the logged in user",
+        "operationId" : "getProductsForUser",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "scope",
+          "in" : "query",
+          "description" : "To indicate which product list(s) should be included in the result. Accepted values web, skus, ALL (default - ALL)",
+          "required" : false,
+          "type" : "string",
+          "default" : "ALL",
+          "enum" : [ "web,", "skus,", "ALL" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Products"
+            }
+          },
+          "401" : {
+            "description" : "invalid access token"
+          },
+          "500" : {
+            "description" : "An error occurred while looking up user's product information."
+          }
+        }
+      }
+    },
+    "/user/products/categories" : {
+      "get" : {
+        "tags" : [ "Products" ],
+        "summary" : "Get product categories for the products that user has",
+        "description" : "Get product Categories",
+        "operationId" : "getProductsCategories",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "level",
+          "in" : "query",
+          "description" : "Product category level",
+          "required" : true,
+          "type" : "number",
+          "default" : 2.0,
+          "enum" : [ 1.0, 2.0, 3.0, 4.0 ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "examples" : {
+              "application/json" : "{\n  \"categoryBundle\": \"member\",\n  \"level\": 2,\n  \"categories\": [\n    \"Advisory\",\n    \"Business Data\",\n    \"Click & Buy\",\n    \"Consulting\",\n    \"Consumer Data\",\n    \"Core Research\",\n    \"Custom Data\"\n  ]\n}"
+            },
+            "schema" : {
+              "$ref" : "#/definitions/ProductCategory"
+            }
+          },
+          "400" : {
+            "description" : "Invalid level provided in request."
+          },
+          "401" : {
+            "description" : "invalid access token"
+          },
+          "500" : {
+            "description" : "An error occurred while looking up user's product categories information."
+          }
+        }
+      }
+    },
+    "/user/{iuserMetaID}/flbcouncils" : {
+      "get" : {
+        "tags" : [ "FLB Councils" ],
+        "summary" : "Gets FLB membership councils for a user",
+        "description" : "get FLB councils for given user.",
+        "operationId" : "getFLBCouncils",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "iuserMetaID",
+          "in" : "path",
+          "description" : "UserMetaId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/FLBCouncil"
+              }
+            }
+          },
+          "401" : {
+            "description" : "invalid access token"
+          }
+        }
+      }
+    },
+    "/user/navigations" : {
+      "get" : {
+        "tags" : [ "Navigations" ],
+        "summary" : "Gets the static/dynamic navigations menu json",
+        "description" : "get static/dynamic navigations menu based on parameter 'type'.",
+        "operationId" : "getNavigationMenu",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0 (Bearer Authorization header). Required for dynamic navigation menu.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.  Required for dynamic navigation menu.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "description" : "static(no authorization)/dynamic(per user - needs authorization)/all(by default)",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Navigations"
+              }
+            }
+          },
+          "500" : {
+            "description" : "An error occurred while checking access for the user."
+          }
+        }
+      }
+    },
+    "/user/{iuserMetaID}/accessgroup" : {
+      "post" : {
+        "tags" : [ "User" ],
+        "summary" : "Add user to access group",
+        "description" : "add user to access group",
+        "operationId" : "addUserToAccessGroup",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0 (Bearer Authorization header).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "iuserMetaID",
+          "in" : "path",
+          "description" : "UserMetaId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "regId",
+          "in" : "formData",
+          "description" : "registration id of the access group to which user should be added.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "User registered."
+          },
+          "400" : {
+            "description" : "Invalid registration id or iusermetaid."
+          },
+          "401" : {
+            "description" : "Not authorized. Bad authorization header is provided or the authorization header is missing."
+          },
+          "402" : {
+            "description" : "Access group seats limit reached."
+          },
+          "403" : {
+            "description" : "The operation is forbidden for the user."
+          },
+          "409" : {
+            "description" : "User already exists."
+          },
+          "500" : {
+            "description" : "An error occurred while creating new user."
+          }
+        }
+      }
+    },
+    "/user/recommendations" : {
+      "get" : {
+        "tags" : [ "User" ],
+        "summary" : "Retrieve recommended documents for the user.",
+        "description" : "Retrieve recommendation documents.",
+        "operationId" : "getUserRecommendations",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0 (Bearer Authorization header).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "Not authorized. Bad authorization header is provided or the authorization header is missing."
+          },
+          "500" : {
+            "description" : "An error occurred while retrieving the user's document recommendations."
+          }
+        }
+      }
+    },
+    "/user/recommendations/{contentId}" : {
+      "delete" : {
+        "tags" : [ "User Recommendations" ],
+        "summary" : "Remove a recommented document for the user.",
+        "description" : "Remove from the recommendation list.",
+        "operationId" : "deleteUserRecommendations",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0 (Bearer Authorization header).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "contentId",
+          "in" : "path",
+          "description" : "The contentId to be removed from the recommendation list.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "Invalid contentId provided."
+          },
+          "401" : {
+            "description" : "Not authorized. Bad authorization header is provided or the authorization header is missing."
+          },
+          "500" : {
+            "description" : "An error occurred while blacklisting."
+          }
+        }
+      }
+    },
+    "/login" : {
+      "post" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Receives the username and password and returns the encrypted token",
+        "description" : "Receives the username and password and returns the encrypted token. This is our legacy token and does not involve Auth0 Login.",
+        "operationId" : "loginToken",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "emailAddress",
+          "in" : "formData",
+          "description" : "The email address for the user",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "password",
+          "in" : "formData",
+          "description" : "The user's password",
+          "required" : true,
+          "type" : "string",
+          "format" : "password"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "loginToken" : "abcdefghijk=",
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "application/json" : {
+                "result" : false,
+                "status" : {
+                  "text" : "Unauthorized",
+                  "code" : 401
+                },
+                "statusMessage" : "Check your email and password and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/playbooks" : {
+      "get" : {
+        "tags" : [ "Playbook" ],
+        "summary" : "Retrieves a list of playbook IDs",
+        "description" : "Retrieves a list of playbook IDs. (in what order? what criteria?)",
+        "operationId" : "getPlaybooksIDs",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "infoCount",
+          "in" : "query",
+          "description" : "Desired number of playbooks that should have more information (title, subtitle, etc.)",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "maxItems" : 20
+        }, {
+          "name" : "infoIDs",
+          "in" : "query",
+          "description" : "Comma-delimited list of playbook IDs that should have more information provided (title, subtitle, etc.)",
+          "required" : false,
+          "type" : "string",
+          "maxItems" : 20
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "playbookType",
+          "in" : "query",
+          "description" : "Specifies whether the response must have a specific type of playbooks only.",
+          "required" : false,
+          "type" : "string",
+          "default" : "date"
+        }, {
+          "name" : "sortBy",
+          "in" : "query",
+          "description" : "Specifies whether the response must be sorted based on some parameter. (Supports \"title\" as of now.)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "playbookIDs" : [ "PLA750", "PLA580", "PLA440", "..." ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/playbooks/{id}" : {
+      "get" : {
+        "tags" : [ "Playbook" ],
+        "summary" : "Retrieves a summary for a given playbook ID",
+        "description" : "Retrieves a summary for a given playbook ID",
+        "operationId" : "getPlaybookSummary",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired report",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "playbook" : {
+                  "phases" : [ {
+                    "phaseName" : "DISCOVER",
+                    "chapters" : [ {
+                      "name" : "Vision",
+                      "report" : {
+                        "editorialImage" : "R0lGODlhmwBuAMQAALTm+s3u+83u/Ob3/aHf+Pn9/+z5/sfs+6jh+cHq+67j+dry/OD0/bro...",
+                        "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/111102/111102_e.gif",
+                        "role" : "Application Development & Delivery",
+                        "title" : "Application Delivery In The Modern Age",
+                        "subtitle" : "Vision: The Modern Application Delivery Playbook",
+                        "date" : "02/12/2014 00:00:00 EST",
+                        "authors" : [ "Kurt Bittner" ],
+                        "abstract" : "Rapid evolution in cloud and mobile applications and the permeation...",
+                        "pdfExists" : true,
+                        "targetLiveDate" : "02/21/2014 00:00:00 EST",
+                        "uniqueID" : "RES111102"
+                      }
+                    }, "..." ]
+                  }, {
+                    "phaseName" : "PLAN",
+                    "chapters" : [ {
+                      "name" : "Assessment",
+                      "report" : {
+                        "editorialImage" : "R0lGODlhmwBuAMQAAJKSlba2uLnPqXSfU9HfxnZ3eqSlptzn1FKHKO3t7fb29oiJjMjIyoyv...",
+                        "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/113367/113367_e.gif",
+                        "role" : "Application Development & Delivery",
+                        "title" : "Overcoming Barriers To Modern Application Delivery",
+                        "subtitle" : "Assessment: The Modern Application Delivery Playbook",
+                        "date" : "08/04/2014 01:00:00 EDT",
+                        "authors" : [ "Diego Lo Giudice", "Kurt Bittner" ],
+                        "abstract" : "Increasing expectations from customers and increased competition have...",
+                        "pdfExists" : true,
+                        "targetLiveDate" : "07/18/2014 00:00:00 EDT",
+                        "uniqueID" : "RES113367"
+                      }
+                    }, "..." ]
+                  }, "..." ],
+                  "role" : "Application Development & Delivery",
+                  "title" : "The Modern Application Delivery Playbook For 2015",
+                  "subtitle" : "Agile And DevOps Adoption Drives Digital Business Success",
+                  "executiveOverview" : {
+                    "editorialImage" : "R0lGODlhmwBuAPcAANjp8ySBtzeMvlujzL/b64C411Cbx9rt9zmRws3u+0ecyn7G6MHl9TuS...",
+                    "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/113385/113385_e.gif",
+                    "role" : "Application Development & Delivery",
+                    "title" : "Agile And DevOps Adoption Drives Digital Business Success",
+                    "subtitle" : "Executive Overview: The Modern Application Delivery Playbook",
+                    "date" : "03/04/2014 00:00:00 EST",
+                    "authors" : [ "Kurt Bittner", "Diego Lo Giudice" ],
+                    "abstract" : "Application delivery in the modern age no longer plays a supporting role...",
+                    "pdfExists" : true,
+                    "targetLiveDate" : "11/20/2015 00:00:00 EST",
+                    "uniqueID" : "RES113385"
+                  },
+                  "uniqueID" : "PLA750"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "406" : {
+            "description" : "Not Accepable"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/figures" : {
+      "get" : {
+        "tags" : [ "Figures" ],
+        "summary" : "Restrives a list of figure IDs",
+        "description" : "Restrives a list of figure IDs. (in what order? what criteria?)",
+        "operationId" : "getFigureID",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "infoCount",
+          "in" : "query",
+          "description" : "Desired number of figures that should have more information (title, subtitle, etc.)",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "maxItems" : 20
+        }, {
+          "name" : "infoIDs",
+          "in" : "query",
+          "description" : "Comma-delimited list of figure IDs that should have more information provided (title, subtitle, etc.)",
+          "required" : false,
+          "type" : "string",
+          "maxItems" : 20
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "figureIDs" : [ "AST1023964", "AST1023967", "AST1023961", "..." ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Accepable"
+          },
+          "500" : {
+            "description" : "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/figures/{id}" : {
+      "get" : {
+        "tags" : [ "Figures" ],
+        "summary" : "Retrieves a figure summary for a given unique ID.",
+        "description" : "Retrieves a figure summary for a given unique ID. The image and the image URL refer to the \"standard\" (aka \"summary\") size image",
+        "operationId" : "getFigureSummary",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired figure",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "figure" : {
+                  "summaryImage" : "R0lGODlhWAIBA/cAAAAAAP///wMDAwwMDBQUFBsbGyQkJCwsLDQ0...",
+                  "summaryImageUrl" : "/pimages/forrester/imported/forresterDotCom/Research/115732/115732_1.gif",
+                  "order" : 1,
+                  "role" : "CIO",
+                  "title" : "Business Leaders Prioritize Growth And Customer Experience Improvement",
+                  "report" : {
+                    "editorialImage" : "R0lGODlhmwBuAOYAAEZ/GszMzJmZmWZmZvLy8kBAQFmfyJG/29Hfxsjf7XSfU1lZ...",
+                    "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/115732/115732_e.gif",
+                    "role" : "CIO",
+                    "title" : "Top Technologies For Your BT Agenda",
+                    "subtitle" : "Tools And Technology: The Business Technology Agenda Playbook",
+                    "date" : "07/29/2014 00:00:00 EDT",
+                    "authors" : [ "Sharyn Leaver", "Kyle McNabb" ],
+                    "abstract" : "In today's competitive environment, investing in business technologies...",
+                    "pdfExists" : true,
+                    "targetLiveDate" : "07/31/2014 00:00:00 EDT",
+                    "uniqueID" : "RES115732"
+                  },
+                  "uniqueID" : "AST978792"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/figures/{id}/full" : {
+      "get" : {
+        "tags" : [ "Figures" ],
+        "summary" : "Retrieves a full figure for a given unique ID.",
+        "description" : "Retrieves a full figure for a given unique ID. The image and the image URL refer to the \"full\" (aka \"quality\") size image",
+        "operationId" : "getFullFigure",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired figure",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "figure" : {
+                  "fullImage" : "R0lGODlhAAi9C+YAAO7z9t/l6GZmZszMzLOzsyJ/ttnZ2YyMjPLy8kBAQObm5oCAgFlZWU1NTaampr...",
+                  "fullImageUrl" : "/pimages/forrester/imported/forresterDotCom/Research/115732/115732_1q.gif",
+                  "uniqueID" : "AST978792"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/figures/{id}/fullsummary" : {
+      "get" : {
+        "tags" : [ "Figures" ],
+        "summary" : "Retrieves a full figure plus the summary for a given unique ID.",
+        "description" : "Retrieves a full figure plus the summary for a given unique ID. The image and the image URL refer to the \"full\" (aka \"quality\") size image",
+        "operationId" : "getFullFigureandSummary",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired figure",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "figure" : {
+                  "fullImage" : "R0lGODlhAAi9C+YAAO7z9t/l6GZmZszMzLOzsyJ/ttnZ2YyMjPLy8kBAQObm5oCAgFlZWU1NTaampr...",
+                  "fullImageUrl" : "/pimages/forrester/imported/forresterDotCom/Research/115732/115732_1q.gif",
+                  "order" : 1,
+                  "role" : "CIO",
+                  "title" : "Business Leaders Prioritize Growth And Customer Experience Improvement",
+                  "report" : {
+                    "editorialImage" : "R0lGODlhmwBuAOYAAEZ/GszMzJmZmWZmZvLy8kBAQFmfyJG/29Hfxsjf7XSfU1lZ...",
+                    "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/115732/115732_e.gif",
+                    "role" : "CIO",
+                    "title" : "Top Technologies For Your BT Agenda",
+                    "subtitle" : "Tools And Technology: The Business Technology Agenda Playbook",
+                    "date" : "07/29/2014 00:00:00 EDT",
+                    "authors" : [ "Sharyn Leaver", "Kyle McNabb" ],
+                    "abstract" : "In today's competitive environment, investing in business technologies...",
+                    "pdfExists" : true,
+                    "targetLiveDate" : "07/31/2014 00:00:00 EDT",
+                    "uniqueID" : "RES115732"
+                  },
+                  "uniqueID" : "AST978792"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/reports" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Retrieves a list of report IDs filtered by primary role",
+        "description" : "Retrieves a list of report IDs filtered by primary role",
+        "operationId" : "getReportIDs",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "infoCount",
+          "in" : "query",
+          "description" : "Desired number of reports that should have more information (title, subtitle, etc)",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0,
+          "maxItems" : 20
+        }, {
+          "name" : "infoIDs",
+          "in" : "query",
+          "description" : "Comma-delimited list of figure IDs that should have more information provided (title, subtitle, etc.)",
+          "required" : false,
+          "type" : "string",
+          "maxItems" : 20
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "reportIDs" : [ "RES115657", "RES130502", "RES118243", "..." ],
+                "reports" : [ ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/reports/{id}" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Retrieves a summary for a given report ID.",
+        "description" : "Retrieves a summary for a given report ID. If the report has figures in the figures array, this resource will return the \"standard\" (aka \"summary\") size image",
+        "operationId" : "getReportSummary",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired report",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "appsource",
+          "in" : "query",
+          "description" : "The type of application using this API. String no longer than 12 chars",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "report" : {
+                  "contributors" : [ "Emily Riley", "James McDavid" ],
+                  "keyTakeaways" : [ {
+                    "title" : "Planning Now Helps Avoid Pain Later",
+                    "description" : "Most marketers are increasing spending on social..."
+                  }, {
+                    "title" : "Embed Best Practices Into Your Social Growth Now To Avoid Pain Later",
+                    "description" : "In our 2010 social media benchmarking survey most..."
+                  } ],
+                  "figures" : [ {
+                    "id" : "AST894440",
+                    "encodedImage" : "R0lGODlhWALnAMQAAKenp6fV+2ZmZvLy8nZ2durq6szMzLq6uuLi4tra2pqamvv7...",
+                    "order" : 4,
+                    "url" : "/pimages/forrester/imported/forresterDotCom/Research/57591/57591_4.gif"
+                  }, {
+                    "id" : "AST894430",
+                    "encodedImage" : "R0lGODlhWAImAcQAAIeHh0BAQNPm+HmhyGaMsYuz21x6mNHR0ebm5vPz81BmfLOz...",
+                    "order" : 2,
+                    "url" : "/pimages/forrester/imported/forresterDotCom/Research/57591/57591_2.gif"
+                  }, "..." ],
+                  "editorialImage" : "R0lGODlhlgBuAMQAAMbHyZCQkOqSW2ZmZvXJr854OleEsBlQYvDp2JSSMjRjkPGyjK...",
+                  "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/57591/57591_e.gif",
+                  "role" : "Marketing Leadership",
+                  "title" : "Social Marketing Spending In 2011",
+                  "subtitle" : "Benchmarks: The Social Marketing Playbook",
+                  "date" : "06/26/2012 00:00:00 EDT",
+                  "authors" : [ "Nate Elliott" ],
+                  "abstract" : "Despite the tremendous hype and even some pockets of success, our...",
+                  "pdfExists" : true,
+                  "targetLiveDate" : "08/27/2010 00:00:00 EDT",
+                  "uniqueID" : "RES57591"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "412" : {
+            "description" : "Precondition Failed"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/reports/{id}/pdf" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Retrieves the PDF for a given report ID.",
+        "description" : "Retrieves the PDF for a given report ID.",
+        "operationId" : "getReportPDF",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired report",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "source",
+          "in" : "query",
+          "description" : "The source of the request",
+          "required" : true,
+          "type" : "string",
+          "default" : "summary"
+        }, {
+          "name" : "appsource",
+          "in" : "query",
+          "description" : "The type of application using this API. String no longer than 12 chars",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found",
+            "examples" : {
+              "application/json" : {
+                "result" : false,
+                "status" : {
+                  "text" : "Not Found",
+                  "code" : 404
+                },
+                "statusMessage" : "Report RES13245 does not exist"
+              }
+            }
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "412" : {
+            "description" : "Precondition Failed"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/reports/{id}/figures" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Retrieves only the thumbnail images for each figure in a given report ID",
+        "description" : "Retrieves only the thumbnail images for each figure in a given report ID",
+        "operationId" : "getReportFigures",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired report",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "reportFigures" : {
+                  "figures" : [ {
+                    "id" : "AST998806",
+                    "encodedImage" : "R0lGODlh0ACYAPcAAAAAAP///wAAAAYJBwcICAoEBg0ECAwLCw8QDw8QEBABBhMECxMLDRw...",
+                    "order" : 7,
+                    "url" : "/pimages/forrester/imported/forresterDotCom/Research/117993/117993_7n.gif"
+                  }, {
+                    "id" : "AST998809",
+                    "encodedImage" : "R0lGODlh0ACYAPcAAAAAAP///wEBAQgNFQwVCw4QExUIChkIERgUDBYVFgEOIgcUJRcdJRc...",
+                    "order" : 8,
+                    "url" : "/pimages/forrester/imported/forresterDotCom/Research/117993/117993_8n.gif"
+                  }, "..." ]
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/reports/{id}/full/json" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Retrieves the content of a report in JSON format for a given report ID.",
+        "description" : "Retrieves the content of a report in JSON format for a given report ID. Also retrieves the summary information for the report (equivalent to the GET reports/:id resource). If the report has figures in the figures array, this resource will return the \"standard\" (aka \"summary\") size image",
+        "operationId" : "getReportJSON",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired report",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "appsource",
+          "in" : "query",
+          "description" : "The type of application using this API. String no longer than 12 chars",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "report" : {
+                  "contents" : {
+                    "metaInfo" : {
+                      "uniqueId" : "RES57591"
+                    },
+                    "toc" : {
+                      "tocSection" : [ {
+                        "tocItem" : [ {
+                          "value" : "Social Media Marketing Is Still Nascent ",
+                          "tocrefid" : "1"
+                        }, {
+                          "value" : "Social Marketing Still Has Many Internal Roadblocks ",
+                          "tocrefid" : "2"
+                        }, "..." ]
+                      } ]
+                    },
+                    "supplementalMaterials" : { }
+                  },
+                  "contributors" : [ "Emily Riley", "James McDavid" ],
+                  "keyTakeaways" : [ {
+                    "title" : "Planning Now Helps Avoid Pain Later",
+                    "description" : "Most marketers are increasing spending on social..."
+                  }, {
+                    "title" : "Embed Best Practices Into Your Social Growth Now To Avoid Pain Later",
+                    "description" : "In our 2010 social media benchmarking survey most..."
+                  } ],
+                  "figures" : [ {
+                    "id" : "AST894440",
+                    "encodedImage" : "R0lGODlhWALnAMQAAKenp6fV+2ZmZvLy8nZ2durq6szMzLq6uuLi4tra2pqamvv7...",
+                    "order" : 4,
+                    "url" : "/pimages/forrester/imported/forresterDotCom/Research/57591/57591_4.gif"
+                  }, {
+                    "id" : "AST894430",
+                    "encodedImage" : "R0lGODlhWAImAcQAAIeHh0BAQNPm+HmhyGaMsYuz21x6mNHR0ebm5vPz81BmfLOz...",
+                    "order" : 2,
+                    "url" : "/pimages/forrester/imported/forresterDotCom/Research/57591/57591_2.gif"
+                  }, "..." ],
+                  "editorialImage" : "R0lGODlhlgBuAMQAAMbHyZCQkOqSW2ZmZvXJr854OleEsBlQYvDp2JSSMjRjkPGyjK...",
+                  "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/57591/57591_e.gif",
+                  "role" : "Marketing Leadership",
+                  "title" : "Social Marketing Spending In 2011",
+                  "subtitle" : "Benchmarks: The Social Marketing Playbook",
+                  "date" : "06/26/2012 00:00:00 EDT",
+                  "authors" : [ "Nate Elliott" ],
+                  "abstract" : "Despite the tremendous hype and even some pockets of success, our...",
+                  "pdfExists" : true,
+                  "targetLiveDate" : "08/27/2010 00:00:00 EDT",
+                  "uniqueID" : "RES57591"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "412" : {
+            "description" : "Precondition Failed"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/roles/filters" : {
+      "get" : {
+        "tags" : [ "Role" ],
+        "summary" : "Retrieves a list of role filters associated with the user identified in the authorization header (ForresterAuth)",
+        "description" : "Retrieves a list of role filters associated with the user identified in the authorization header (ForresterAuth)",
+        "operationId" : "getRoleFilters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "userRoles" : {
+                  "groups" : [ {
+                    "clientGroupName" : "Marketing & Strategy",
+                    "roles" : [ {
+                      "roleID" : 81,
+                      "roleName" : "B2B Marketing"
+                    }, {
+                      "roleID" : 76,
+                      "roleName" : "B2C Marketing"
+                    }, {
+                      "roleID" : 73,
+                      "roleName" : "CMO"
+                    }, {
+                      "roleID" : 64,
+                      "roleName" : "Customer Experience"
+                    }, {
+                      "roleID" : 67,
+                      "roleName" : "Customer Insights"
+                    }, {
+                      "roleID" : 78,
+                      "roleName" : "eBusiness & Channel Strategy",
+                      "readOnly" : true,
+                      "selected" : true,
+                      "primary" : true
+                    } ]
+                  }, {
+                    "clientGroupName" : "Technology Management",
+                    "roles" : [ {
+                      "roleID" : 63,
+                      "roleName" : "Application Development & Delivery",
+                      "selected" : true
+                    }, {
+                      "roleID" : 71,
+                      "roleName" : "CIO"
+                    }, {
+                      "roleID" : 62,
+                      "roleName" : "Enterprise Architecture"
+                    }, {
+                      "roleID" : 65,
+                      "roleName" : "Infrastructure & Operations"
+                    }, {
+                      "roleID" : 59,
+                      "roleName" : "Security & Risk"
+                    }, {
+                      "roleID" : 72,
+                      "roleName" : "Sourcing & Vendor Management"
+                    } ]
+                  }, {
+                    "clientGroupName" : "Technology Industry",
+                    "roles" : [ {
+                      "roleID" : 61,
+                      "roleName" : "Analyst Relations",
+                      "selected" : true
+                    } ]
+                  } ]
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Role" ],
+        "summary" : "Updates the roles that the authorized user belongs to",
+        "description" : "Updates the roles that the authorized user belongs to",
+        "operationId" : "postRoles",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "roles",
+          "in" : "query",
+          "description" : "Comma delimited list of role ids for which the authorized user (as specified in the ForresterAuth header) belongs to. If omitted or blank, all roles will be removed for the specified user",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/search" : {
+      "get" : {
+        "tags" : [ "Search" ],
+        "summary" : "Retrieves a list of contents based on the parameters.",
+        "description" : "Retrieves a list of contents based on the parameters. For authenticated user, search results are filtered by the authenticated user's access rights (see ForresterAuth header below). 1. Note that fullName, imageUrl and uniqueId in the \"authors\" section are returned only for Blogs and Webinars",
+        "operationId" : "getSearchContent",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "tmtxt",
+          "in" : "query",
+          "description" : "The term on which to search",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "The order that the search results will be presented in",
+          "required" : false,
+          "type" : "string",
+          "default" : "relevance if there is a tmtxt parameter/s, date if tmtxt is empty"
+        }, {
+          "name" : "filters",
+          "in" : "query",
+          "description" : "Comma-delimited list of filter IDs, as selected from the list of available IDs. Category ID should be used in this parameter. It should be used in \"categories\"",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "infoCount",
+          "in" : "query",
+          "description" : "The number of objects that should have expanded information",
+          "required" : false,
+          "type" : "integer",
+          "default" : 10,
+          "maxItems" : 20
+        }, {
+          "name" : "categories",
+          "in" : "query",
+          "description" : "Comma separated values of category IDs",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "totalResults" : 6616,
+                "searchResultIDs" : [ "RES123402", "RES130182", "RES100001", "..." ],
+                "searchResults" : [ {
+                  "presenters" : [ {
+                    "fullName" : "Julie Ask"
+                  }, {
+                    "fullName" : "Jeffrey Hammond"
+                  } ],
+                  "hasEmbedVideo" : false,
+                  "webinarType" : "Webinar",
+                  "role" : "Application Development & Delivery",
+                  "title" : "Digital Transformation: Mobile Is Your Catalyst",
+                  "date" : "08/15/2018 00:00:00 EDT",
+                  "abstract" : "...either experiences or their business model. Furthermore, they underestimate the impact of mobile. No technology will impact how businesses evolve and transform more than mobile...",
+                  "contentCategory" : 10006,
+                  "contentType" : 5025,
+                  "url" : "/go?objectid=WEB25966",
+                  "uniqueID" : "WEB25966"
+                }, {
+                  "authors" : [ "Jeffrey S. Hammond", "Bill Seguin" ],
+                  "pdfExists" : true,
+                  "targetLiveDate" : "08/07/2018 00:00:00 EDT",
+                  "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/142469/142469_e.png",
+                  "role" : "Application Development & Delivery",
+                  "title" : "The Forrester Wave™: Mobile Low-Code Platforms For Business Developers, Q3 2018",
+                  "subtitle" : "The 12 Providers That Matter Most And How They Stack Up",
+                  "date" : "08/07/2018 09:24:03 EDT",
+                  "abstract" : "In our 30-criteria evaluation of mobile low-code platforms for business developers, we identified the 12 most significant providers — AppSheet, Betty Blocks, Dropsource, DSI, Intelledox, Microsoft, MobileSmith, Pulpstream, Quick Base, Skuid, Snappii, and Zudy — and researched, analyzed, and scored them. This report shows how each provider measures up and helps application development and delivery (AD&D) professionals make the right choice.",
+                  "contentCategory" : 10001,
+                  "contentType" : 5001,
+                  "url" : "/go?objectid=RES142469",
+                  "uniqueID" : "RES142469"
+                }, {
+                  "authors" : [ {
+                    "fullName" : "Jennifer Belissent, Ph.D.",
+                    "imageUrl" : "/staticassets/forresterDotCom/NEOanalyst/Jennifer-Belissent.png",
+                    "uniqueId" : "BIO2042"
+                  } ],
+                  "title" : "Rethinking Mobility: There’s More Than Autonomous Cars",
+                  "date" : "02/15/2018 05:19:17 EST",
+                  "abstract" : "A first for me. I’d never been to Detroit, and now I have. Last week, I participated in a roundtable on autonomous cars, and transformation in the automotive industry. Yes, autonomous cars will...",
+                  "contentCategory" : 10003,
+                  "contentType" : 5014,
+                  "url" : "/blogs/rethinking-mobility-theres-more-than-autonomous-cars",
+                  "uniqueID" : "BLOG63894"
+                } ],
+                "availableFilters" : [ {
+                  "value" : "Content Categories",
+                  "id" : 10000,
+                  "children" : [ {
+                    "value" : "Blogs",
+                    "id" : 10003
+                  }, {
+                    "value" : "Reports",
+                    "id" : 10001
+                  }, "..." ]
+                }, {
+                  "value" : "Date Range",
+                  "id" : 500000,
+                  "children" : [ {
+                    "value" : "Past 30 days",
+                    "id" : 500004
+                  }, {
+                    "value" : "Past 24 months",
+                    "id" : 500003
+                  }, "..." ]
+                }, {
+                  "value" : "Primary Role",
+                  "id" : 200500,
+                  "children" : [ {
+                    "value" : "Analyst Relations",
+                    "id" : 200501
+                  }, {
+                    "value" : "Sourcing & Vendor Management",
+                    "id" : 200519
+                  }, "..." ]
+                }, {
+                  "value" : "Industry",
+                  "id" : 25000,
+                  "children" : [ {
+                    "value" : "Consumer Electronics",
+                    "id" : 25001
+                  }, {
+                    "value" : "Travel",
+                    "id" : 25101
+                  }, "..." ]
+                } ],
+                "sort" : "relevance",
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/search/{id}" : {
+      "get" : {
+        "tags" : [ "Search" ],
+        "summary" : "Retrieves the list of information for a given set of content IDs",
+        "description" : "Retrieves the list of information for a given set of content IDs 1. Document URL is only returned for research docs and playbooks, not charts & figures 2. Note that fullName, imageUrl and uniqueId in the \"authors\" section are returned only for Blogs and Webinars",
+        "operationId" : "getSearchListforContentIDs",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "A comma-delimited set of unique IDs that need information",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "searchResults" : [ {
+                  "order" : 1,
+                  "role" : "B2B Marketing",
+                  "title" : "Channel Partners Predict Positive Business Growth In The Coming Two Years",
+                  "report" : {
+                    "editorialImage" : "R0lGODlhlgBuAOYAAMzMzJmZmWZmZrPd8PLy8ub2/UBAQE1NTXTE6OXl5c3u+9nZ2YCpXX...",
+                    "editorialImageURL" : "/pimages/forrester/imported/forresterDotCom/Research/96381/96381_e.gif",
+                    "role" : "B2B Marketing",
+                    "title" : "Seeding The Cloud Channel",
+                    "subtitle" : "Channel Partners' Plans And Needs For Business Model Transformation",
+                    "date" : "05/09/2013 00:00:00 EDT",
+                    "authors" : [ "Tirthankar Sen" ],
+                    "abstract" : "As technologies and tech decision-makers' needs evolve at a livelier...",
+                    "pdfExists" : true,
+                    "targetLiveDate" : "04/19/2013 00:00:00 EDT",
+                    "uniqueID" : "RES96381"
+                  },
+                  "thumbnailImage" : "R0lGODlhaABMAPcAAAAAAP///2VlZW5ubnR0dH5+fg9zrxx6syJ/tiWFuymIvh+PxyqMwiG...",
+                  "thumbnailImageUrl" : "/pimages/forrester/imported/forresterDotCom/Research/96381/96381_1n.gif",
+                  "uniqueID" : "AST932283"
+                } ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/readinglist" : {
+      "get" : {
+        "tags" : [ "Reading List" ],
+        "summary" : "Retrieves a list of reports and figures from a user's Reading List",
+        "description" : "Retrieves a list of reports and figures from a user's Reading List.  Reports and figures returned by the resource are filtered down to only such content as is accessible to the user specified by the ForresterAuth header token.  It is important to note that on the Forrester website, it is possible for a user to add content to his or her library without having authorization to it, so there can be a difference between the reading list acquired through this service and what is seen online.",
+        "operationId" : "getReadingList",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "inflate",
+          "in" : "query",
+          "description" : "The inflation level",
+          "required" : false,
+          "type" : "string",
+          "default" : "id"
+        }, {
+          "name" : "encodedImage",
+          "in" : "query",
+          "description" : "Specifies whether the resource should return encoded images",
+          "required" : false,
+          "type" : "boolean",
+          "default" : false
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "entries" : [ {
+                  "contentID" : "RES117949",
+                  "uniqueID" : "176774"
+                }, {
+                  "contentID" : "AST1012575",
+                  "uniqueID" : "177240"
+                } ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/readinglist/add" : {
+      "post" : {
+        "tags" : [ "Reading List" ],
+        "summary" : "Adds a piece of content to a user's Reading List",
+        "description" : "Adds a piece of content to a user's Reading List",
+        "operationId" : "AddReadingList",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "contentID",
+          "in" : "query",
+          "description" : "The unique ID for the piece of content that needs to be added to a user's Reading List",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "folderID",
+          "in" : "query",
+          "description" : "The ID of the folder that the piece of content should be placed in. The available folder IDs can be found by parsing the GET readinglist output. If no value is present, then the content will be placed within the Default folder",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "entries" : [ {
+                  "contentID" : "RES105881",
+                  "folderID" : 1,
+                  "folderName" : "My Reading List",
+                  "dateAdded" : "02/09/2016 11:55:12 EST",
+                  "uniqueID" : "177850"
+                } ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/readinglist/remove" : {
+      "post" : {
+        "tags" : [ "Reading List" ],
+        "summary" : "Removes a piece of content from a user's Reading List",
+        "description" : "Removes a piece of content from a user's Reading List",
+        "operationId" : "RemoveReadingList",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "description" : "The unique ID of the Reading List entry",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/newcontent" : {
+      "get" : {
+        "tags" : [ "Content" ],
+        "summary" : "Retrieves the count of new content available by content type",
+        "description" : "Retrieves the count of new content available by content type. For now, the playbooks count will always be zero. We reserve the right to enable playbook \"newness\" at a future time.",
+        "operationId" : "getNewContent",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "epoch",
+          "in" : "query",
+          "description" : "required  The Unix Time (in milliseconds) representing the last time this method was called. In other words, 'x' in the statement \"tell me the count of new content for this user since 'x'\"",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "full",
+          "in" : "query",
+          "description" : "Determines whether the resource returns a full list of content counts. If 'false', the resource returns the overall count. If 'true', the resource returns the overall count, the reports count, the playbooks count, and the figures count",
+          "required" : false,
+          "type" : "string",
+          "default" : "false"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "newContentMap" : {
+                  "reports" : 7,
+                  "playbooks" : 0,
+                  "figures" : 1,
+                  "overall" : 8
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "The required 'epoch' field is either missing or invalid"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/updatedcontent" : {
+      "get" : {
+        "tags" : [ "Content" ],
+        "summary" : "Retrieves a list of content IDs that have been updated since a given epoch time",
+        "description" : "Retrieves a list of content IDs that have been updated since a given epoch time",
+        "operationId" : "getUpdatedContent",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "epoch",
+          "in" : "query",
+          "description" : "required  The Unix Time (in milliseconds) representing the last time this method was called. In other words, 'x' in the statement \"tell me the count of new content for this user since 'x'\"",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "description" : "List of strings (same as 3 char endeca id prefixes). RES, AST, BLO, WEB, etc. If null, returns all",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "An optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "IDs" : [ "RES103762", "RES116941", "RES116960", "RES96920", "RES96760" ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "The required 'epoch' field is either missing or invalid"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/taxonomylist" : {
+      "get" : {
+        "tags" : [ "Taxonomy" ],
+        "summary" : "Retrieves a list of taxonomy terms for use in type-ahead",
+        "description" : "Retrieves a list of taxonomy terms for use in type-ahead",
+        "operationId" : "getTaxonomyList",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "taxonomyList" : [ "Accenture", "Acxiom", "Adam Silverman", "..." ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/taxonomy" : {
+      "get" : {
+        "tags" : [ "Taxonomy" ],
+        "summary" : "Retrieves the full list of taxonomy nodes",
+        "description" : "Retrieves the full list of taxonomy nodes",
+        "operationId" : "getTaxonomyNodes",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "filters",
+          "in" : "query",
+          "description" : "A comma-delimited list of filter IDs",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "taxonomyList" : [ {
+                  "taxonomyID" : "1003",
+                  "nodeID" : "1003",
+                  "label" : "Topics",
+                  "filterID" : 20000,
+                  "children" : [ {
+                    "taxonomyID" : "1003",
+                    "nodeID" : "gk5e0606",
+                    "label" : "Technology",
+                    "filterID" : 21000,
+                    "children" : [ {
+                      "taxonomyID" : "1003",
+                      "nodeID" : "gk5e0608",
+                      "label" : "Application Development Processes & Tools",
+                      "filterID" : 20002,
+                      "children" : [ {
+                        "taxonomyID" : "1003",
+                        "nodeID" : "gk5e0609",
+                        "label" : "Agile",
+                        "filterID" : 20003
+                      }, "..." ]
+                    }, {
+                      "taxonomyID" : "1003",
+                      "nodeID" : "gk5e060n",
+                      "label" : "Application Infrastructure Technologies",
+                      "filterID" : 20017,
+                      "children" : [ {
+                        "taxonomyID" : "1003",
+                        "nodeID" : "gk5e060o",
+                        "label" : "Application Server Platforms",
+                        "filterID" : 20018
+                      }, "..." ]
+                    }, "..." ]
+                  }, "..." ]
+                }, {
+                  "taxonomyID" : "1008",
+                  "nodeID" : "1008",
+                  "label" : "Vendor",
+                  "filterID" : 45000,
+                  "children" : [ {
+                    "taxonomyID" : "1008",
+                    "nodeID" : "gk5e06ky",
+                    "label" : "Microsoft",
+                    "filterID" : 45001
+                  }, {
+                    "taxonomyID" : "1008",
+                    "nodeID" : "gk5e06kz",
+                    "label" : "IBM",
+                    "filterID" : 45002
+                  }, "..." ]
+                }, "..." ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/taxonomy/{id}" : {
+      "get" : {
+        "tags" : [ "Taxonomy" ],
+        "summary" : "Retrieves a taxonomy node for a given taxonomy ID",
+        "description" : "Retrieves a taxonomy node for a given taxonomy ID",
+        "operationId" : "getTaxonomyNodesforID",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The taxonomy ID for which to provide information",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "taxonomyList" : [ {
+                  "taxonomyID" : "1502",
+                  "nodeID" : "1502",
+                  "label" : "OR Role",
+                  "filterID" : 115000,
+                  "children" : [ {
+                    "taxonomyID" : "1502",
+                    "nodeID" : "gki8vbum",
+                    "label" : "Technology Industry",
+                    "filterID" : 115001,
+                    "children" : [ {
+                      "taxonomyID" : "1502",
+                      "nodeID" : "gki8vbun",
+                      "label" : "Analyst Relations",
+                      "filterID" : 115002,
+                      "isAccessible" : true
+                    } ]
+                  }, {
+                    "taxonomyID" : "1502",
+                    "nodeID" : "gki8vbwx",
+                    "label" : "Marketing & Strategy",
+                    "filterID" : 115071,
+                    "children" : [ {
+                      "taxonomyID" : "1502",
+                      "nodeID" : "gki8vbvo",
+                      "label" : "B2B Marketing",
+                      "filterID" : 115039,
+                      "isAccessible" : true
+                    }, "..." ]
+                  }, "..." ]
+                } ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/auth" : {
+      "post" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Accepts email address and password and returns the plain text userId.",
+        "description" : "Accepts email address and password and returns the plain text userId. This is not meant for public consumption and it is only meant as a hook from Auth0 to our backend system",
+        "operationId" : "getUserId",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "emailAddress",
+          "in" : "formData",
+          "description" : "The email address for the user",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "password",
+          "in" : "formData",
+          "description" : "The user's password",
+          "required" : true,
+          "type" : "string",
+          "format" : "password"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "userId" : "3162074",
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/userCredentials" : {
+      "patch" : {
+        "tags" : [ "Authentication" ],
+        "summary" : "Updates user's password.",
+        "description" : "Accepts email address and new password. This is not meant for public consumption and it is only meant as a hook from Auth0 to our backend system",
+        "operationId" : "changePassword",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "emailAddress",
+          "in" : "formData",
+          "description" : "The email address for the user",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "apikey",
+          "in" : "formData",
+          "description" : "api key",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "name" : "password",
+          "in" : "formData",
+          "description" : "The user's password",
+          "required" : true,
+          "type" : "string",
+          "format" : "password"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "userId" : "3162074",
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/webinars/{id}" : {
+      "get" : {
+        "tags" : [ "Webinar" ],
+        "summary" : "Retrieves a webinar summary for a given unique ID.",
+        "description" : "Retrieves a webinar summary for a given unique ID. The assets will be returned only if the user has the access to the webinar",
+        "operationId" : "getWebinarSummary",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "The unique ID of the desired webinar",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "optional Auth0 authentication header. When this header is present, ForresterAuth header will not be checked",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "webinar" : {
+                  "role" : "Security & Risk",
+                  "title" : "Upcoming Webinar With Files",
+                  "subtitle" : "",
+                  "date" : "12/05/2017 07:30:00 EST",
+                  "abstract" : "This is the overview. This webinar has files.",
+                  "presenter" : "Eric G. Brown",
+                  "webinarLinks" : [ {
+                    "fileType" : "Presentation",
+                    "fileExt" : "ppt",
+                    "fileLocation" : "/staticassets/forresterDotCom/Webinars/2014/03/ppt/Webinar_032714_Ross.ppt"
+                  } ],
+                  "hasAccess" : true,
+                  "uniqueID" : "WEB11069"
+                },
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/atoms" : {
+      "get" : {
+        "tags" : [ "Atom" ],
+        "summary" : "Retrieves a list of atom contents based on the parameters.",
+        "description" : "Retrieves a list of atom contents based on the parameters.",
+        "operationId" : "getAtomContents",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiKey",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied to authorize the api consumer",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied from the authentication token as returned by the Login resource",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "An optional Auth0 authentication header.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "The term on which to search for atoms",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "platform",
+          "in" : "query",
+          "description" : "The platform to display the atoms. For example, web",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "numberOfResults",
+          "in" : "query",
+          "description" : "The number of atom contents should be retrieved (maximum value is fixed to 20)",
+          "required" : false,
+          "type" : "integer",
+          "default" : 5
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "atomsList" : [ {
+                  "id" : "ka02F000000D36zQAC",
+                  "atomContent" : "This is the first atom",
+                  "type" : "Text",
+                  "docId" : "RES61388"
+                }, {
+                  "id" : "ka02F000000D36zQAD",
+                  "atomContent" : "This is the second atom",
+                  "type" : "Text",
+                  "docId" : "RES61389"
+                }, {
+                  "id" : "ka02F000000D36zQAE",
+                  "atomContent" : "This is the third atom",
+                  "type" : "Text",
+                  "docId" : "RES61390"
+                } ],
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/atoms/{id}/feedback" : {
+      "post" : {
+        "tags" : [ "Atom" ],
+        "summary" : "Create an atom's feedback.",
+        "description" : "Create an atom's feedback as specified by the parameters.",
+        "operationId" : "addAtomFeedback",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Unique id of an atom",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "feedbackValue",
+          "in" : "query",
+          "description" : "Feedback for the atom (0-Yes, 1-Somewhat, 2-No)",
+          "required" : true,
+          "type" : "number"
+        }, {
+          "name" : "searchTerm",
+          "in" : "query",
+          "description" : "The search term for the atom",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "accessToken issued by Auth0 (Bearer Authorization header)..",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource or forresterid cookie value. Only needed if no accessToken is present.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/accessgroup/{reg_id}/products" : {
+      "get" : {
+        "tags" : [ "AccessGroup" ],
+        "summary" : "Retrieves a list of products for an accessgroup.",
+        "description" : "Retrieves a list of products for an accessgroup. parameters.",
+        "operationId" : "getProductsForAccessGoup",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "apiKey",
+          "in" : "header",
+          "description" : "A custom header value that must be supplied to authorize the api consumer",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "reg_id",
+          "in" : "path",
+          "description" : "Unique registration id of an accessgroup",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "accessGroupResult" : {
+                  "productList" : [ {
+                    "productCode" : "SV_RIT",
+                    "productName" : "Information Technology Reader"
+                  }, {
+                    "productCode" : "SV_RMS",
+                    "productName" : "Marketing & Strategy Reader"
+                  } ],
+                  "result" : true,
+                  "status" : {
+                    "text" : "OK",
+                    "code" : 200
+                  },
+                  "statusMessage" : "Success"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Accessgroup"
+          },
+          "401" : {
+            "description" : "AccessGroup Expired"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    },
+    "/audit" : {
+      "post" : {
+        "tags" : [ "Audit" ],
+        "summary" : "Audit of webinar usage.",
+        "description" : "Audit of webinar usage.",
+        "operationId" : "insertUsage",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "objectId",
+          "in" : "path",
+          "description" : "Object id of an webinar",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "ForresterAuth",
+          "in" : "header",
+          "description" : "A custom header value from the authentication token as returned by the Login resource.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "examples" : {
+              "application/json" : {
+                "result" : true,
+                "status" : {
+                  "text" : "OK",
+                  "code" : 200
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "406" : {
+            "description" : "Not Acceptable"
+          },
+          "500" : {
+            "description" : "Internal Service Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "ForresterContact" : {
+      "type" : "object",
+      "properties" : {
+        "contactName" : {
+          "type" : "string"
+        },
+        "contactEmail" : {
+          "type" : "string",
+          "example" : "xyz@forrester.com"
+        },
+        "contactTitle" : {
+          "type" : "string",
+          "example" : "FLB Advisor | Data Advisor |ADM/AAM| CE/Account Rep"
+        }
+      }
+    },
+    "UserRecommendation" : {
+      "type" : "object",
+      "properties" : {
+        "contentId" : {
+          "type" : "string",
+          "example" : "57667"
+        },
+        "contentType" : {
+          "type" : "string",
+          "example" : "RES"
+        },
+        "title" : {
+          "type" : "string",
+          "example" : "Choose The Optimal Type Of AR Program To Drive Your Firm's Business Results"
+        },
+        "url" : {
+          "type" : "string",
+          "example" : "https://www.forrester.com/go?objectid=RES57667#utm_source=SF&utm_medium=email&utm_campaign=Koverse"
+        },
+        "rank" : {
+          "type" : "integer",
+          "example" : 1
+        }
+      }
+    },
+    "Products" : {
+      "type" : "object",
+      "properties" : {
+        "webProducts" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/WebProducts"
+          }
+        },
+        "productSkus" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ProductSkus"
+          }
+        }
+      }
+    },
+    "ProductCategory" : {
+      "type" : "object",
+      "properties" : {
+        "categoryBundle" : {
+          "type" : "string",
+          "enum" : [ "member", "reader", "other" ]
+        },
+        "level" : {
+          "type" : "number"
+        },
+        "categories" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "WebProducts" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string",
+          "example" : "CT_AGEN_APAC"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "CT APAC - Agency"
+        },
+        "familyId" : {
+          "type" : "integer"
+        }
+      }
+    },
+    "ProductSkus" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string",
+          "example" : "RVE_UGW_VE"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "TI RoleView READERSHIP+W RPKG"
+        }
+      }
+    },
+    "ProductFamilies" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "190"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "ForecastView European Digital Marketing Forecasts"
+        },
+        "prarentIdId" : {
+          "type" : "string",
+          "example" : "49"
+        }
+      }
+    },
+    "ProductAccessFeedRequests" : {
+      "type" : "object",
+      "properties" : {
+        "jobLocation" : {
+          "type" : "string",
+          "example" : "http://services.forrester.com/ProductAccessFeedRequest/job11a4f9"
+        }
+      }
+    },
+    "FLBCouncil" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "B2B Marketing Council"
+        },
+        "link" : {
+          "type" : "string",
+          "example" : "peers.forrester.com"
+        }
+      }
+    },
+    "ContentAccessRecord" : {
+      "type" : "object",
+      "properties" : {
+        "contentId" : {
+          "type" : "string",
+          "example" : "RES123456"
+        },
+        "hasAccess" : {
+          "type" : "string",
+          "enum" : [ "NOT FOUND" ]
+        }
+      }
+    },
+    "Navigations" : {
+      "type" : "object",
+      "properties" : {
+        "sections" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/sections"
+          }
+        }
+      }
+    },
+    "sections" : {
+      "type" : "object",
+      "properties" : {
+        "sectionTitle" : {
+          "type" : "string",
+          "example" : "Insights"
+        },
+        "linkSections" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/linkSections"
+          }
+        }
+      }
+    },
+    "linkSections" : {
+      "type" : "object",
+      "properties" : {
+        "linkList" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/linkList"
+          }
+        }
+      }
+    },
+    "linkList" : {
+      "type" : "object",
+      "properties" : {
+        "text" : {
+          "type" : "string",
+          "example" : "Webinars & events"
+        },
+        "href" : {
+          "type" : "string",
+          "example" : "https://go.forrester.com/webinars-and-events"
+        }
+      }
+    }
+  }
+}
