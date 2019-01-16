@@ -1,0 +1,2960 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Salon Booking Plugin API",
+    "description" : "This is the Salon Booking Plugin API",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "1-oas3"
+  },
+  "servers" : [ {
+    "url" : "http://prova.salonbooking.it/wp-json/salon/api/v1"
+  } ],
+  "tags" : [ {
+    "name" : "tokens",
+    "description" : "Create/revoke tokens calls"
+  }, {
+    "name" : "assistants",
+    "description" : "Operations with assistants"
+  }, {
+    "name" : "services",
+    "description" : "Operations with sevices"
+  }, {
+    "name" : "customers",
+    "description" : "Operations with customers"
+  }, {
+    "name" : "discounts",
+    "description" : "Operations with discounts"
+  }, {
+    "name" : "bookings",
+    "description" : "Operations with bookings"
+  }, {
+    "name" : "availability",
+    "description" : "Operations with availability"
+  } ],
+  "paths" : {
+    "/login" : {
+      "get" : {
+        "tags" : [ "tokens" ],
+        "summary" : "Create/regenerate token",
+        "description" : "Create/regenerate token\n",
+        "operationId" : "login",
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "query",
+          "description" : "User login",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "description" : "User password",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Access info",
+            "content" : {
+              "*/*" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      }
+    },
+    "/logout" : {
+      "post" : {
+        "tags" : [ "tokens" ],
+        "summary" : "Revoke token",
+        "description" : "Revoke token\n",
+        "operationId" : "logout",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Token revoked",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      }
+    },
+    "/assistants" : {
+      "get" : {
+        "tags" : [ "assistants" ],
+        "summary" : "Get all assistants",
+        "description" : "Get all assistants\n",
+        "operationId" : "assistantsAll",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Assistants results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "assistants" ],
+        "summary" : "Create a new assistant",
+        "description" : "Create a new assistant\n",
+        "operationId" : "addAssistant",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Assistant item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AssistantItem"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Item created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "An existing item already exists"
+          }
+        }
+      }
+    },
+    "/assistants/{id}" : {
+      "get" : {
+        "tags" : [ "assistants" ],
+        "summary" : "Get one assistants",
+        "description" : "Get one assistant\n",
+        "operationId" : "getAssistant",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Assistant id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Assistant results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "assistants" ],
+        "summary" : "Modify an assistant",
+        "description" : "Modify an assistant\n",
+        "operationId" : "updateAssistant",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Assistant id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Assistant item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AssistantItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "assistants" ],
+        "summary" : "Delete an assistant",
+        "description" : "Delete an assistant\n",
+        "operationId" : "deleteAssistant",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Assistant id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/services" : {
+      "get" : {
+        "tags" : [ "services" ],
+        "summary" : "Get all services",
+        "description" : "Get all services\n",
+        "operationId" : "servicesAll",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "description" : "Resource type of services (all, primary, secondary)",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "all",
+            "enum" : [ "all", "primary", "secondary" ]
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Services results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "services" ],
+        "summary" : "Create a new service",
+        "description" : "Create a new service\n",
+        "operationId" : "addService",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Service item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ServiceItem"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Item created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "An existing item already exists"
+          }
+        }
+      }
+    },
+    "/services/{id}" : {
+      "get" : {
+        "tags" : [ "services" ],
+        "summary" : "Get one service",
+        "description" : "Get one service\n",
+        "operationId" : "getService",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Service id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Service results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "services" ],
+        "summary" : "Modify an service",
+        "description" : "Modify an service\n",
+        "operationId" : "updateService",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Service id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Service item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/ServiceItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "services" ],
+        "summary" : "Delete an services",
+        "description" : "Delete an service\n",
+        "operationId" : "deleteService",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Service id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/services/categories" : {
+      "get" : {
+        "tags" : [ "services" ],
+        "summary" : "Get all services categories",
+        "description" : "Get all services categories\n",
+        "operationId" : "servicesCategoriesAll",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Services categories results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "services" ],
+        "summary" : "Create a new services category",
+        "description" : "Create a new services category\n",
+        "operationId" : "addServiceCategory",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Service item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CategoryItem"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Item created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "An existing item already exists"
+          }
+        }
+      }
+    },
+    "/services/categories/{id}" : {
+      "get" : {
+        "tags" : [ "services" ],
+        "summary" : "Get one service category",
+        "description" : "Get one service category\n",
+        "operationId" : "getServiceCategory",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Service category id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Service category results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "services" ],
+        "summary" : "Modify an service category",
+        "description" : "Modify an service category\n",
+        "operationId" : "updateServiceCategory",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Service category id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Service category item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CategoryItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "services" ],
+        "summary" : "Delete an services category",
+        "description" : "Delete an service category\n",
+        "operationId" : "deleteServiceCategory",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Service category id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/customers" : {
+      "get" : {
+        "tags" : [ "customers" ],
+        "summary" : "Get all customers",
+        "description" : "Get all customers\n",
+        "operationId" : "customersAll",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Search string",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Customers results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_3"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "customers" ],
+        "summary" : "Create a new customer",
+        "description" : "Create a new customer\n",
+        "operationId" : "addCustomer",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Customer item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CustomerItem"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Item created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "An existing item already exists"
+          }
+        }
+      }
+    },
+    "/customers/{id}" : {
+      "get" : {
+        "tags" : [ "customers" ],
+        "summary" : "Get one customer",
+        "description" : "Get one customer\n",
+        "operationId" : "getCustomer",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Customer id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Customer results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_3"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "customers" ],
+        "summary" : "Modify an customer",
+        "description" : "Modify an customer\n",
+        "operationId" : "updateCustomer",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Customer id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Customer item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CustomerItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "customers" ],
+        "summary" : "Delete an customer",
+        "description" : "Delete an customer\n",
+        "operationId" : "deleteCustomer",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Customer id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/discounts" : {
+      "get" : {
+        "tags" : [ "discounts" ],
+        "summary" : "Get all discounts",
+        "description" : "Get all discounts\n",
+        "operationId" : "discountsAll",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Discounts results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_4"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "discounts" ],
+        "summary" : "Create a new discount",
+        "description" : "Create a new discount\n",
+        "operationId" : "addDiscount",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Discount item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DiscountItem"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Item created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "An existing item already exists"
+          }
+        }
+      }
+    },
+    "/discounts/{id}" : {
+      "get" : {
+        "tags" : [ "discounts" ],
+        "summary" : "Get one discount",
+        "description" : "Get one discount\n",
+        "operationId" : "getDiscount",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Discount id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Discount results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_4"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "discounts" ],
+        "summary" : "Modify an discount",
+        "description" : "Modify an discount\n",
+        "operationId" : "updateDiscount",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Discount id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Discount item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/DiscountItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "discounts" ],
+        "summary" : "Delete an discount",
+        "description" : "Delete an discount\n",
+        "operationId" : "deleteDiscount",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Discount id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/bookings" : {
+      "get" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Get all bookings",
+        "description" : "Get all bookings\n",
+        "operationId" : "bookingsAll",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "search",
+          "in" : "query",
+          "description" : "Search string",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "services",
+          "in" : "query",
+          "description" : "Services ids",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        }, {
+          "name" : "customers",
+          "in" : "query",
+          "description" : "Customers ids",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        }, {
+          "name" : "start_date",
+          "in" : "query",
+          "description" : "Date range start",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD"
+          }
+        }, {
+          "name" : "end_date",
+          "in" : "query",
+          "description" : "Date range end",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD"
+          }
+        }, {
+          "name" : "orderby",
+          "in" : "query",
+          "description" : "Order by",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "id",
+            "enum" : [ "id", "date" ]
+          }
+        }, {
+          "name" : "order",
+          "in" : "query",
+          "description" : "Order",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "default" : "asc",
+            "enum" : [ "asc", "desc" ]
+          }
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Per page",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 10
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Offset",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Bookings results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_5"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Create a new booking",
+        "description" : "Create a new booking\n",
+        "operationId" : "addBooking",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Booking item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BookingItem"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Item created",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_2"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          },
+          "409" : {
+            "description" : "An existing item already exists"
+          }
+        }
+      }
+    },
+    "/bookings/{id}" : {
+      "get" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Get one booking",
+        "description" : "Get one booking\n",
+        "operationId" : "getBooking",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Booking id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Booking results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_5"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Modify an booking",
+        "description" : "Modify an booking\n",
+        "operationId" : "updateBooking",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Booking id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "Booking item to add",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/BookingItem"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Delete an booking",
+        "description" : "Delete an booking\n",
+        "operationId" : "deleteBooking",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Booking id",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Item updated",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_201_1"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Invalid input, object invalid"
+          }
+        }
+      }
+    },
+    "/bookings/stats" : {
+      "get" : {
+        "tags" : [ "bookings" ],
+        "summary" : "Get all bookings stats",
+        "description" : "Get all bookings stats\n",
+        "operationId" : "bookingsAllStats",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "group_by",
+          "in" : "query",
+          "description" : "Group by",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "day", "month", "year" ]
+          }
+        }, {
+          "name" : "start_date",
+          "in" : "query",
+          "description" : "Date range start",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD"
+          }
+        }, {
+          "name" : "end_date",
+          "in" : "query",
+          "description" : "Date range end",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Bookings stats results",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_6"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      }
+    },
+    "/availability/intervals" : {
+      "get" : {
+        "tags" : [ "availability" ],
+        "summary" : "Get all available bookings dates and times",
+        "description" : "Get all available bookings date/time\n",
+        "operationId" : "availabilityIntervals",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "Date",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2018-10-21"
+          }
+        }, {
+          "name" : "time",
+          "in" : "query",
+          "description" : "Time",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "14:00"
+          }
+        }, {
+          "name" : "services",
+          "in" : "query",
+          "description" : "Booking services",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/services"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Availability dates/times result",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_7"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      }
+    },
+    "/availability/services/primary" : {
+      "get" : {
+        "tags" : [ "availability" ],
+        "summary" : "Check available primary services on date/time",
+        "description" : "Check available primary services on date/time\n",
+        "operationId" : "availabilityPrimaryServices",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "Date",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2018-10-21"
+          }
+        }, {
+          "name" : "time",
+          "in" : "query",
+          "description" : "Time",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "14:00"
+          }
+        }, {
+          "name" : "primary_services",
+          "in" : "query",
+          "description" : "Selected primary services ids",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "example" : [ 1, 2 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        }, {
+          "name" : "secondary_services",
+          "in" : "query",
+          "description" : "Selected secondary services ids",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "example" : [ 3, 4 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Availability Primary Services Result",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_8"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      }
+    },
+    "/availability/services/secondary" : {
+      "get" : {
+        "tags" : [ "availability" ],
+        "summary" : "Check available secondary services on date/time",
+        "description" : "Check available secondary services on date/time\n",
+        "operationId" : "availabilitySecondaryServices",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "Date",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2018-10-22"
+          }
+        }, {
+          "name" : "time",
+          "in" : "query",
+          "description" : "Time",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "14:00"
+          }
+        }, {
+          "name" : "primary_services",
+          "in" : "query",
+          "description" : "Selected primary services ids",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "example" : [ 1, 2 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        }, {
+          "name" : "secondary_services",
+          "in" : "query",
+          "description" : "Selected secondary services ids",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "example" : [ 3, 4 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Availability Secondary Services Result",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_8"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      }
+    },
+    "/availability/assistants" : {
+      "get" : {
+        "tags" : [ "availability" ],
+        "summary" : "Check available assistants on date/time",
+        "description" : "Check available assistants on date/time\n",
+        "operationId" : "availabilityAssistants",
+        "parameters" : [ {
+          "name" : "Access-Token",
+          "in" : "header",
+          "description" : "Access token",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "Date",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2018-10-22"
+          }
+        }, {
+          "name" : "time",
+          "in" : "query",
+          "description" : "Time",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "14:00"
+          }
+        }, {
+          "name" : "services",
+          "in" : "query",
+          "description" : "Booking services",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/services_1"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Availability Assistants Result",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/inline_response_200_9"
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "Bad input parameter"
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "AssistantItem" : {
+        "required" : [ "id", "name", "services" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "Alex"
+          },
+          "services" : {
+            "type" : "array",
+            "description" : " Array of services ids. Empty for all services.",
+            "example" : [ 6, 7 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "email" : {
+            "type" : "string",
+            "format" : "email",
+            "example" : "alex@salonbooking.it"
+          },
+          "phone" : {
+            "type" : "string",
+            "format" : "phone",
+            "example" : "987-45-26"
+          },
+          "description" : {
+            "type" : "string",
+            "example" : "Very professional master"
+          },
+          "availabilities" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AvailabilityItem"
+            }
+          },
+          "holidays" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/HolidayItem"
+            }
+          },
+          "image_url" : {
+            "type" : "string",
+            "format" : "url"
+          }
+        }
+      },
+      "AvailabilityItem" : {
+        "required" : [ "days", "from", "to" ],
+        "type" : "object",
+        "properties" : {
+          "days" : {
+            "$ref" : "#/components/schemas/AvailabilityItem_days"
+          },
+          "from" : {
+            "$ref" : "#/components/schemas/AvailabilityItem_from"
+          },
+          "to" : {
+            "$ref" : "#/components/schemas/AvailabilityItem_to"
+          },
+          "always" : {
+            "type" : "integer",
+            "description" : "0 or 1",
+            "format" : "int32",
+            "example" : 1
+          },
+          "from_date" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-19"
+          },
+          "to_date" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-24"
+          }
+        }
+      },
+      "HolidayItem" : {
+        "required" : [ "from_date", "from_time", "to_date", "to_time" ],
+        "type" : "object",
+        "properties" : {
+          "from_date" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-25"
+          },
+          "to_date" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-26"
+          },
+          "from_time" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "08:00"
+          },
+          "to_time" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "14:00"
+          }
+        }
+      },
+      "ServiceItem" : {
+        "required" : [ "id", "name" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "Massage"
+          },
+          "price" : {
+            "type" : "number",
+            "format" : "double",
+            "example" : 10
+          },
+          "unit" : {
+            "type" : "number",
+            "description" : " Unit per hour.",
+            "example" : 1,
+            "enum" : [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 ]
+          },
+          "duration" : {
+            "type" : "string",
+            "example" : "01:00",
+            "enum" : [ "00:00", "01:00", "02:00", "03:00", "04:00", "05:00", "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00", "23:00" ]
+          },
+          "exclusive" : {
+            "type" : "integer",
+            "description" : " Is a exclusive service.",
+            "format" : "int32",
+            "example" : 1,
+            "enum" : [ 0, 1 ]
+          },
+          "secondary" : {
+            "type" : "integer",
+            "description" : " Is a secondary service.",
+            "format" : "int32",
+            "example" : 1,
+            "enum" : [ 0, 1 ]
+          },
+          "secondary_display_mode" : {
+            "type" : "string",
+            "description" : " Display secondary if: always (always), belong to the same category (category), is child of selected service (service)",
+            "example" : "always",
+            "enum" : [ "always", "category", "service" ]
+          },
+          "secondary_parent_services" : {
+            "type" : "array",
+            "description" : " Parent services ids for this secondary service",
+            "example" : [ 1, 4 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "execution_order" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 1,
+            "enum" : [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+          },
+          "break" : {
+            "type" : "string",
+            "example" : "00:00",
+            "enum" : [ "00:00", "01:00", "02:00", "03:00" ]
+          },
+          "empty_assistants" : {
+            "type" : "integer",
+            "description" : " No assistants required.",
+            "format" : "int32",
+            "example" : 1,
+            "enum" : [ 0, 1 ]
+          },
+          "description" : {
+            "type" : "string",
+            "example" : "The relax service"
+          },
+          "categories" : {
+            "type" : "array",
+            "description" : " Array of service catagories ids.",
+            "example" : [ 6, 7 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "availabilities" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AvailabilityItem"
+            }
+          },
+          "image_url" : {
+            "type" : "string"
+          }
+        }
+      },
+      "CategoryItem" : {
+        "required" : [ "id", "name", "slug" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "Relax"
+          },
+          "slug" : {
+            "type" : "string",
+            "example" : "relax"
+          },
+          "description" : {
+            "type" : "string",
+            "example" : "The relax category"
+          }
+        }
+      },
+      "CustomerItem" : {
+        "required" : [ "email", "first_name", "id", "last_name" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "first_name" : {
+            "type" : "string",
+            "example" : "Ivan"
+          },
+          "last_name" : {
+            "type" : "string",
+            "example" : "Ivanov"
+          },
+          "email" : {
+            "type" : "string",
+            "format" : "email",
+            "example" : "ivan@salonbooking.it"
+          },
+          "phone" : {
+            "type" : "string",
+            "format" : "phone",
+            "example" : "987-45-26"
+          },
+          "address" : {
+            "type" : "string",
+            "example" : " 3604 Sycamore Fork Road Ft Lauderdale, FL 7146, United States"
+          },
+          "note" : {
+            "type" : "string",
+            "example" : "The first customer"
+          },
+          "bookings" : {
+            "type" : "array",
+            "description" : " Array of bookings ids.",
+            "example" : [ 6, 7 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          }
+        }
+      },
+      "BookingItem" : {
+        "required" : [ "date", "id", "status", "time" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "date" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-24"
+          },
+          "time" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "13:00"
+          },
+          "status" : {
+            "type" : "string",
+            "example" : "sln-b-pending",
+            "enum" : [ "sln-b-pendingpayment", "sln-b-pending", "sln-b-paid", "sln-b-paylater", "sln-b-canceled", "sln-b-confirmed", "sln-b-error" ]
+          },
+          "customer_id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "customer_first_name" : {
+            "type" : "string",
+            "example" : "Ivan"
+          },
+          "customer_last_name" : {
+            "type" : "string",
+            "example" : "Ivanov"
+          },
+          "customer_email" : {
+            "type" : "string",
+            "format" : "email",
+            "example" : "ivan@salonbooking.it"
+          },
+          "customer_phone" : {
+            "type" : "string",
+            "format" : "phone",
+            "example" : "987-45-26"
+          },
+          "customer_address" : {
+            "type" : "string",
+            "example" : " 3604 Sycamore Fork Road Ft Lauderdale, FL 7146, United States"
+          },
+          "services" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/BookingItem_services"
+            }
+          },
+          "discounts" : {
+            "type" : "array",
+            "description" : " Array of disounts ids.",
+            "example" : [ 6, 7 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "duration" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "readOnly" : true,
+            "example" : "01:30"
+          },
+          "amount" : {
+            "type" : "number",
+            "format" : "double",
+            "readOnly" : true,
+            "example" : 10
+          },
+          "deposit" : {
+            "type" : "number",
+            "format" : "double",
+            "readOnly" : true,
+            "example" : 0
+          },
+          "currency" : {
+            "type" : "string",
+            "readOnly" : true,
+            "example" : "$"
+          },
+          "transaction_id" : {
+            "type" : "string",
+            "readOnly" : true,
+            "example" : "13712"
+          },
+          "note" : {
+            "type" : "string",
+            "example" : "The first booking"
+          }
+        }
+      },
+      "DiscountItem" : {
+        "required" : [ "id", "name" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "uuid"
+          },
+          "name" : {
+            "type" : "string",
+            "example" : "15% discount"
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : " Amount of discount.",
+            "format" : "double",
+            "example" : 15
+          },
+          "amount_type" : {
+            "type" : "string",
+            "description" : " Type of amount (fix or percent).",
+            "example" : "fixed",
+            "enum" : [ "fixed", "percentage" ]
+          },
+          "total_limit" : {
+            "type" : "integer",
+            "description" : " Limit of usage discount (unlimited if blank).",
+            "format" : "int32"
+          },
+          "valid_from" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-19"
+          },
+          "valid_to" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-25"
+          },
+          "per_user_limit" : {
+            "type" : "integer",
+            "description" : " Limit of usage discount (unlimited if blank) per user.",
+            "format" : "int32"
+          },
+          "services" : {
+            "type" : "array",
+            "description" : " Apply discount only for these services. If empty - for all services.",
+            "example" : [ 1, 2 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "discount_type" : {
+            "type" : "string",
+            "description" : " Type of discount: coupon code or auto by logic rules",
+            "example" : "sln-d-auto",
+            "enum" : [ "sln-d-coupon", "sln-d-auto" ]
+          },
+          "discount_code" : {
+            "type" : "string",
+            "example" : "12718"
+          },
+          "discount_rules" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/DiscountItem_discount_rules"
+            }
+          }
+        }
+      },
+      "AvailibilityIntervals" : {
+        "type" : "object",
+        "properties" : {
+          "years" : {
+            "type" : "array",
+            "example" : [ "2018", "2019" ],
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "months" : {
+            "type" : "array",
+            "example" : [ "Oct", "Nov" ],
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "days" : {
+            "type" : "array",
+            "example" : [ 1, 2, 3, 4 ],
+            "items" : {
+              "type" : "integer",
+              "format" : "int32"
+            }
+          },
+          "times" : {
+            "type" : "array",
+            "example" : [ "11:00", "12:00" ],
+            "items" : {
+              "type" : "string",
+              "format" : "HH:ii"
+            }
+          },
+          "dates" : {
+            "type" : "array",
+            "example" : [ "2018-10-04", "2018-10-05" ],
+            "items" : {
+              "type" : "string",
+              "format" : "YYYY-MM-DD"
+            }
+          },
+          "fullDays" : {
+            "type" : "array",
+            "example" : [ ],
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "suggestedDay" : {
+            "type" : "string",
+            "format" : "DD",
+            "example" : "04"
+          },
+          "suggestedMonth" : {
+            "type" : "string",
+            "format" : "MM",
+            "example" : "06"
+          },
+          "suggestedYear" : {
+            "type" : "string",
+            "format" : "YYYY",
+            "example" : "2018"
+          },
+          "suggestedDate" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2018-10-18"
+          },
+          "suggestedTime" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "11:00"
+          }
+        }
+      },
+      "AvailibilityServices" : {
+        "type" : "object",
+        "additionalProperties" : {
+          "type" : "object",
+          "properties" : {
+            "available" : {
+              "type" : "boolean",
+              "description" : "Status of availability the service"
+            },
+            "selected" : {
+              "type" : "boolean",
+              "description" : "Status of selection the service"
+            },
+            "error" : {
+              "type" : "string",
+              "description" : "Error message if service can not be available or selected"
+            }
+          }
+        },
+        "example" : {
+          "7" : {
+            "available" : true,
+            "selected" : false,
+            "error" : ""
+          },
+          "8" : {
+            "available" : true,
+            "selected" : true,
+            "error" : ""
+          }
+        }
+      },
+      "AvailibilityAssistants" : {
+        "type" : "object",
+        "additionalProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : {
+              "available" : {
+                "type" : "boolean",
+                "description" : "Status of availability the assistant"
+              },
+              "selected" : {
+                "type" : "boolean",
+                "description" : "Status of selection the assistant"
+              },
+              "error" : {
+                "type" : "string",
+                "description" : "Error message if assistant can not be available or selected"
+              }
+            }
+          }
+        },
+        "description" : "Array of map service_id and assistant_id with available data",
+        "example" : {
+          "1" : {
+            "11" : {
+              "available" : true,
+              "selected" : false,
+              "error" : ""
+            },
+            "12" : {
+              "available" : true,
+              "selected" : true,
+              "error" : ""
+            }
+          },
+          "2" : {
+            "11" : {
+              "available" : true,
+              "selected" : false,
+              "error" : ""
+            },
+            "12" : {
+              "available" : true,
+              "selected" : false,
+              "error" : ""
+            }
+          }
+        }
+      },
+      "inline_response_201" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "access_token" : {
+            "type" : "string",
+            "example" : "AIzaSyDFQnkXLwswGJ6TghAfTh_leQ61pJ-ohYV"
+          }
+        }
+      },
+      "inline_response_201_1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          }
+        }
+      },
+      "inline_response_200" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AssistantItem"
+            }
+          }
+        }
+      },
+      "inline_response_201_2" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "id" : {
+            "type" : "string",
+            "example" : "309"
+          }
+        }
+      },
+      "inline_response_200_1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ServiceItem"
+            }
+          }
+        }
+      },
+      "inline_response_200_2" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CategoryItem"
+            }
+          }
+        }
+      },
+      "inline_response_200_3" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/CustomerItem"
+            }
+          }
+        }
+      },
+      "inline_response_200_4" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/DiscountItem"
+            }
+          }
+        }
+      },
+      "inline_response_200_5" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/BookingItem"
+            }
+          }
+        }
+      },
+      "inline_response_200_6_items" : {
+        "type" : "object",
+        "properties" : {
+          "unit_type" : {
+            "type" : "string",
+            "example" : "year",
+            "enum" : [ "day", "month", "year" ]
+          },
+          "unit_value" : {
+            "type" : "string",
+            "example" : "2018"
+          },
+          "bookings_count" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 11
+          }
+        }
+      },
+      "inline_response_200_6" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/inline_response_200_6_items"
+            }
+          }
+        }
+      },
+      "services" : {
+        "type" : "object",
+        "properties" : {
+          "service_id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "assistant_id" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : "[{\"service_id\":1,\"assistant_id\":11},{\"service_id\":2,\"assistant_id\":12}]"
+      },
+      "inline_response_200_7" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "success" : {
+            "type" : "integer",
+            "format" : "int32",
+            "example" : 1,
+            "enum" : [ 0, 1 ]
+          },
+          "errors" : {
+            "type" : "array",
+            "example" : [ ],
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "intervals" : {
+            "$ref" : "#/components/schemas/AvailibilityIntervals"
+          }
+        }
+      },
+      "inline_response_200_8" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "services" : {
+            "$ref" : "#/components/schemas/AvailibilityServices"
+          }
+        }
+      },
+      "services_1" : {
+        "type" : "object",
+        "properties" : {
+          "service_id" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "assistant_id" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "example" : "[{\"service_id\":1,\"assistant_id\":11}]"
+      },
+      "inline_response_200_9" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "example" : "OK"
+          },
+          "is_valid" : {
+            "type" : "boolean",
+            "description" : "Validation result of selected services and assistants"
+          },
+          "assistants" : {
+            "$ref" : "#/components/schemas/AvailibilityAssistants"
+          }
+        }
+      },
+      "AvailabilityItem_days" : {
+        "type" : "object",
+        "properties" : {
+          "0" : {
+            "type" : "integer",
+            "description" : "sunday",
+            "format" : "only 0 or 1",
+            "example" : 0
+          },
+          "1" : {
+            "type" : "integer",
+            "description" : "monday",
+            "format" : "only 0 or 1",
+            "example" : 0
+          },
+          "2" : {
+            "type" : "integer",
+            "description" : "tuesday",
+            "format" : "only 0 or 1",
+            "example" : 1
+          },
+          "3" : {
+            "type" : "integer",
+            "description" : "wednesday",
+            "format" : "only 0 or 1",
+            "example" : 0
+          },
+          "4" : {
+            "type" : "integer",
+            "description" : "thursday",
+            "format" : "only 0 or 1",
+            "example" : 1
+          },
+          "5" : {
+            "type" : "integer",
+            "description" : "friday",
+            "format" : "only 0 or 1",
+            "example" : 0
+          },
+          "6" : {
+            "type" : "integer",
+            "description" : "saturday",
+            "format" : "only 0 or 1",
+            "example" : 1
+          }
+        }
+      },
+      "AvailabilityItem_from" : {
+        "type" : "object",
+        "properties" : {
+          "0" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "09:00"
+          },
+          "1" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "13:00"
+          }
+        }
+      },
+      "AvailabilityItem_to" : {
+        "type" : "object",
+        "properties" : {
+          "0" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "12:30"
+          },
+          "1" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "example" : "17:00"
+          }
+        }
+      },
+      "BookingItem_services" : {
+        "type" : "object",
+        "properties" : {
+          "start_at" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "readOnly" : true,
+            "example" : "08:00"
+          },
+          "end_at" : {
+            "type" : "string",
+            "format" : "HH:ii",
+            "readOnly" : true,
+            "example" : "09:00"
+          },
+          "service_id" : {
+            "type" : "integer",
+            "format" : "uuid",
+            "example" : 0
+          },
+          "service_name" : {
+            "type" : "string",
+            "readOnly" : true,
+            "example" : "Massage"
+          },
+          "service_price" : {
+            "type" : "number",
+            "format" : "double",
+            "readOnly" : true,
+            "example" : 15
+          },
+          "assistant_id" : {
+            "type" : "number",
+            "format" : "uuid",
+            "example" : 0
+          },
+          "assistant_name" : {
+            "type" : "string",
+            "readOnly" : true,
+            "example" : "Mario"
+          }
+        }
+      },
+      "DiscountItem_discount_rules" : {
+        "type" : "object",
+        "properties" : {
+          "mode" : {
+            "type" : "string",
+            "description" : " Mode of logic rule",
+            "example" : "weekdays",
+            "enum" : [ "bookings", "amount", "daterange", "weekdays" ]
+          },
+          "bookings_number" : {
+            "type" : "integer",
+            "description" : " Number of reservations.",
+            "format" : "int32",
+            "example" : 1894231
+          },
+          "amount_number" : {
+            "type" : "number",
+            "description" : " Amount of reservations.",
+            "format" : "double",
+            "example" : 100
+          },
+          "daterange_from" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-19"
+          },
+          "daterange_to" : {
+            "type" : "string",
+            "format" : "YYYY-MM-DD",
+            "example" : "2017-12-25"
+          },
+          "weekdays" : {
+            "type" : "array",
+            "items" : {
+              "type" : "integer",
+              "description" : " Days of week by these order number",
+              "format" : "int32",
+              "example" : 0,
+              "enum" : [ 0, 1, 2, 3, 4, 5, 6 ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
