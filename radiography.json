@@ -1,0 +1,1818 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This API allows auser to load; lists of trusts, sites controlled by individual trusts and rooms with those sites. It also allows for the configuration and booking of rooms as well as providing means to update or delete those bookings",
+    "version" : "1.0.45",
+    "title" : "HSSScheduler api for radiography room admin and bookings Implicit Flow OAuth2 Project"
+  },
+  "host" : "192.168.43.163:9999",
+  "basePath" : "/api/",
+  "schemes" : [ "https" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/ping" : {
+      "get" : {
+        "summary" : "Server heartbeat operation",
+        "description" : "This operation shows how to override the global security defined above, as we want to open it up for all users.",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/procedure/{procedureId}" : {
+      "get" : {
+        "summary" : "gets a single procedure by id",
+        "description" : "return a single procedure",
+        "parameters" : [ {
+          "name" : "procedureId",
+          "in" : "path",
+          "description" : "The  procedure to return.",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully retrieved Procedure data",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Procedure"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID Procedure"
+          },
+          "404" : {
+            "description" : "Procedure not found"
+          }
+        }
+      }
+    },
+    "/communities" : {
+      "get" : {
+        "summary" : "get list of communties",
+        "description" : "This operation will get a list of community objects",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Community"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Consortium ID"
+          },
+          "404" : {
+            "description" : "Community not found"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "saves a new community",
+        "description" : "This operation will get a save a new community object. It will not save any child Organisations. That will require a Put.",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "community",
+          "description" : "The Community to save.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Community"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully saved community data",
+            "schema" : {
+              "$ref" : "#/definitions/Community"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "community not saved"
+          }
+        }
+      }
+    },
+    "/communities/{communityId}" : {
+      "put" : {
+        "summary" : "updates a community by id",
+        "description" : "This operation will update a community by its id",
+        "parameters" : [ {
+          "name" : "communityId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "community",
+          "description" : "The Community to update.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Community"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully updated community data",
+            "schema" : {
+              "$ref" : "#/definitions/Community"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "community not deleted"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "delete community by id",
+        "description" : "This operation will delete a single community by its id",
+        "parameters" : [ {
+          "name" : "communityId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully deleted community data"
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "community not deleted"
+          }
+        }
+      }
+    },
+    "/organisations" : {
+      "get" : {
+        "summary" : "get list of organisations",
+        "description" : "This operation will get a list of organisation objects",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Organisation"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid organisation ID"
+          },
+          "404" : {
+            "description" : "organisation not found"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "saves a new organisation",
+        "description" : "This operation will get a save a new organisation object",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "organisation",
+          "description" : "The organisation to save.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Organisation"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully saved organisation data",
+            "schema" : {
+              "$ref" : "#/definitions/Organisation"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "organisation not saved"
+          }
+        }
+      }
+    },
+    "/organisations/{organisationId}" : {
+      "put" : {
+        "summary" : "updates a organisation by id",
+        "description" : "This operation will update a organisation by its id",
+        "parameters" : [ {
+          "name" : "organisationId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "organisation",
+          "description" : "The organisation to update.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Organisation"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully deleted organisation data",
+            "schema" : {
+              "$ref" : "#/definitions/Organisation"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "organisation not deleted"
+          }
+        }
+      }
+    },
+    "/facilities" : {
+      "get" : {
+        "summary" : "get list of facilities",
+        "description" : "This operation will get a list of facility objects",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Facility"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Consortium ID"
+          },
+          "404" : {
+            "description" : "Facility not found"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "saves a new Facility",
+        "description" : "This operation will get a save a new Facility object",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "facility",
+          "description" : "The Facility to save.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Facility"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully saved Facility data",
+            "schema" : {
+              "$ref" : "#/definitions/Facility"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Facility not saved"
+          }
+        }
+      }
+    },
+    "/facilities/{facilityId}" : {
+      "put" : {
+        "summary" : "updates a facility by id",
+        "description" : "This operation will update a facility by its id",
+        "parameters" : [ {
+          "name" : "facilityId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "facility",
+          "description" : "The facility to update.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Facility"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully deleted facility data",
+            "schema" : {
+              "$ref" : "#/definitions/Facility"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "facility not deleted"
+          }
+        }
+      }
+    },
+    "/departments" : {
+      "get" : {
+        "summary" : "get list of departments",
+        "description" : "This operation will get a list of department objects",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Department"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Consortium ID"
+          },
+          "404" : {
+            "description" : "Department not found"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "saves a new department",
+        "description" : "This operation will get a save a new Department object",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "department",
+          "description" : "The Department to save.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Department"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully saved Department data",
+            "schema" : {
+              "$ref" : "#/definitions/Department"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Department not saved"
+          }
+        }
+      }
+    },
+    "/departments/{departmentId}" : {
+      "put" : {
+        "summary" : "updates a department by id",
+        "description" : "This operation will update a department by its id",
+        "parameters" : [ {
+          "name" : "departmentId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "department",
+          "description" : "The department to update.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Department"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully deleted department data",
+            "schema" : {
+              "$ref" : "#/definitions/Department"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "department not deleted"
+          }
+        }
+      }
+    },
+    "/patient/{patientId}" : {
+      "get" : {
+        "summary" : "get patient by id",
+        "description" : "This operation will get a single patient by its id",
+        "parameters" : [ {
+          "name" : "patientId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned Patient data",
+            "schema" : {
+              "$ref" : "#/definitions/Patient"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Patient not found"
+          }
+        }
+      }
+    },
+    "/trusts" : {
+      "get" : {
+        "summary" : "get list of trusts",
+        "description" : "This operation will get a list of trusts for the consortium",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Trust"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Consortium ID"
+          },
+          "404" : {
+            "description" : "Trusts not found"
+          }
+        }
+      }
+    },
+    "/worklists" : {
+      "get" : {
+        "summary" : "get list of worklist counts",
+        "description" : "This operation will get a list of worklist counts",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/WorkList"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/worklist/{worklistName}" : {
+      "get" : {
+        "summary" : "get list of worklist items for a named worklist",
+        "description" : "This operation will get a list of worklist items",
+        "parameters" : [ {
+          "name" : "worklistName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/WorkList"
+            }
+          },
+          "404" : {
+            "description" : "Worklist not found"
+          }
+        }
+      }
+    },
+    "/worklist/{worklistName}/item/{id}" : {
+      "get" : {
+        "summary" : "get worklist item for a specific Id",
+        "description" : "This operation will get a single worklist item",
+        "parameters" : [ {
+          "name" : "worklistName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/WorklistItem"
+            }
+          },
+          "400" : {
+            "description" : "Invalid Consortium ID"
+          },
+          "404" : {
+            "description" : "Worklist item not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}" : {
+      "get" : {
+        "summary" : "get trust by id",
+        "description" : "This operation will get a single trust by its id",
+        "parameters" : [ {
+          "name" : "trustId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully returned Trust data",
+            "schema" : {
+              "$ref" : "#/definitions/Trust"
+            }
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Trust not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/sites" : {
+      "get" : {
+        "summary" : "get sites by trust id",
+        "description" : "This operation will get a list of sites operated by a single trust.",
+        "parameters" : [ {
+          "name" : "trustId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Site"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Trust ID"
+          },
+          "404" : {
+            "description" : "Sites not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/site/{siteId}" : {
+      "get" : {
+        "summary" : "get a site by site id",
+        "description" : "This operation will get a single site. Might need for config",
+        "parameters" : [ {
+          "name" : "trustId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Site"
+            }
+          },
+          "400" : {
+            "description" : "Invalid Trust or Site ID"
+          },
+          "404" : {
+            "description" : "Site list not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/site/{siteId}/rooms" : {
+      "get" : {
+        "summary" : "get list of rooms",
+        "description" : "This operation will get a list of rooms operated by a single site.",
+        "parameters" : [ {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "The trust id from a list of trusts managed by a consortium",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "The site id from a list of sites managed by a trust",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Room"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid Trust ID or Site ID"
+          },
+          "404" : {
+            "description" : "Room list not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/site/{siteId}/room/{roomId}" : {
+      "get" : {
+        "summary" : "get room by id",
+        "description" : "This operation will get a room from alist of rooms operated by a single site.",
+        "parameters" : [ {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "The trust id from a list of trusts managed by a consortium",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "The site id from a list of sites managed by a trust",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "roomId",
+          "in" : "path",
+          "description" : "The room id from a list of rooms managed by a site",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Room"
+            }
+          },
+          "400" : {
+            "description" : "Invalid Trust, Site or Room ID"
+          },
+          "404" : {
+            "description" : "Room not found"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "update room by id",
+        "description" : "This operation will update a single room by its id",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "room",
+          "description" : "The room to update.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Room"
+          }
+        }, {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "the trust id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "the site id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "roomId",
+          "in" : "path",
+          "description" : "The room id",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully updated Room data"
+          },
+          "400" : {
+            "description" : "Invalid room ID supplied"
+          },
+          "404" : {
+            "description" : "Room not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/site/{siteId}/department/{departmentId}/rooms" : {
+      "get" : {
+        "summary" : "get all rooms by in a department",
+        "description" : "This operation will get a a list rooms with in a department",
+        "parameters" : [ {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "The trust id from a list of trusts managed by a consortium",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "The site id from a list of sites managed by a trust",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "departmentId",
+          "in" : "path",
+          "description" : "The department id from a list of departments managed by a site",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Room"
+            }
+          },
+          "400" : {
+            "description" : "Invalid Trust, Site or Department ID"
+          },
+          "404" : {
+            "description" : "Department not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/site/{siteId}/room/{roomId}/close" : {
+      "post" : {
+        "summary" : "Adds new close room config to a room",
+        "description" : "Adds new close room config room",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "config",
+          "description" : "The close roomcomment to create.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SlotConfig"
+          }
+        }, {
+          "name" : "roomId",
+          "in" : "path",
+          "description" : "the room id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "the trust id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "The site id",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully added close room config data"
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Close room Comment not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/site/{siteId}/room/{roomId}/config" : {
+      "post" : {
+        "summary" : "Adds new config to a room",
+        "description" : "Adds new config room",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "config",
+          "description" : "The config to create.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SlotConfig"
+          }
+        }, {
+          "name" : "roomId",
+          "in" : "path",
+          "description" : "the room id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "the trust id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "The site id",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully added config data"
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Comment not found"
+          }
+        }
+      }
+    },
+    "/trust/{trustId}/site/{siteId}/room/{roomId}/config/{slotConfigId}" : {
+      "put" : {
+        "summary" : "update slot config by id",
+        "description" : "This operation will update a single slot config by its id",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "room",
+          "description" : "The room to update.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SlotConfig"
+          }
+        }, {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "the trust id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "The site id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "roomId",
+          "in" : "path",
+          "description" : "the room id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "slotConfigId",
+          "in" : "path",
+          "description" : "The slot config ID",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully updated slot config data"
+          },
+          "400" : {
+            "description" : "Invalid slot config ID supplied"
+          },
+          "404" : {
+            "description" : "slot config not found"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Removes config from a room",
+        "description" : "Removes  config room",
+        "parameters" : [ {
+          "name" : "trustId",
+          "in" : "path",
+          "description" : "the trust id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "siteId",
+          "in" : "path",
+          "description" : "The site id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "roomId",
+          "in" : "path",
+          "description" : "the room id",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "slotConfigId",
+          "in" : "path",
+          "description" : "The Slot Config ID",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Successfully removed config data"
+          },
+          "400" : {
+            "description" : "Invalid ID supplied"
+          },
+          "404" : {
+            "description" : "Close room Comment not found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Community" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "organisationArray" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Organisation"
+          }
+        }
+      }
+    },
+    "Organisation" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 219
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Our Organisation"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "organisationType" : {
+          "type" : "string"
+        },
+        "endDate" : {
+          "type" : "string",
+          "example" : "2025-11-08T10:22:19+0000"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string",
+          "example" : "Its Our Organisation"
+        }
+      }
+    },
+    "Facility" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 1
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "organisation" : {
+          "type" : "string"
+        },
+        "imageNo" : {
+          "type" : "string"
+        },
+        "imageDate" : {
+          "type" : "string"
+        },
+        "restartYear" : {
+          "type" : "string"
+        },
+        "invoiceNo" : {
+          "type" : "string"
+        },
+        "hospitalNumbers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "imageNumbers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "filmStore" : {
+          "type" : "string"
+        },
+        "filingSystem" : {
+          "type" : "string"
+        },
+        "filingSite" : {
+          "type" : "string"
+        },
+        "invoiceSite" : {
+          "type" : "string"
+        },
+        "invoiceSuffix" : {
+          "type" : "string"
+        },
+        "referralSource" : {
+          "type" : "string"
+        },
+        "locationIhours" : {
+          "type" : "string"
+        },
+        "locationOhours" : {
+          "type" : "string"
+        },
+        "locationDefault" : {
+          "type" : "string"
+        },
+        "endDate" : {
+          "type" : "string",
+          "example" : "2020-11-08T10:22:19+0000"
+        },
+        "workgroup" : {
+          "type" : "string"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "notes" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Department" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 1
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "facility" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "nameTwo" : {
+          "type" : "string"
+        },
+        "endDate" : {
+          "type" : "string"
+        },
+        "contactName" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string"
+        },
+        "otherPhone" : {
+          "type" : "string"
+        },
+        "waitingArea" : {
+          "type" : "string"
+        },
+        "directionsText" : {
+          "type" : "string"
+        },
+        "contactEmail" : {
+          "type" : "string"
+        },
+        "URL" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "notes" : {
+          "type" : "string"
+        }
+      }
+    },
+    "WorkList" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "number"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "count" : {
+          "type" : "number"
+        },
+        "workListArray" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/WorklistItem"
+          }
+        }
+      }
+    },
+    "PatientDetails" : {
+      "type" : "object",
+      "properties" : {
+        "patientId" : {
+          "type" : "string"
+        },
+        "patientIdentifierList" : {
+          "type" : "string"
+        },
+        "primaryHospitalID" : {
+          "type" : "string"
+        },
+        "primaryCountryID" : {
+          "type" : "string"
+        },
+        "patientName" : {
+          "type" : "string"
+        },
+        "surname" : {
+          "type" : "string"
+        },
+        "forename" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "dateOfBirth" : {
+          "type" : "string",
+          "example" : "1990-11-08T10:22:19+0000"
+        },
+        "sex" : {
+          "type" : "string"
+        },
+        "patientAddress" : {
+          "type" : "string"
+        },
+        "patientAccountNumber" : {
+          "type" : "string"
+        },
+        "GP" : {
+          "type" : "string"
+        },
+        "GPPractice" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ReferralDetails" : {
+      "type" : "object",
+      "properties" : {
+        "patientClass" : {
+          "type" : "string"
+        },
+        "assignedPatientLocation" : {
+          "type" : "string"
+        },
+        "attendingDoctor" : {
+          "type" : "string"
+        },
+        "referringDoctor" : {
+          "type" : "string"
+        },
+        "consultingDoctor" : {
+          "type" : "string"
+        },
+        "hospitalService" : {
+          "type" : "string"
+        },
+        "admittingDoctor" : {
+          "type" : "string"
+        },
+        "episodeID" : {
+          "type" : "string"
+        },
+        "episodeDescription" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OrderInformation" : {
+      "type" : "object",
+      "properties" : {
+        "orderStatus" : {
+          "type" : "string"
+        },
+        "enteredBy" : {
+          "type" : "string"
+        },
+        "orderingProvider" : {
+          "type" : "string"
+        },
+        "enterersLocation" : {
+          "type" : "string"
+        },
+        "callBackPhoneNumber" : {
+          "type" : "string"
+        },
+        "enteringOrganization" : {
+          "type" : "string"
+        },
+        "priority" : {
+          "type" : "string"
+        },
+        "dangerCode" : {
+          "type" : "string"
+        },
+        "relevantClinicalInfo" : {
+          "type" : "string"
+        },
+        "accessionNumber" : {
+          "type" : "string"
+        },
+        "requestedProcedureID" : {
+          "type" : "string"
+        },
+        "diagnosticServSectID" : {
+          "type" : "string"
+        },
+        "transportationMode" : {
+          "type" : "string"
+        },
+        "reasonForStudy" : {
+          "type" : "string"
+        },
+        "procedureCode" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "clinicalHistory" : {
+          "type" : "string"
+        },
+        "clinicalSafetyQuestions" : {
+          "type" : "string"
+        },
+        "eventComments" : {
+          "type" : "string"
+        },
+        "bookingNotes" : {
+          "type" : "string"
+        },
+        "protocol" : {
+          "type" : "string"
+        },
+        "intendedClinician" : {
+          "type" : "string"
+        },
+        "pregnancyPossible" : {
+          "type" : "string"
+        },
+        "pathway" : {
+          "type" : "string"
+        },
+        "requestCategory" : {
+          "type" : "string"
+        },
+        "patientType" : {
+          "type" : "string"
+        },
+        "onCall" : {
+          "type" : "string"
+        },
+        "copyTo" : {
+          "type" : "string"
+        },
+        "speciality" : {
+          "type" : "string"
+        },
+        "breachDate" : {
+          "type" : "string",
+          "example" : "2018-11-08T10:22:19+0000"
+        },
+        "requiredDate" : {
+          "type" : "string",
+          "example" : "2018-11-08T10:22:19+0000"
+        },
+        "requestDate" : {
+          "type" : "string",
+          "example" : "2018-11-08T10:22:19+0000"
+        },
+        "referredDate" : {
+          "type" : "string",
+          "example" : "2018-11-08T10:22:19+0000"
+        },
+        "nextOutpatientsAppointmentDate" : {
+          "type" : "string",
+          "example" : "2018-11-08T10:22:19+0000"
+        }
+      }
+    },
+    "VettingDetails" : {
+      "type" : "object",
+      "properties" : {
+        "patientCondition" : {
+          "type" : "string"
+        },
+        "currentMedication" : {
+          "type" : "string"
+        },
+        "resourceRequirements" : {
+          "type" : "string"
+        },
+        "contrast" : {
+          "type" : "string"
+        },
+        "vettedBy" : {
+          "type" : "string"
+        },
+        "vettedOnDate" : {
+          "type" : "string",
+          "example" : "2018-01-03T13:57:38+0000"
+        }
+      }
+    },
+    "WorklistItem" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "vettingDetails" : {
+          "$ref" : "#/definitions/VettingDetails"
+        },
+        "orderInformation" : {
+          "$ref" : "#/definitions/OrderInformation"
+        },
+        "referralDetails" : {
+          "$ref" : "#/definitions/ReferralDetails"
+        },
+        "patientDetails" : {
+          "$ref" : "#/definitions/PatientDetails"
+        }
+      }
+    },
+    "Patient" : {
+      "type" : "object",
+      "properties" : {
+        "secondGivenName" : {
+          "type" : "string",
+          "example" : "Bloggs"
+        },
+        "givenName" : {
+          "type" : "string",
+          "example" : "Joe"
+        },
+        "title" : {
+          "type" : "string",
+          "example" : "Mr"
+        },
+        "gender" : {
+          "type" : "string",
+          "example" : "Male"
+        },
+        "chiNumber" : {
+          "type" : "string",
+          "example" : "956 125 4786"
+        },
+        "nhsNumber" : {
+          "type" : "string",
+          "example" : "956 125 4786"
+        },
+        "hospitalNumber" : {
+          "type" : "string",
+          "example" : "5924NOTTS"
+        },
+        "dateOfBirth" : {
+          "type" : "string",
+          "example" : "2018-03-20 10:46:11"
+        },
+        "alarmsList" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Alarm"
+          }
+        },
+        "allergies" : {
+          "type" : "string",
+          "example" : "known"
+        },
+        "allergyList" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Allergy"
+          }
+        },
+        "addressOne" : {
+          "type" : "string",
+          "example" : "address line 1"
+        },
+        "addressTwo" : {
+          "type" : "string",
+          "example" : "address line 2"
+        },
+        "addressThree" : {
+          "type" : "string",
+          "example" : "address line 3"
+        },
+        "addressFour" : {
+          "type" : "string",
+          "example" : "address line 4"
+        },
+        "addressFive" : {
+          "type" : "string",
+          "example" : "address line 5"
+        },
+        "postCode" : {
+          "type" : "string",
+          "example" : "NG14 5BJ"
+        },
+        "workTelephone" : {
+          "type" : "string",
+          "example" : "07754285977"
+        },
+        "homeTelephone" : {
+          "type" : "string",
+          "example" : "07754285977"
+        },
+        "mobileTelephone" : {
+          "type" : "string",
+          "example" : "07754285977"
+        },
+        "email" : {
+          "type" : "string",
+          "example" : "user@wellsoft.net"
+        }
+      }
+    },
+    "Alarm" : {
+      "type" : "object",
+      "properties" : {
+        "crisNumber" : {
+          "type" : "integer",
+          "example" : 134
+        },
+        "recnum" : {
+          "type" : "integer",
+          "example" : 134
+        },
+        "severity" : {
+          "type" : "integer",
+          "example" : 134
+        },
+        "alarmType" : {
+          "type" : "string",
+          "example" : "serious"
+        },
+        "text1" : {
+          "type" : "string",
+          "example" : "text 1"
+        },
+        "text2" : {
+          "type" : "string",
+          "example" : "Test 2"
+        },
+        "code" : {
+          "type" : "string",
+          "example" : "gh-9009uuu"
+        }
+      }
+    },
+    "Allergy" : {
+      "type" : "object",
+      "properties" : {
+        "allergy" : {
+          "type" : "string",
+          "example" : "Latex"
+        },
+        "date" : {
+          "type" : "string",
+          "example" : "2001-11-08T10:22:19+0000"
+        }
+      }
+    },
+    "Trust" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Test Trust One",
+          "minLength" : 3
+        }
+      },
+      "example" : {
+        "name" : "Test Trust One",
+        "id" : 0
+      }
+    },
+    "Site" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : " Site One",
+          "minLength" : 3
+        },
+        "trustid" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "example" : {
+        "trustid" : 6,
+        "name" : " Site One",
+        "id" : 0
+      }
+    },
+    "Room" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "roomCode" : {
+          "type" : "string",
+          "example" : " Room 1 xdd6"
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Ultrasound Room 1",
+          "minLength" : 3
+        },
+        "department" : {
+          "type" : "string",
+          "example" : "MRI ROOM"
+        },
+        "modality" : {
+          "$ref" : "#/definitions/Room_modality"
+        },
+        "openingTime" : {
+          "type" : "string",
+          "format" : "time",
+          "example" : "09:00"
+        },
+        "closingTime" : {
+          "type" : "string",
+          "format" : "time",
+          "example" : "09:00"
+        },
+        "roomClosed" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "slotDurationInMins" : {
+          "type" : "integer",
+          "example" : 5
+        },
+        "bookingWindow" : {
+          "type" : "integer",
+          "example" : 6
+        },
+        "config" : {
+          "type" : "string",
+          "example" : "Lorem ipsum dolor sit amet, pede a libero aenean phasellus, lectus metus sint ut risus, fusce vel in pellentesque. Nisl rutrum etiam morbi consectetuer tempor magna, aenean nullam nunc id, neque vivamus interdum sociis nulla scelerisque sem, dolor id wisi turpis magna aliquam magna. Risus accumsan hac eget etiam donec sed, senectus erat mattis quam, tempor vel urna occaecat cras, metus urna augue nec at. Et morbi amet dui praesent, nec eu at, ligula ipsum dui sollicitudin, quis nisl massa viverra ligula, mauris fermentum orci arcu enim fringilla. Arcu erat nulla in aenean lacinia ullamcorper, urna ante nam et sagittis, tristique vehicula nibh ipsum vivamus, proin proin. Porta commodo nibh quis libero amet. Taciti dui, sapien consectetuer. "
+        },
+        "slotConfigs" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SlotConfig"
+          }
+        },
+        "closedDates" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "format" : "date",
+            "example" : "2018-11-08T10:22:19+0000"
+          }
+        },
+        "level" : {
+          "type" : "string",
+          "example" : "trust"
+        }
+      },
+      "example" : {
+        "slotDurationInMins" : 5,
+        "modality" : {
+          "mri" : true,
+          "ctscan" : true,
+          "nuclearmed" : true,
+          "xray" : true,
+          "ultrasnd" : true
+        },
+        "roomClosed" : false,
+        "closingTime" : "09:00",
+        "level" : "trust",
+        "openingTime" : "09:00",
+        "slotConfigs" : [ {
+          "duration" : "3d:2h:45m",
+          "start" : "12-6-2019 12:00",
+          "end" : "12-6-2019 12:00",
+          "id" : 6,
+          "title" : "Ultrasound Room 1",
+          "body" : "Slot Comment MAx chars 200"
+        }, {
+          "duration" : "3d:2h:45m",
+          "start" : "12-6-2019 12:00",
+          "end" : "12-6-2019 12:00",
+          "id" : 6,
+          "title" : "Ultrasound Room 1",
+          "body" : "Slot Comment MAx chars 200"
+        } ],
+        "name" : "Ultrasound Room 1",
+        "config" : "Lorem ipsum dolor sit amet, pede a libero aenean phasellus, lectus metus sint ut risus, fusce vel in pellentesque. Nisl rutrum etiam morbi consectetuer tempor magna, aenean nullam nunc id, neque vivamus interdum sociis nulla scelerisque sem, dolor id wisi turpis magna aliquam magna. Risus accumsan hac eget etiam donec sed, senectus erat mattis quam, tempor vel urna occaecat cras, metus urna augue nec at. Et morbi amet dui praesent, nec eu at, ligula ipsum dui sollicitudin, quis nisl massa viverra ligula, mauris fermentum orci arcu enim fringilla. Arcu erat nulla in aenean lacinia ullamcorper, urna ante nam et sagittis, tristique vehicula nibh ipsum vivamus, proin proin. Porta commodo nibh quis libero amet. Taciti dui, sapien consectetuer. ",
+        "id" : 0,
+        "roomCode" : " Room 1 xdd6",
+        "closedDates" : [ "2018-11-08T10:22:19+0000", "2018-11-08T10:22:19+0000" ]
+      }
+    },
+    "SlotConfig" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "start" : {
+          "type" : "string",
+          "example" : "2018-11-08T10:22:19+0000"
+        },
+        "endTime" : {
+          "type" : "string",
+          "example" : "2018-11-08T10:22:19+0000"
+        },
+        "duration" : {
+          "type" : "string"
+        },
+        "commentType" : {
+          "type" : "string",
+          "enum" : [ "comment", "note", "booking", "closed" ]
+        },
+        "recurring" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "never", "sun", "mon", "tues", "weds", "thurs", "fri", "sat", "daily" ]
+          }
+        },
+        "configExceptions" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "2018-11-08T10:22:19+0000"
+          }
+        },
+        "title" : {
+          "type" : "string",
+          "example" : "Ultrasound Room 1",
+          "minLength" : 3
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "config"
+        },
+        "body" : {
+          "type" : "string",
+          "example" : "Slot Comment Max chars 200",
+          "maxLength" : 200
+        }
+      },
+      "example" : {
+        "duration" : "3d:2h:45m",
+        "start" : "2018-11-08T10:00:00+0000",
+        "endTime" : "2018-11-08T17:00:00+0000",
+        "id" : 6,
+        "type" : "room config",
+        "title" : "Ultrasound Room 1",
+        "body" : "Slot Comment Max chars 200"
+      }
+    },
+    "Room_modality" : {
+      "properties" : {
+        "xray" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "ctscan" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "mri" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "nuclearmed" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "ultrasnd" : {
+          "type" : "boolean",
+          "example" : true
+        }
+      },
+      "example" : {
+        "mri" : true,
+        "ctscan" : true,
+        "nuclearmed" : true,
+        "xray" : true,
+        "ultrasnd" : true
+      }
+    },
+    "Procedure" : {
+      "properties" : {
+        "room" : {
+          "type" : "string"
+        },
+        "dept" : {
+          "type" : "string"
+        },
+        "dept_name" : {
+          "type" : "string"
+        },
+        "hospital" : {
+          "type" : "string"
+        },
+        "examination" : {
+          "type" : "string"
+        },
+        "exams_date" : {
+          "type" : "string"
+        },
+        "radiographer_1" : {
+          "type" : "string"
+        },
+        "start_time" : {
+          "type" : "string"
+        },
+        "rooms_name" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "forenames" : {
+          "type" : "string"
+        },
+        "surname" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}
