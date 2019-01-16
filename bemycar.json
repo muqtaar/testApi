@@ -1,0 +1,3448 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This is the API for the Bemycar project.",
+    "version" : "1.0.0",
+    "title" : "Bemycar",
+    "termsOfService" : "",
+    "contact" : {
+      "email" : "info@globalincubator.net"
+    },
+    "license" : {
+      "name" : "Bemycar License",
+      "url" : "bemycar.webintra.net/license"
+    }
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/GlobalIncubator/Bemycar/1.0.0",
+  "schemes" : [ "https" ],
+  "security" : [ {
+    "Token" : [ ],
+    "Secret" : [ ],
+    "SessionUser" : [ ],
+    "SessionCode" : [ ]
+  } ],
+  "paths" : {
+    "/users/signin" : {
+      "post" : {
+        "tags" : [ "users" ],
+        "summary" : "Log in user",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "Invalid email/password supplied"
+          }
+        },
+        "security" : [ {
+          "Token" : [ ],
+          "Secret" : [ ]
+        } ]
+      }
+    },
+    "/users/signup" : {
+      "post" : {
+        "tags" : [ "users" ],
+        "summary" : "Sign up user",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "firstname",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "lastname",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "email",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "birthdate",
+          "in" : "formData",
+          "description" : "unix timestamp seconds",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "User email exists"
+          }
+        },
+        "security" : [ {
+          "Token" : [ ],
+          "Secret" : [ ]
+        } ]
+      }
+    },
+    "/users/sociallogin" : {
+      "post" : {
+        "tags" : [ "users" ],
+        "summary" : "Signin/Signup user",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "social",
+          "in" : "formData",
+          "description" : "google or facebook",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "Token error"
+          }
+        },
+        "security" : [ {
+          "Token" : [ ],
+          "Secret" : [ ]
+        } ]
+      }
+    },
+    "/users/session" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "retrieves user session",
+        "description" : "",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/users" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "retrieves user search",
+        "description" : "",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "search",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/users/recoveryPassword/{email}" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "Get user by id",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "email",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "summary" : "Get user by id",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "users" ],
+        "summary" : "Edit user",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "user",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/users/terms" : {
+      "get" : {
+        "tags" : [ "terms and conditions" ],
+        "summary" : "Get new terms for user",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Terms"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/notifications" : {
+      "get" : {
+        "tags" : [ "notifications" ],
+        "summary" : "Get notifications current user",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Notification"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "notifications" ],
+        "summary" : "Edit user notifications",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "notifications",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Notification"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Notification"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/licenses" : {
+      "post" : {
+        "tags" : [ "licenses" ],
+        "summary" : "Create license",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "license",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/License"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/License"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/licenses/{licenseId}" : {
+      "put" : {
+        "tags" : [ "licenses" ],
+        "summary" : "Edit license",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "licenseId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "license",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/License"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/License"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "licenses" ],
+        "summary" : "Delete license",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "licenseId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/schools" : {
+      "get" : {
+        "tags" : [ "schools" ],
+        "summary" : "Search schools",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "search",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/School"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "schools" ],
+        "summary" : "Create school",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "school",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/School"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/School"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/schools/{schoolId}" : {
+      "put" : {
+        "tags" : [ "schools" ],
+        "summary" : "Edit school",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schoolId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "school",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/School"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/School"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/schools/{schoolId}/users" : {
+      "get" : {
+        "tags" : [ "schools" ],
+        "summary" : "Search users by school",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schoolId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/schools/{schoolId}/users/{userId}" : {
+      "post" : {
+        "tags" : [ "schools" ],
+        "summary" : "Add user to school",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schoolId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "schools" ],
+        "summary" : "Delete user from school",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "schoolId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/works" : {
+      "get" : {
+        "tags" : [ "works" ],
+        "summary" : "Search works",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "search",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Work"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "works" ],
+        "summary" : "Create work",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "work",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Work"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Work"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/works/{workId}" : {
+      "put" : {
+        "tags" : [ "works" ],
+        "summary" : "Edit work",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "workId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "work",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Work"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Work"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/works/{workId}/users" : {
+      "get" : {
+        "tags" : [ "works" ],
+        "summary" : "Search users by work",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "workId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/User"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/works/{workId}/users/{userId}" : {
+      "post" : {
+        "tags" : [ "works" ],
+        "summary" : "Add user to work",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "workId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "works" ],
+        "summary" : "Delete user from work",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "workId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/reviews" : {
+      "get" : {
+        "tags" : [ "reviews" ],
+        "summary" : "Get reviews for actual user",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Review"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/reviews/users/{userId}/" : {
+      "get" : {
+        "tags" : [ "reviews" ],
+        "summary" : "Get reviews by user",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Review"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get car list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        }, {
+          "name" : "brand",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "model",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "tags",
+          "in" : "query",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "collectionFormat" : "multi"
+        }, {
+          "name" : "year",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "version",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "displacement",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "postalCode",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "latitude",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double"
+        }, {
+          "name" : "longitude",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double"
+        }, {
+          "name" : "radius",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double"
+        }, {
+          "name" : "color",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "fuel",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "kms",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "power",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "extras",
+          "in" : "query",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Car"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "cars" ],
+        "summary" : "Create car",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "car",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Car"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Car"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/users/{userId}" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get cars by user",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Car"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/dealerships/{dealershipId}" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get cars by dealership",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "dealershipId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Car"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/{carId}" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get car",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "carId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Car"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "cars" ],
+        "summary" : "Edit car",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "carId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "car",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Car"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Car"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "cars" ],
+        "summary" : "Delete car",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "carId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get car brands",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Brand"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/insurances" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get insurance types",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Insurance"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands/{brandId}/models" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get car models by brand",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca/:id_marca/modelos",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "brandId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Model"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands/{brandId}/models/{modelId}/versions" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get car versions by model",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca/id_marca/modelo/:id_modelo/versiones",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "brandId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "modelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Version"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands/{brandId}/models/{modelId}/versions/{versionId}/images" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get car versions by model",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca/id_marca/modelo/:id_modelo/versiones",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "brandId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "modelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Image"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands/{brandId}/models/{modelId}/versions/{versionId}/colors" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get colors by version",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca/id_marca/modelo/:id_modelo/versiones",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "brandId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "modelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Color"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands/{brandId}/models/{modelId}/versions/{versionId}/fuels" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get fuels by version",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca/id_marca/modelo/:id_modelo/versiones",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "brandId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "modelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Fuel"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands/{brandId}/models/{modelId}/versions/{versionId}/extras" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get extras by version",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca/id_marca/modelo/:id_modelo/versiones",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "brandId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "modelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Extra"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/brands/{brandId}/models/{modelId}/versions/{versionId}/displacements" : {
+      "get" : {
+        "tags" : [ "cars" ],
+        "summary" : "Get extras by version",
+        "description" : "https://api.motorpress-iberica.es/jato/api/v1/marca/id_marca/modelo/:id_modelo/versiones",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "brandId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "modelId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "versionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Displacement"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/models" : {
+      "get" : {
+        "tags" : [ "models" ],
+        "summary" : "Get car models by price & type",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 3
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        }, {
+          "name" : "price",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "characteristic",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Model"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/models/types" : {
+      "get" : {
+        "tags" : [ "models" ],
+        "summary" : "Get types list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Type"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/models/prices" : {
+      "get" : {
+        "tags" : [ "models" ],
+        "summary" : "Get range prices",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Price"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/models/characteristics" : {
+      "get" : {
+        "tags" : [ "models" ],
+        "summary" : "Get characteristics types",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Characteristic"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/{carId}/locations" : {
+      "get" : {
+        "tags" : [ "locations" ],
+        "summary" : "Get locations by car",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "carId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Location"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "locations" ],
+        "summary" : "Create location",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "carId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "location",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Location"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Location"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/cars/locations/{locationId}" : {
+      "put" : {
+        "tags" : [ "locations" ],
+        "summary" : "Edit location",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "locationId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "location",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Location"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Location"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "locations" ],
+        "summary" : "Delete location",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "locationId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/dealerships" : {
+      "get" : {
+        "tags" : [ "dealerships" ],
+        "summary" : "Get dealerships",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        }, {
+          "name" : "latitude",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double"
+        }, {
+          "name" : "longitude",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double"
+        }, {
+          "name" : "radius",
+          "in" : "query",
+          "required" : false,
+          "type" : "number",
+          "format" : "double"
+        }, {
+          "name" : "brand",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "model",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "displacement",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "color",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "fuel",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "power",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "extras",
+          "in" : "query",
+          "required" : false,
+          "type" : "string",
+          "format" : "array"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Dealership"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/chats" : {
+      "get" : {
+        "tags" : [ "chats" ],
+        "summary" : "Get user chats",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Chat"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "chats" ],
+        "summary" : "Init chat with owner car id",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "car",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Car"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Chat"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/chats/from/{dateStart}/to/{dateEnd}" : {
+      "get" : {
+        "tags" : [ "chats" ],
+        "summary" : "Get chats",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "dateStart",
+          "in" : "path",
+          "description" : "unix timestamp seconds",
+          "required" : true,
+          "type" : "integer",
+          "format" : "date"
+        }, {
+          "name" : "dateEnd",
+          "in" : "path",
+          "description" : "unix timestamp seconds",
+          "required" : true,
+          "type" : "integer",
+          "format" : "date"
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Chat"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/chats/{chatId}/messages" : {
+      "get" : {
+        "tags" : [ "chats" ],
+        "summary" : "Get messages",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "chatId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Message"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/chats/{chatId}/sendMessage" : {
+      "post" : {
+        "tags" : [ "chats" ],
+        "summary" : "Send message",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "chatId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "name" : "text",
+          "in" : "formData",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Message"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/chats/{chatId}/tests" : {
+      "post" : {
+        "tags" : [ "chats" ],
+        "summary" : "Create test",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "chatId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "test",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Test"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Test"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/tests" : {
+      "get" : {
+        "tags" : [ "tests" ],
+        "summary" : "Get tests from actual user",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Test"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/tests/status/{statusId}" : {
+      "get" : {
+        "tags" : [ "tests" ],
+        "summary" : "Get test by status",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "statusId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Test"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/test/{testId}/confirm" : {
+      "post" : {
+        "tags" : [ "tests" ],
+        "summary" : "Confirm test",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Test"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/test/{testId}/reject" : {
+      "post" : {
+        "tags" : [ "tests" ],
+        "summary" : "Cancel test",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/tests/{testId}/star" : {
+      "post" : {
+        "tags" : [ "tests" ],
+        "summary" : "Start test",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "location",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Location"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Test"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/tests/{testId}/end" : {
+      "post" : {
+        "tags" : [ "tests" ],
+        "summary" : "End test",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "location",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Location"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Test"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/tests/{testId}/review" : {
+      "post" : {
+        "tags" : [ "tests" ],
+        "summary" : "Review test",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "testId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        }, {
+          "in" : "body",
+          "name" : "review",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Review"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Review"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/payments" : {
+      "get" : {
+        "tags" : [ "payments" ],
+        "summary" : "Search payments",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "size",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "default" : 0
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "dateStart",
+          "in" : "query",
+          "description" : "unix timestamp seconds",
+          "required" : false,
+          "type" : "integer",
+          "format" : "data"
+        }, {
+          "name" : "dateEnd",
+          "in" : "query",
+          "description" : "unix timestamp seconds",
+          "required" : false,
+          "type" : "integer",
+          "format" : "data"
+        }, {
+          "name" : "city",
+          "in" : "query",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Payment"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/payments/charge" : {
+      "post" : {
+        "tags" : [ "payments" ],
+        "summary" : "Charge all payments of actual user",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Payment"
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/payments/{paymentId}/charge" : {
+      "post" : {
+        "tags" : [ "payments" ],
+        "summary" : "Charge payment id",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Payment"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/extras" : {
+      "get" : {
+        "tags" : [ "extras" ],
+        "summary" : "Get extras list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Extra"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/tags" : {
+      "get" : {
+        "tags" : [ "tags" ],
+        "summary" : "Get tags list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Tag"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/countries" : {
+      "get" : {
+        "tags" : [ "countries" ],
+        "summary" : "Get countries list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Country"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/countries/{countryId}/cities" : {
+      "get" : {
+        "tags" : [ "cities" ],
+        "summary" : "Get cities by country",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "countryId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/City"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Not active session for actual user"
+          }
+        }
+      }
+    },
+    "/image" : {
+      "post" : {
+        "tags" : [ "images" ],
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "file",
+          "in" : "formData",
+          "description" : "The file to upload.",
+          "required" : true,
+          "type" : "file"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Image"
+            }
+          }
+        }
+      }
+    },
+    "/redeem_codes" : {
+      "get" : {
+        "tags" : [ "redeem_codes" ],
+        "summary" : "Get codes from current user",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RedeemCode"
+              }
+            }
+          },
+          "400" : {
+            "description" : "Invalid code or code used"
+          }
+        }
+      }
+    },
+    "/redeem_codes/{code}" : {
+      "post" : {
+        "tags" : [ "redeem_codes" ],
+        "summary" : "Redeem code",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "code",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RedeemCode"
+            }
+          },
+          "400" : {
+            "description" : "Invalid code or code used"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "Token" : {
+      "type" : "apiKey",
+      "name" : "Token",
+      "in" : "header"
+    },
+    "Secret" : {
+      "type" : "apiKey",
+      "name" : "Secret",
+      "in" : "header"
+    },
+    "SessionUser" : {
+      "type" : "apiKey",
+      "name" : "session_user",
+      "in" : "header"
+    },
+    "SessionCode" : {
+      "type" : "apiKey",
+      "name" : "session_code",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "User" : {
+      "type" : "object",
+      "required" : [ "avatar", "firstName", "id", "lastName" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "userToken" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "avatar" : {
+          "$ref" : "#/definitions/Image"
+        },
+        "email" : {
+          "type" : "string",
+          "format" : "email"
+        },
+        "phone" : {
+          "$ref" : "#/definitions/Phone"
+        },
+        "birthdate" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2000-11-26"
+        },
+        "paypal" : {
+          "type" : "string"
+        },
+        "schools" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/School"
+          }
+        },
+        "works" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Work"
+          }
+        },
+        "license" : {
+          "$ref" : "#/definitions/License"
+        },
+        "rating" : {
+          "$ref" : "#/definitions/Rating"
+        },
+        "notifications" : {
+          "$ref" : "#/definitions/Notification"
+        },
+        "redeem_codes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RedeemCode"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "User"
+      }
+    },
+    "Phone" : {
+      "type" : "object",
+      "required" : [ "code", "id", "number" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "code" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "number" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "xml" : {
+        "name" : "Phone"
+      }
+    },
+    "Chat" : {
+      "type" : "object",
+      "required" : [ "car", "id", "notReaded" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lastMessage" : {
+          "$ref" : "#/definitions/Message"
+        },
+        "notReaded" : {
+          "type" : "integer"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Message"
+          }
+        },
+        "car" : {
+          "$ref" : "#/definitions/Car"
+        },
+        "tests" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Test"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "Chat"
+      }
+    },
+    "Message" : {
+      "type" : "object",
+      "required" : [ "date", "id", "sender", "text" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "sender" : {
+          "$ref" : "#/definitions/User"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "date" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        }
+      },
+      "xml" : {
+        "name" : "Message"
+      }
+    },
+    "Test" : {
+      "type" : "object",
+      "required" : [ "chat", "date", "id", "status" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "date" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        },
+        "checkings" : {
+          "$ref" : "#/definitions/Checking"
+        },
+        "usersConfirmed" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/User"
+          }
+        },
+        "payment" : {
+          "$ref" : "#/definitions/Payment"
+        },
+        "chat" : {
+          "$ref" : "#/definitions/Chat"
+        },
+        "review" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Review"
+          }
+        },
+        "status" : {
+          "$ref" : "#/definitions/Status"
+        }
+      },
+      "xml" : {
+        "name" : "Test"
+      }
+    },
+    "Status" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Status"
+      },
+      "description" : "pendiente, confirmada, cancelada y realizada. Default -> pendiente"
+    },
+    "Payment" : {
+      "type" : "object",
+      "required" : [ "amount", "completed", "currency", "id", "user" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "amount" : {
+          "type" : "number",
+          "format" : "currency"
+        },
+        "currency" : {
+          "$ref" : "#/definitions/Currency"
+        },
+        "completed" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
+        }
+      },
+      "xml" : {
+        "name" : "Payment"
+      }
+    },
+    "Currency" : {
+      "type" : "object",
+      "required" : [ "id", "identifier", "name", "symbol" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "identifier" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "symbol" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Currency"
+      }
+    },
+    "Checking" : {
+      "type" : "object",
+      "required" : [ "id", "test", "user" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "startDate" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        },
+        "startLocaliton" : {
+          "$ref" : "#/definitions/Location"
+        },
+        "endDate" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        },
+        "endLocaliton" : {
+          "$ref" : "#/definitions/Location"
+        },
+        "test" : {
+          "$ref" : "#/definitions/Test"
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
+        }
+      },
+      "xml" : {
+        "name" : "Checking"
+      }
+    },
+    "Car" : {
+      "type" : "object",
+      "required" : [ "brand", "id", "model", "owner", "type", "version", "year" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "owner" : {
+          "$ref" : "#/definitions/User"
+        },
+        "year" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "kms" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "type" : {
+          "$ref" : "#/definitions/Type"
+        },
+        "tags" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Tag"
+          }
+        },
+        "brand" : {
+          "$ref" : "#/definitions/Brand"
+        },
+        "model" : {
+          "$ref" : "#/definitions/Model"
+        },
+        "version" : {
+          "$ref" : "#/definitions/Version"
+        },
+        "color" : {
+          "$ref" : "#/definitions/Color"
+        },
+        "fuel" : {
+          "$ref" : "#/definitions/Fuel"
+        },
+        "displacement" : {
+          "$ref" : "#/definitions/Displacement"
+        },
+        "extras" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Extra"
+          }
+        },
+        "images" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Image"
+          }
+        },
+        "locations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Location"
+          }
+        },
+        "insurance" : {
+          "$ref" : "#/definitions/Insurance"
+        }
+      },
+      "xml" : {
+        "name" : "Car"
+      }
+    },
+    "Type" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "identifier" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Type"
+      }
+    },
+    "Tag" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Tag"
+      }
+    },
+    "Brand" : {
+      "type" : "object",
+      "required" : [ "id", "image", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "image" : {
+          "$ref" : "#/definitions/Image"
+        }
+      },
+      "xml" : {
+        "name" : "Brand"
+      }
+    },
+    "Dealership" : {
+      "type" : "object",
+      "required" : [ "discounts", "email", "id", "images", "locations", "name", "phone", "web" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "phone" : {
+          "type" : "string",
+          "format" : "phone"
+        },
+        "email" : {
+          "type" : "string",
+          "format" : "email"
+        },
+        "web" : {
+          "type" : "string",
+          "format" : "url"
+        },
+        "locations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Location"
+          }
+        },
+        "brands" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Brand"
+          }
+        },
+        "images" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Image"
+          }
+        },
+        "discounts" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Discount"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "Dealership"
+      }
+    },
+    "Discount" : {
+      "type" : "object",
+      "required" : [ "code", "dateEnd", "dateStart", "description", "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "dateStart" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        },
+        "dateEnd" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        }
+      },
+      "xml" : {
+        "name" : "Discount"
+      }
+    },
+    "Model" : {
+      "type" : "object",
+      "required" : [ "id", "images", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "type" : {
+          "$ref" : "#/definitions/Type"
+        },
+        "images" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Image"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "Model"
+      }
+    },
+    "Version" : {
+      "type" : "object",
+      "required" : [ "doors", "id", "name", "power", "year" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "year" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "doors" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "power" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "price" : {
+          "$ref" : "#/definitions/Price"
+        },
+        "type" : {
+          "$ref" : "#/definitions/Type"
+        }
+      },
+      "xml" : {
+        "name" : "Version"
+      }
+    },
+    "Price" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Price"
+      },
+      "description" : "0-10000, 10001-20000, 20001-50000 y 50001-1000000"
+    },
+    "Characteristic" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Characteristic"
+      },
+      "description" : "seguridad, espacioso, ecológico, urbanita, grandes viajes y diseño"
+    },
+    "Displacement" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Displacement"
+      }
+    },
+    "Color" : {
+      "type" : "object",
+      "required" : [ "color", "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "color" : {
+          "type" : "string",
+          "format" : "hex"
+        }
+      },
+      "xml" : {
+        "name" : "Color"
+      }
+    },
+    "Fuel" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Fuel"
+      }
+    },
+    "Extra" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Extra"
+      }
+    },
+    "Image" : {
+      "type" : "object",
+      "required" : [ "hash", "id", "url" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "hash" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Image"
+      }
+    },
+    "Review" : {
+      "type" : "object",
+      "required" : [ "amiability", "id", "puntuality", "sender", "vehicleStatus" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "puntuality" : {
+          "type" : "integer",
+          "format" : "rate"
+        },
+        "amiability" : {
+          "type" : "integer",
+          "format" : "rate"
+        },
+        "vehicleStatus" : {
+          "type" : "integer",
+          "format" : "rate"
+        },
+        "sender" : {
+          "$ref" : "#/definitions/User"
+        }
+      },
+      "xml" : {
+        "name" : "Review"
+      }
+    },
+    "Rating" : {
+      "type" : "object",
+      "required" : [ "amiability", "id", "puntuality", "total", "vehicleStatus" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "total" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "total reviews number"
+        },
+        "puntuality" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "amiability" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "vehicleStatus" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "xml" : {
+        "name" : "Rating"
+      }
+    },
+    "Location" : {
+      "type" : "object",
+      "required" : [ "address", "city", "id", "postalCode" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "address" : {
+          "type" : "string"
+        },
+        "postalCode" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "city" : {
+          "$ref" : "#/definitions/City"
+        },
+        "country" : {
+          "$ref" : "#/definitions/Country"
+        },
+        "latitude" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "longitude" : {
+          "type" : "number",
+          "format" : "double"
+        }
+      },
+      "xml" : {
+        "name" : "Location"
+      }
+    },
+    "City" : {
+      "type" : "object",
+      "required" : [ "id", "identifier", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "identifier" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "City"
+      }
+    },
+    "Country" : {
+      "type" : "object",
+      "required" : [ "id", "identifier", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "identifier" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Country"
+      }
+    },
+    "School" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "School"
+      }
+    },
+    "Work" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "Work"
+      }
+    },
+    "Insurance" : {
+      "type" : "object",
+      "required" : [ "id", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "xml" : {
+        "name" : "License"
+      },
+      "description" : "todo riesgo, todo riesgo con franquicia, terceros ampliado y terceros"
+    },
+    "License" : {
+      "type" : "object",
+      "required" : [ "expiration", "id", "number", "obtaining" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "number" : {
+          "type" : "string"
+        },
+        "obtaining" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        },
+        "expiration" : {
+          "type" : "integer",
+          "format" : "date",
+          "description" : "unix timestamp seconds"
+        },
+        "images" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Image"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "License"
+      }
+    },
+    "Terms" : {
+      "type" : "object",
+      "required" : [ "finalities", "terms" ],
+      "properties" : {
+        "terms" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Term"
+          }
+        },
+        "finalities" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Term"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "Terms"
+      }
+    },
+    "Term" : {
+      "type" : "object",
+      "required" : [ "id", "mandatory", "name", "terms" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "terms" : {
+          "type" : "string"
+        },
+        "mandatory" : {
+          "type" : "boolean"
+        },
+        "checked" : {
+          "type" : "boolean"
+        }
+      },
+      "xml" : {
+        "name" : "Term"
+      }
+    },
+    "Notification" : {
+      "type" : "object",
+      "required" : [ "mail_messages", "mail_promos", "push_messages", "push_promos" ],
+      "properties" : {
+        "mail_messages" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "mail_promos" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "push_messages" : {
+          "type" : "boolean",
+          "default" : true
+        },
+        "push_promos" : {
+          "type" : "boolean",
+          "default" : true
+        }
+      },
+      "xml" : {
+        "name" : "Notification"
+      }
+    },
+    "RedeemCode" : {
+      "type" : "object",
+      "required" : [ "id", "is_redeemed", "promotion" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer"
+        },
+        "is_redeemed" : {
+          "type" : "boolean",
+          "default" : false
+        },
+        "promotion" : {
+          "$ref" : "#/definitions/Promotion"
+        }
+      },
+      "xml" : {
+        "name" : "RedeemCode"
+      }
+    },
+    "Promotion" : {
+      "type" : "object",
+      "required" : [ "amount", "availables", "count_user_apply", "currency", "deadline", "description", "id", "maxcodes", "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "maxcodes" : {
+          "type" : "integer"
+        },
+        "count_user_apply" : {
+          "type" : "integer"
+        },
+        "deadline" : {
+          "type" : "string",
+          "format" : "date",
+          "example" : "2000-11-26"
+        },
+        "amount" : {
+          "type" : "number",
+          "format" : "currency"
+        },
+        "currency" : {
+          "$ref" : "#/definitions/Currency"
+        },
+        "availables" : {
+          "type" : "array",
+          "items" : {
+            "format" : "string"
+          }
+        }
+      },
+      "xml" : {
+        "name" : "Promotion"
+      }
+    }
+  }
+}
