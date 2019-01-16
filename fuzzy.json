@@ -1,0 +1,655 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Definition fuzzysearch system APIs",
+    "version" : "1.0.0",
+    "title" : "fuzzy search system APIs"
+  },
+  "host" : "13.229.41.144:8080",
+  "tags" : [ {
+    "name" : "auth",
+    "description" : "login authentication of user/administrator"
+  }, {
+    "name" : "account",
+    "description" : "account management create user and Change user roles/ user password"
+  }, {
+    "name" : "doc",
+    "description" : "file upload and file delete"
+  }, {
+    "name" : "search",
+    "description" : "search keyword from user and return keyword list"
+  }, {
+    "name" : "aiocr",
+    "description" : "Execute AI-OCR with list file ids and get status of AI-OCR"
+  }, {
+    "name" : "indexing",
+    "description" : "Not-yet create search inex data."
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/auth/login" : {
+      "post" : {
+        "tags" : [ "auth" ],
+        "summary" : "Returns username and user role",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "accountid",
+          "in" : "query",
+          "description" : "The user name for login",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "password",
+          "in" : "query",
+          "description" : "The password for login in clear text",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/auth"
+            }
+          },
+          "400" : {
+            "description" : "Invalid user auth"
+          }
+        }
+      }
+    },
+    "/auth/logout" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "Logs out current logged in user session",
+        "description" : "",
+        "operationId" : "accountid",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "accountid",
+          "in" : "query",
+          "description" : "The user name for login",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/account/list" : {
+      "get" : {
+        "tags" : [ "account" ],
+        "summary" : "Return user list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/account"
+            }
+          },
+          "400" : {
+            "description" : "Invalid user auth"
+          }
+        }
+      }
+    },
+    "/account/createUser/{accountId}" : {
+      "post" : {
+        "tags" : [ "account" ],
+        "summary" : "Creates list of users with given input array",
+        "description" : "",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Create user object",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/newUser"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/account/ChangePassord/{accountId}" : {
+      "post" : {
+        "tags" : [ "account" ],
+        "summary" : "Change yourself password",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "newPassword",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/account/ChangeUseRole/{accountId}" : {
+      "post" : {
+        "tags" : [ "account" ],
+        "summary" : "Change userRole",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "newuserRole",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/account/DeleteUser/{accountId}" : {
+      "delete" : {
+        "tags" : [ "account" ],
+        "summary" : "Delete user",
+        "description" : "This can only be done by the logged in user.",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "The name that needs to be deleted",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "deleteUserId",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "400" : {
+            "description" : "Invalid username supplied"
+          },
+          "404" : {
+            "description" : "User not found"
+          }
+        }
+      }
+    },
+    "/doc/{accountId}" : {
+      "get" : {
+        "tags" : [ "doc" ],
+        "summary" : "File list in same day file uploaded",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/docList"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "doc" ],
+        "summary" : "File upload",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "NG"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "doc" ],
+        "summary" : "Delete document",
+        "description" : "This can only be done by the logged in user.",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Updated user object",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/doc"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/doc/process/" : {
+      "post" : {
+        "tags" : [ "aiocr" ],
+        "summary" : "Process list files",
+        "description" : "",
+        "operationId" : "addPet",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "List document id",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/process_body"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/status_process"
+            }
+          },
+          "400" : {
+            "description" : "error message",
+            "schema" : {
+              "$ref" : "#/definitions/error_msg"
+            }
+          }
+        }
+      }
+    },
+    "/doc/status/" : {
+      "get" : {
+        "tags" : [ "aiocr" ],
+        "summary" : "Get document status",
+        "description" : "Multiple status values can be provided with comma separated strings",
+        "parameters" : [ {
+          "name" : "list_ids",
+          "in" : "query",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/status_doc"
+            }
+          },
+          "400" : {
+            "description" : "error message",
+            "schema" : {
+              "$ref" : "#/definitions/error_msg"
+            }
+          }
+        }
+      }
+    },
+    "/doc/search/" : {
+      "get" : {
+        "tags" : [ "search" ],
+        "summary" : "Search document by keyword",
+        "parameters" : [ {
+          "name" : "text",
+          "in" : "query",
+          "description" : "Tags to filter by",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page index for pagination",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "size",
+          "in" : "query",
+          "description" : "Number of results will be displayed for one page",
+          "required" : false,
+          "type" : "integer"
+        }, {
+          "name" : "author",
+          "in" : "query",
+          "description" : "Search by authors( split by comma ) \"JohnDoe,Alan\"",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "department",
+          "in" : "query",
+          "description" : "Search by department",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "from_date",
+          "in" : "query",
+          "description" : "Published date (start date) - YYYY-mm-dd hh:mm:ss",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "to_date",
+          "in" : "query",
+          "description" : "Published date (end date) - YYYY-mm-dd hh:mm:ss",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/search_result"
+            }
+          },
+          "400" : {
+            "description" : "error message",
+            "schema" : {
+              "$ref" : "#/definitions/error_msg"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "petstore_auth" : {
+      "type" : "oauth2",
+      "authorizationUrl" : "http://petstore.swagger.io/oauth/dialog",
+      "flow" : "implicit",
+      "scopes" : {
+        "write:pets" : "modify pets in your account",
+        "read:pets" : "read your pets"
+      }
+    },
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "api_key",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "auth" : {
+      "type" : "object",
+      "properties" : {
+        "accountid" : {
+          "type" : "string",
+          "format" : "e-mail address"
+        },
+        "accountrole" : {
+          "type" : "string",
+          "format" : "Normal or Administrator"
+        }
+      }
+    },
+    "account" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/account_inner"
+      }
+    },
+    "newUser" : {
+      "type" : "object",
+      "properties" : {
+        "accountid" : {
+          "type" : "string",
+          "format" : "e-mail address"
+        },
+        "password" : {
+          "type" : "string"
+        },
+        "accountrole" : {
+          "type" : "string",
+          "format" : "Normal or Administrator"
+        }
+      }
+    },
+    "doc" : {
+      "type" : "object",
+      "properties" : {
+        "createId" : {
+          "type" : "string",
+          "format" : "e-mail address"
+        },
+        "createDate" : {
+          "type" : "number",
+          "description" : "Create date"
+        },
+        "docId" : {
+          "type" : "string",
+          "description" : "system unique key"
+        },
+        "createResult" : {
+          "type" : "boolean",
+          "description" : "OK is True NG is False"
+        }
+      }
+    },
+    "docList" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/docList_inner"
+      }
+    },
+    "process_body" : {
+      "type" : "object",
+      "properties" : {
+        "document_ids" : {
+          "type" : "array",
+          "example" : [ "X10-01", "X10-02", "X10-03", "X10-04" ],
+          "items" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      }
+    },
+    "status_process" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "example" : "OK"
+        }
+      }
+    },
+    "status_doc" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/status_doc_inner"
+      }
+    },
+    "search_result" : {
+      "type" : "object",
+      "properties" : {
+        "query_text" : {
+          "type" : "string"
+        },
+        "total" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 30
+        },
+        "total_page" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 3
+        },
+        "page" : {
+          "type" : "integer",
+          "format" : "int64",
+          "example" : 2
+        },
+        "result" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/search_doc"
+          }
+        }
+      }
+    },
+    "search_doc" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "X10-01"
+        },
+        "filepath" : {
+          "type" : "string",
+          "example" : "/upload/X10-01.pdf"
+        },
+        "author" : {
+          "type" : "string",
+          "example" : "John Doe"
+        },
+        "publish_date" : {
+          "type" : "string",
+          "example" : "2018-09-12 19:00:00"
+        },
+        "score" : {
+          "type" : "number",
+          "format" : "float",
+          "example" : 0.5
+        },
+        "matching_lines" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/search_doc_matching_lines"
+          }
+        }
+      }
+    },
+    "error_msg" : {
+      "type" : "object",
+      "properties" : {
+        "error" : {
+          "type" : "string",
+          "example" : "invalid format"
+        }
+      }
+    },
+    "account_inner" : {
+      "properties" : {
+        "accountid" : {
+          "type" : "string",
+          "format" : "e-mail address",
+          "example" : "sei.ishige@cinammon.is"
+        },
+        "accountrole" : {
+          "type" : "string",
+          "format" : "Normal or Administrator",
+          "example" : "Admin"
+        }
+      }
+    },
+    "docList_inner" : {
+      "properties" : {
+        "createId" : {
+          "type" : "string",
+          "format" : "e-mail address",
+          "example" : "sei.ishige@cinammon.is"
+        },
+        "createDate" : {
+          "type" : "number",
+          "format" : "datetime",
+          "example" : "2018/08/29"
+        },
+        "docId" : {
+          "type" : "string",
+          "example" : "ZX-50d"
+        }
+      }
+    },
+    "status_doc_inner" : {
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 1
+        },
+        "status" : {
+          "type" : "number",
+          "example" : 3.0,
+          "description" : "Values:\n  * `10` - Queued\n  * `11` - Processing\n  * `20` - Done\n  * `21` - Done OCR\n  * `22` - Done index\n  * `41` - Error in AI-OCR step\n  * `42` - Error in index step\n  * `43` - Unsupport format\n  * `44` - Can not connect to fileserver\n  * `45` - Can not connect to database\n  * `46` - Not existed \n"
+        }
+      }
+    },
+    "search_doc_matching_lines" : {
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "X10-01-1:2:99:kw_Wfud"
+        },
+        "text" : {
+          "type" : "string",
+          "example" : "NaOH.CO2"
+        },
+        "keyword" : {
+          "type" : "string",
+          "example" : "NaOH"
+        },
+        "prob" : {
+          "type" : "number",
+          "example" : 0.3
+        },
+        "line_short_image" : {
+          "type" : "string",
+          "example" : "/data/X10-01/2/text_line19.png"
+        },
+        "short_fulltext" : {
+          "type" : "string",
+          "example" : "“I have a NaOH”, //Get 3 OCR line"
+        },
+        "line_large_image" : {
+          "type" : "string",
+          "example" : "/data/X10-01/2/text_line19.png"
+        },
+        "large_fulltext" : {
+          "type" : "string",
+          "example" : "“I have a NaOH”, //Get 5 OCR line"
+        },
+        "page_image" : {
+          "type" : "string",
+          "example" : "/data/X10-01/X10-01-2.png"
+        }
+      }
+    }
+  },
+  "externalDocs" : {
+    "description" : "Find out more about Swagger",
+    "url" : "http://swagger.io"
+  }
+}
