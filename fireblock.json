@@ -1,0 +1,1028 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "0.9.0",
+    "title" : "Fireblocks Developer API"
+  },
+  "host" : "api.fireblocks.io",
+  "basePath" : "/",
+  "schemes" : [ "https" ],
+  "security" : [ {
+    "accessToken" : [ ]
+  } ],
+  "paths" : {
+    "/vaults/{vaultId}" : {
+      "get" : {
+        "summary" : "Returns a Fireblock Vault by ID.",
+        "parameters" : [ {
+          "name" : "vaultId",
+          "in" : "path",
+          "description" : "The ID of the vault to return, or 'active' for the active vault in the tenant",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Vault object.",
+            "schema" : {
+              "$ref" : "#/definitions/Vault"
+            }
+          },
+          "404" : {
+            "description" : "A vault with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/vaults/{vaultId}/{assetId}/address" : {
+      "get" : {
+        "summary" : "Returns a deposit address for a vault's asset",
+        "parameters" : [ {
+          "name" : "vaultId",
+          "in" : "path",
+          "description" : "The ID of the vault to return, or 'active' for the active vault in the tenant",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "name" : "new_address",
+          "in" : "query",
+          "description" : "If true - generates a new address",
+          "required" : false,
+          "type" : "boolean"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The new Addrees object",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/WalletAddress"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/internal_wallets" : {
+      "get" : {
+        "summary" : "Gets a list of internal wallets under the tenant",
+        "parameters" : [ {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "If used, only wallets which this string can be found in their name will be returned.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A list of internal wallets.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Wallet"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Creates a new internal wallet.",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "wallet",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/wallet"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A new wallet object",
+            "schema" : {
+              "$ref" : "#/definitions/Wallet"
+            }
+          }
+        }
+      }
+    },
+    "/internal_wallets/{walletId}" : {
+      "get" : {
+        "summary" : "Returns an internal wallet by ID.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet object.",
+            "schema" : {
+              "$ref" : "#/definitions/Wallet"
+            }
+          },
+          "400" : {
+            "description" : "The specified wallet ID is invalid (e.g. not a string)."
+          },
+          "404" : {
+            "description" : "A wallet with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Changes properties of an internal wallet by ID",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet to set.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "in" : "body",
+          "name" : "wallet",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/wallet_1"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet object.",
+            "schema" : {
+              "$ref" : "#/definitions/Wallet"
+            }
+          },
+          "404" : {
+            "description" : "A wallet with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Deletes an internal wallet by ID.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet to delete.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "A wallet with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/internal_wallets/{walletId}/{assetId}" : {
+      "get" : {
+        "summary" : "Returns a wallet asset by ID.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet Asset object.",
+            "schema" : {
+              "$ref" : "#/definitions/WalletAsset"
+            }
+          },
+          "404" : {
+            "description" : "A wallet or asset with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Changes settings of a wallet asset",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to set.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "asset settings",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/asset settings"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet Asset object.",
+            "schema" : {
+              "$ref" : "#/definitions/WalletAsset"
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Adds an asset to an existing internal wallet.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to add.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "wallet address properties",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/wallet address properties"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet Asset object.",
+            "schema" : {
+              "$ref" : "#/definitions/WalletAsset"
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/external_wallets" : {
+      "get" : {
+        "summary" : "Gets a list of external wallets under the tenant",
+        "parameters" : [ {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "If used, only wallets where this string can be found in their name will be returned.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A list of external wallets.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Wallet"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Creates a new external wallet.",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "wallet",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/wallet_2"
+          }
+        } ]
+      }
+    },
+    "/external_wallets/{walletId}" : {
+      "get" : {
+        "summary" : "Returns an external wallet by ID.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet object.",
+            "schema" : {
+              "$ref" : "#/definitions/Wallet"
+            }
+          },
+          "404" : {
+            "description" : "A wallet with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Changes properties of an external wallet by ID",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet to set.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "in" : "body",
+          "name" : "wallet",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/wallet_3"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet object.",
+            "schema" : {
+              "$ref" : "#/definitions/Wallet"
+            }
+          },
+          "404" : {
+            "description" : "A wallet with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Deletes an external wallet by ID.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet to delete.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "A wallet with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/external_wallets/{walletId}/{assetId}" : {
+      "get" : {
+        "summary" : "Returns a wallet asset by ID.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet Asset object.",
+            "schema" : {
+              "$ref" : "#/definitions/WalletAsset"
+            }
+          },
+          "404" : {
+            "description" : "A wallet or asset with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Changes settings of a wallet asset",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to set.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "asset settings",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/asset settings_1"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet Asset object.",
+            "schema" : {
+              "$ref" : "#/definitions/WalletAsset"
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "put" : {
+        "summary" : "Adds an asset to an existing external wallet.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to add.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "wallet address properties",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/wallet address properties_1"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A Wallet Asset object.",
+            "schema" : {
+              "$ref" : "#/definitions/WalletAsset"
+            }
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Deletes a wallet asset by ID.",
+        "parameters" : [ {
+          "name" : "walletId",
+          "in" : "path",
+          "description" : "The ID of the wallet.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "A wallet or asset with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/exchange_accounts" : {
+      "get" : {
+        "summary" : "Gets a list of exchange accounts under the tenant.",
+        "parameters" : [ {
+          "name" : "filter",
+          "in" : "query",
+          "description" : "If used, only accounts where this string can be found in their name or exchange type will be returned.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A list of exchange accounts.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ExchangeAccount"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Creates a new exchange account.",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "wallet",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Wallet"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A new ExchangeAccount object.",
+            "schema" : {
+              "$ref" : "#/definitions/ExchangeAccount"
+            }
+          }
+        }
+      }
+    },
+    "/exchange_accounts/{exchangeAccountId}" : {
+      "get" : {
+        "summary" : "Returns an exchange account by ID.",
+        "parameters" : [ {
+          "name" : "exchangeAccountId",
+          "in" : "path",
+          "description" : "The ID of the exchange account to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "An ExchangeAccount object.",
+            "schema" : {
+              "$ref" : "#/definitions/ExchangeAccount"
+            }
+          },
+          "404" : {
+            "description" : "An exchange account with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      },
+      "delete" : {
+        "summary" : "Deletes an exchange account by ID.",
+        "parameters" : [ {
+          "name" : "exchangeAccountId",
+          "in" : "path",
+          "description" : "The ID of the exchange account to delete.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "OK"
+          },
+          "404" : {
+            "description" : "An exchange account with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/exchange_accounts/{exchangeAccountId}/{assetId}" : {
+      "get" : {
+        "summary" : "Returns an exchange account by ID.",
+        "parameters" : [ {
+          "name" : "exchangeAccountId",
+          "in" : "path",
+          "description" : "The ID of the exchange account to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "The ID of the asset to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "An ExchangeAccountAsset object.",
+            "schema" : {
+              "$ref" : "#/definitions/ExchangeAccountAsset"
+            }
+          },
+          "404" : {
+            "description" : "An exchange account or asset with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/transactions" : {
+      "get" : {
+        "summary" : "Gets a list of transactions under the tenant",
+        "parameters" : [ {
+          "name" : "before",
+          "in" : "query",
+          "description" : "Unix timestamp. Returns only transactions created before the specified date",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "after",
+          "in" : "query",
+          "description" : "Unix timestamp. Returns only transactions created after the specified date",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "source",
+          "in" : "query",
+          "description" : "Returns only transactions with the specified source",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "destination",
+          "in" : "query",
+          "description" : "Returns only transactions with the specified destination",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "description" : "Comma-separated list of statuses. Returns only transactions with each of the specified statuses",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A list of exchange accounts.",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ExchangeAccount"
+              }
+            }
+          }
+        }
+      },
+      "post" : {
+        "summary" : "Creates a new transaction.",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "wallet",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/wallet_4"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A transaction object.",
+            "schema" : {
+              "$ref" : "#/definitions/Transaction"
+            }
+          }
+        }
+      }
+    },
+    "/transactions/{txId}" : {
+      "get" : {
+        "summary" : "Returns a transaction by ID.",
+        "parameters" : [ {
+          "name" : "txId",
+          "in" : "path",
+          "description" : "The ID of the transaction to return.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "An Transaction object.",
+            "schema" : {
+              "$ref" : "#/definitions/Transaction"
+            }
+          },
+          "404" : {
+            "description" : "A transaction with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    },
+    "/transactions/{txId}/cancel" : {
+      "post" : {
+        "summary" : "Cancels a transaction by ID.",
+        "parameters" : [ {
+          "name" : "txId",
+          "in" : "path",
+          "description" : "The ID of the transaction to cancel.",
+          "required" : true,
+          "type" : "string",
+          "minimum" : 1
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "An Transaction object.",
+            "schema" : {
+              "$ref" : "#/definitions/Transaction"
+            }
+          },
+          "404" : {
+            "description" : "A transaction with the specified ID was not found."
+          },
+          "default" : {
+            "description" : "Unexpected error"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "accessToken" : {
+      "type" : "apiKey",
+      "name" : "x-access-token",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "Vault" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ready", "disabled", "waiting_for_peers", "finalizing" ]
+        }
+      }
+    },
+    "Wallet" : {
+      "type" : "object",
+      "required" : [ "id", "name", "universalPath" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "universalPath" : {
+          "type" : "string"
+        },
+        "assets" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/WalletAsset"
+          }
+        }
+      }
+    },
+    "WalletAsset" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "balance" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "pending_setup", "ready", "disabled" ]
+        }
+      }
+    },
+    "WalletAddress" : {
+      "type" : "object",
+      "properties" : {
+        "assetId" : {
+          "type" : "string"
+        },
+        "address" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ExchangeAccount" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "Display name of the exchange account"
+        },
+        "exchangeId" : {
+          "type" : "string",
+          "description" : "the ID of the exchange this account is associated with"
+        },
+        "status" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ExchangeAccountAsset" : {
+      "type" : "object",
+      "properties" : {
+        "balance" : {
+          "type" : "number"
+        },
+        "lockedAmount" : {
+          "type" : "number"
+        }
+      }
+    },
+    "Transaction" : {
+      "type" : "object",
+      "required" : [ "amount", "assetId", "destination", "source", "status" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "assetId" : {
+          "type" : "string"
+        },
+        "source" : {
+          "type" : "string"
+        },
+        "destination" : {
+          "type" : "string"
+        },
+        "amount" : {
+          "type" : "number"
+        },
+        "createdAt" : {
+          "type" : "string",
+          "description" : "Unix timestamp"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "submitted", "pending_signature", "confirmed", "confirming", "failed", "rejected", "cancelled" ]
+        },
+        "txHash" : {
+          "type" : "string"
+        },
+        "numOfConfirmations" : {
+          "type" : "number"
+        },
+        "failureReason" : {
+          "type" : "string",
+          "description" : "failure reason. Populated only if status == failed"
+        }
+      }
+    },
+    "wallet" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "the wallet's display name"
+        }
+      }
+    },
+    "wallet_1" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "the wallet's display name"
+        }
+      }
+    },
+    "wallet address properties" : {
+      "properties" : {
+        "address" : {
+          "type" : "string",
+          "description" : "The wallet's address (or xpub) of the wallet"
+        }
+      }
+    },
+    "asset settings" : {
+      "properties" : {
+        "address" : {
+          "type" : "string",
+          "description" : "The wallet's address (or xpub) of the wallet"
+        }
+      }
+    },
+    "wallet_2" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "the wallet's display name"
+        }
+      }
+    },
+    "wallet_3" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "the wallet's display name"
+        }
+      }
+    },
+    "wallet address properties_1" : {
+      "properties" : {
+        "address" : {
+          "type" : "string",
+          "description" : "The wallet's address (or xpub) of the wallet"
+        }
+      }
+    },
+    "asset settings_1" : {
+      "properties" : {
+        "address" : {
+          "type" : "string",
+          "description" : "The wallet's address (or xpub) of the wallet"
+        }
+      }
+    },
+    "wallet_4" : {
+      "properties" : {
+        "assetId" : {
+          "type" : "string"
+        },
+        "source" : {
+          "type" : "string"
+        },
+        "destination" : {
+          "type" : "string"
+        },
+        "amount" : {
+          "type" : "number"
+        }
+      }
+    }
+  },
+  "responses" : {
+    "Error" : {
+      "description" : "Error Response",
+      "schema" : {
+        "type" : "object",
+        "required" : [ "message" ],
+        "properties" : {
+          "message" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  }
+}
