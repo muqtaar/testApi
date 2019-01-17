@@ -1,0 +1,1560 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Signiant's **Media Shuttle Management API** endpoints allows you to automate portal and storage management and view active transfers using your own web applications.\n\nThe **System-to-Person API** allows you to create upload and download links directly from other applications, letting you accelerate file transfers through Media Shuttle.\n\nFor more information about getting started with the Media Shuttle API, read our [Getting Started Guide](http://developer.signiant.com/msapi/getting-started.html).\n\n---\n\n\nYou can test API endpoints using your Media Shuttle subscription by generating an API key from your IT Administration user menu, in the **Developer** section.\n\nOnce you have generated an API key, click the **Authorize** button, and enter your API key in the **Value** field, and click **Authorize** to enable the examples.\n",
+    "version" : "1.12.5",
+    "title" : "Media Shuttle API"
+  },
+  "host" : "api.mediashuttle.com",
+  "basePath" : "/v1",
+  "tags" : [ {
+    "name" : "Transfers"
+  }, {
+    "name" : "Storage"
+  }, {
+    "name" : "Portals"
+  }, {
+    "name" : "System-to-Person"
+  } ],
+  "schemes" : [ "https" ],
+  "consumes" : [ "application/json" ],
+  "produces" : [ "application/json" ],
+  "security" : [ {
+    "ApiKey" : [ ]
+  } ],
+  "paths" : {
+    "/transfers" : {
+      "get" : {
+        "tags" : [ "Transfers" ],
+        "summary" : "List current active transfers",
+        "description" : "Return a list of transfers across all portals associated with the account.",
+        "operationId" : "getTransfers",
+        "parameters" : [ {
+          "name" : "state",
+          "in" : "query",
+          "description" : "Return a list of active transfers. All requests must include `state=active`.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "portalId",
+          "in" : "query",
+          "description" : "Filter the response by specific portal IDs. You can repeat this query to list transfers from more than one portal per request.",
+          "required" : false,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Transfer list",
+            "schema" : {
+              "$ref" : "#/definitions/TransferList"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/storage" : {
+      "get" : {
+        "tags" : [ "Storage" ],
+        "summary" : "List storage location",
+        "description" : "Gets a list of storage locations associated with the account.",
+        "operationId" : "listStorage",
+        "parameters" : [ {
+          "name" : "installationKey",
+          "in" : "query",
+          "description" : "Use an installationKey value to filter the request.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Storage list.",
+            "schema" : {
+              "$ref" : "#/definitions/StorageList"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Storage" ],
+        "summary" : "Create a new storage location",
+        "description" : "Create a new storage location for an account.\n\nCloud storage configuration values are validated for file location access.\n\nCreating Local Storage generates a new Storage Server Installation Key. Use the installation key\nduring Storage Server installation to register a server with your account.\n",
+        "operationId" : "createStorage",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "storage",
+          "description" : "The attributes of the storage to be created. All create storage requests must include the storage \"type\".\nCloud storage requests must include a valid \"configuration\" object.\n",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Storage"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Storage created response. For cloud backed storage",
+            "schema" : {
+              "$ref" : "#/definitions/Storage"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Configuration Property Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/storage/{storageId}" : {
+      "get" : {
+        "tags" : [ "Storage" ],
+        "summary" : "Display information about a specific storage location",
+        "description" : "Returns details about a specific storage location associated with the account by its storageId.",
+        "operationId" : "getStorage",
+        "parameters" : [ {
+          "name" : "storageId",
+          "in" : "path",
+          "description" : "Storage ID.",
+          "required" : true,
+          "type" : "string",
+          "format" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Storage.",
+            "schema" : {
+              "$ref" : "#/definitions/Storage"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Storage Not Found.\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals" : {
+      "get" : {
+        "tags" : [ "Portals" ],
+        "summary" : "List portals",
+        "description" : "Gets a list of portals associated with the account.",
+        "operationId" : "getPortals",
+        "parameters" : [ {
+          "name" : "url",
+          "in" : "query",
+          "description" : "Filter the response by portal access URL. The URL must include the \".mediashuttle.com\" domain suffix.",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Portal list",
+            "schema" : {
+              "$ref" : "#/definitions/PortalList"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Portals" ],
+        "summary" : "Create a new portal",
+        "description" : "Creates a new portal. If values are not specified, a Share portal with default values is created.",
+        "operationId" : "createPortal",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "portal",
+          "description" : "The basic attributes of the portal to be created.",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Portal"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Create portal response",
+            "schema" : {
+              "$ref" : "#/definitions/Portal"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/storage/{storageId}" : {
+      "put" : {
+        "tags" : [ "Portals" ],
+        "summary" : "Assign storage to a portal",
+        "description" : "Assigns storage to a portal. If local storage is being assigned, a repository path can be provided in the request body.\n\nStorage is only assigned if there is no prior storage attached to the portal. This field is ignored for other types of storage. If a storageId is sent as part of the request body, it is validated against the storageId in the path, however the value is not required in the body. Storage must be unassigned using the Media Shuttle Configuration Console.\n",
+        "operationId" : "assignStorageToPortal",
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "storageId",
+          "in" : "path",
+          "description" : "ID of the storage to assign.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "in" : "body",
+          "name" : "repositoryPath",
+          "description" : "The path to the repository on the local storage system. If a value is not provided, the repositoryPath is set to either a default value or to a previously configured repositoryPath.",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PortalStorage"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Storage added response",
+            "schema" : {
+              "$ref" : "#/definitions/PortalStorage"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Portal or Storage Not found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/storage" : {
+      "get" : {
+        "tags" : [ "Portals" ],
+        "summary" : "List the storage locations assigned to a portal",
+        "description" : "Gets a list of all storage locations (On-premises or Cloud) assigned to a portal",
+        "operationId" : "getPortalStorage",
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Portal ID.",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Storage list.",
+            "schema" : {
+              "$ref" : "#/definitions/PortalStorageList"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Portal Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/users" : {
+      "post" : {
+        "tags" : [ "Portals" ],
+        "summary" : "Add a user to a portal with a role and permissions",
+        "description" : "Adds a user with a given email, role, and permissions to a portal. The role value can be either `Member` or `Ops`. If permissions aren't specified, default permissions will be populated.",
+        "operationId" : "addUserToPortal",
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "in" : "body",
+          "name" : "user",
+          "description" : "The user email, role, and permissions to add to the portal",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PortalMember"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User added response.",
+            "schema" : {
+              "$ref" : "#/definitions/PortalMember"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Portal Not Found\n* **409** - User is already assigned to portal in any role\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/users/{email}" : {
+      "get" : {
+        "tags" : [ "Portals" ],
+        "summary" : "Fetch a portal member",
+        "description" : "Fetch a portal member identified by their email address. The response body contains the permissions assigned to the portal member for this portal as well as their role.",
+        "operationId" : "getPortalMember",
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "email",
+          "in" : "path",
+          "description" : "Email of the member to fetch for the portal.",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Portal member.",
+            "schema" : {
+              "$ref" : "#/definitions/PortalMember"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Portal or Member Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Portals" ],
+        "summary" : "Update the user's role and/or permissions",
+        "description" : "Updates the user's role and/or permissions. The email value is mandatory. The role value can be either `Member` or `Ops`. If permissions aren't specified, the member permissions will be unchanged. When an email is set as part of the request body, it is validated against the email in the path. This value is not required in the body.",
+        "operationId" : "assignUserToPortal",
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "email",
+          "in" : "path",
+          "description" : "Email of the user to add to the portal",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        }, {
+          "in" : "body",
+          "name" : "role",
+          "description" : "The role, and permissions to assign to the user",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PortalMember"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User assigned response.",
+            "schema" : {
+              "$ref" : "#/definitions/PortalMember"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Portal or Member Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Portals" ],
+        "summary" : "Remove a user from a portal",
+        "description" : "Removes a user from a portal and returns the removed user record. If the user was not assigned to the portal, an HTTP 204 No Content response is returned with an empty response body. Any user-customized folder settings are deleted.\n",
+        "operationId" : "removeUserFromPortal",
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "email",
+          "in" : "path",
+          "description" : "Email of the user to remove from the portal",
+          "required" : true,
+          "type" : "string",
+          "format" : "email"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "User deleted response.",
+            "schema" : {
+              "$ref" : "#/definitions/PortalMember"
+            }
+          },
+          "default" : {
+            "description" : "* **204** - User Not Found\n* **401** - API Key Validation Failure\n* **404** - Portal Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/packages" : {
+      "post" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Create a new package\n",
+        "description" : "Create an empty file package.\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "The created package",
+            "schema" : {
+              "$ref" : "#/definitions/Package"
+            }
+          },
+          "default" : {
+            "description" : "* **401** - API Key Validation Failure\n* **402** - Payment Required\n* **404** - Portal Not Found\n* **500** - Internal Server Error\n"
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/packages/{packageId}" : {
+      "get" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Get package information\n",
+        "description" : "Returns information about a package, including all package metadata.\n",
+        "operationId" : "getPackages",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "packageId",
+          "in" : "path",
+          "description" : "Unique package identifier",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The requested package",
+            "schema" : {
+              "$ref" : "#/definitions/Package"
+            }
+          },
+          "default" : {
+            "description" : "* **401** - API Key Validation Failure\n* **404** - Portal Not Found or Package Not Found\n* **500** - Internal Server Error\n"
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/packages/{packageId}/files" : {
+      "get" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Show package contents\n",
+        "description" : "Returns an array of all files contained within a package.\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "packageId",
+          "in" : "path",
+          "description" : "The requested package ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The set of files that are part of the package",
+            "schema" : {
+              "$ref" : "#/definitions/FileSetResponse"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **404** - Portal Not Found or Package Not Found\n* **500** - Internal Server Error\n"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Add files to a package\n",
+        "description" : "Add files to a package. This endpoint accepts an array of files.\n",
+        "operationId" : "putPackages",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "packageId",
+          "in" : "path",
+          "description" : "The package that the files are being added to",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "fileset",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FileSetRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The array of files added to the package",
+            "schema" : {
+              "$ref" : "#/definitions/FileSetResponse"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **402** - Payment Required\n* **404** - Portal Not Found or Package Not Found\n* **409** - Package already has files\n* **500** - Internal Server Error\n"
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/packages/{packageId}/events" : {
+      "get" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Show package events\n",
+        "description" : "Show a list of transfer events associated with a package.\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "packageId",
+          "in" : "path",
+          "description" : "Unique package identifier",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The package event log.",
+            "schema" : {
+              "$ref" : "#/definitions/PackageEventSetResponse"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **402** - Payment Required\n* **404** - Portal Not Found or Package Not Found\n* **500** - Internal Server Error\n"
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/packages/{packageId}/tokens" : {
+      "post" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Create transfer link\n",
+        "description" : "Create a package upload or download token. This generates a URL to distribute to a user for their file transfer.\n",
+        "operationId" : "createToken",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "packageId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "packageTokenRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PackageTokenRequest"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "The package token.",
+            "schema" : {
+              "$ref" : "#/definitions/PackageTokenResponse"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **402** - Payment Required\n* **404** - Portal Not Found or Package Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/subscriptions" : {
+      "get" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Get portal subscriptions\n",
+        "description" : "Get all subscriptions for a portal.\n",
+        "operationId" : "getPortalSubscriptions",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The portal subscriptions.",
+            "schema" : {
+              "$ref" : "#/definitions/PortalSubscriptionsResponse"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **402** - Payment Required\n* **404** - Portal Not Found or Package Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Subscribe to portal events\n",
+        "description" : "Create a subscription to receive Media Shuttle event notifications. You can receive notifications for:\n  - package.upload.complete: When a package upload completes.\n  - package.upload.canceled: When a package upload is canceled.\n  - package.upload.failed: When a package upload fails.\n  - package.download.complete: When a package download completes.\n  - package.download.canceled: When a package download is canceled.\n  - package.download.failed: When a package download fails.\n  - The webhook URL will recieve a http POST call whenever there is an event. The event details structure is defined in the PortalSubscriptionEvent Model\n\nSigniant recommends that webhook handlers check the event type to ensure future compatibility.\n",
+        "operationId" : "createPortalSubscription",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "in" : "body",
+          "name" : "portalSubscriptionRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PortalSubscriptionRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The subscription response",
+            "schema" : {
+              "$ref" : "#/definitions/PortalSubscriptionResponse"
+            }
+          },
+          "default" : {
+            "description" : "* **400** - Bad Request\n* **401** - API Key Validation Failure\n* **402** - Payment Required\n* **404** - Portal Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/portals/{portalId}/subscriptions/{subscriptionId}" : {
+      "delete" : {
+        "tags" : [ "System-to-Person" ],
+        "summary" : "Delete a portal subscription\n",
+        "description" : "Delete a subscription from a portal.\n",
+        "operationId" : "deletePortalSubscription",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "portalId",
+          "in" : "path",
+          "description" : "Unique portal identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        }, {
+          "name" : "subscriptionId",
+          "in" : "path",
+          "description" : "Unique portal subscription identifier",
+          "required" : true,
+          "type" : "string",
+          "format" : "uuid"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Delete subscription."
+          },
+          "default" : {
+            "description" : "* **401** - API Key Validation Failure\n* **404** - Subscription or Portal Not Found\n* **500** - Internal Server Error\n",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "ApiKey" : {
+      "description" : "The API Key associated with your Media Shuttle account. This key is accessible from the Developer menu item in the Media Shuttle Configuration Console.",
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "Portal" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "35460d47-019b-4e06-8108-18343b235108",
+          "description" : "Unique identifier representing a portal."
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "New Portal",
+          "description" : "The portal name.",
+          "default" : "Share Portal n"
+        },
+        "url" : {
+          "type" : "string",
+          "example" : "new-portal.mediashuttle.com",
+          "description" : "The access URL for the portal. The URL prefix cannot exceed 63 characters, must contain only alphanumeric characters and cannot start or end with a dash (-) and must end in \".mediashuttle.com\".",
+          "pattern" : "^([a-zA-Z0-9]+(-?[a-zA-Z0-9]+)*)\\.mediashuttle.com",
+          "default" : "random.mediashuttle.com"
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "share",
+          "description" : "Media Shuttle portal type.",
+          "default" : "share",
+          "enum" : [ "send", "share", "submit" ]
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "1985-04-12T23:20:50.52.000Z",
+          "description" : "The date of portal creation.",
+          "readOnly" : true
+        },
+        "lastModifiedOn" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "1985-04-12T23:20:50.52.000Z",
+          "description" : "The date the portal was last modified.",
+          "readOnly" : true
+        },
+        "authentication" : {
+          "$ref" : "#/definitions/Portal_authentication"
+        }
+      },
+      "description" : "A Media Shuttle portal registered to an account."
+    },
+    "Storage" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "35460d47-019b-4e06-8108-18343b235108",
+          "description" : "The unique identifier for the remote storage."
+        },
+        "type" : {
+          "type" : "string",
+          "example" : "s3",
+          "description" : "The type of remote storage: local, s3, or azure.",
+          "enum" : [ "local", "s3", "azure" ]
+        },
+        "status" : {
+          "type" : "string",
+          "example" : "available",
+          "description" : "The status of the storage location. The options are: available, unavailable, or suspended.",
+          "readOnly" : true,
+          "enum" : [ "available", "unavailable", "suspended" ]
+        },
+        "relays" : {
+          "type" : "array",
+          "example" : [ "relay1.host1", "relay2.host2" ],
+          "description" : "The list of relay addresses set for transfers with the Storage Server.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "configuration" : {
+          "type" : "object",
+          "example" : {
+            "externalId" : "dd6b5908-6b58-47b3-89a7-13055c74c712",
+            "roleARN" : "arn:aws:iam::123456789012:role/SigniantMediaShuttleRole",
+            "bucket" : "bucket-name",
+            "filePrefix" : "path/prefix",
+            "serverSideEncryption" : true
+          },
+          "description" : "A configuration object based on the storage type. The options are: LocalStorage, S3Storage, or AzureBlobStorage.",
+          "properties" : { }
+        }
+      },
+      "description" : "A storage location registered to an account."
+    },
+    "LocalStorage" : {
+      "type" : "object",
+      "properties" : {
+        "useMultiplePorts" : {
+          "type" : "boolean",
+          "example" : false,
+          "description" : "Setting to determine if multiple ports are used during transfers.",
+          "default" : false
+        },
+        "hostname" : {
+          "type" : "string",
+          "example" : "localhost.localdomain",
+          "description" : "The hostname reported by the Storage Server.",
+          "readOnly" : true
+        },
+        "storageServerVersion" : {
+          "type" : "string",
+          "example" : "2.0.0",
+          "description" : "The version of Signiant Storage Server reported by the Storage Server.",
+          "readOnly" : true
+        },
+        "installationKey" : {
+          "type" : "string",
+          "example" : "3377bca9-43bf-4bf5-84ce-eccc061cc7d3",
+          "description" : "The installation key used to register the Storage Server.",
+          "readOnly" : true
+        }
+      },
+      "description" : "Storage configuration details specific to local storage."
+    },
+    "S3Storage" : {
+      "type" : "object",
+      "properties" : {
+        "roleARN" : {
+          "type" : "string",
+          "example" : "arn:aws:iam::123456789012:role/SigniantFlightRole",
+          "description" : "The role ARN for the AWS S3 Storage."
+        },
+        "bucket" : {
+          "type" : "string",
+          "example" : "bucket-name",
+          "description" : "The name of the S3 bucket."
+        },
+        "externalId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "dd6b5908-6b58-47b3-89a7-13055c74c712",
+          "description" : "The unique identifier used to secure the S3 storage, as entered when creating the roleARN."
+        },
+        "serverSideEncryption" : {
+          "type" : "boolean",
+          "example" : false,
+          "description" : "Encrypt file contents at rest in S3.",
+          "default" : false
+        },
+        "filePrefix" : {
+          "type" : "string",
+          "example" : "path/prefix",
+          "description" : "Prefix to prepend to files transfered to this location. Can be used to drop all files into a sub-directory.",
+          "default" : ""
+        }
+      },
+      "description" : "Storage configuration details specific to AWS S3 Storage."
+    },
+    "AzureBlobStorage" : {
+      "type" : "object",
+      "properties" : {
+        "accountName" : {
+          "type" : "string",
+          "example" : "storage-account",
+          "description" : "The Azure account owning the Blob Storage."
+        },
+        "accessKey" : {
+          "type" : "string",
+          "example" : "g2bEcrOw4xN0sNcw/2hc16UrCl02mcr/zoQKgupYA3uN+x9RtVuyaKOGJ8/jwgUTI67nR4smkKLomdNBjDyRQw==",
+          "description" : "The access key for the Blob Storage."
+        },
+        "container" : {
+          "type" : "string",
+          "example" : "azure-container",
+          "description" : "The Blob Storage container."
+        },
+        "filePrefix" : {
+          "type" : "string",
+          "example" : "path/prefix",
+          "description" : "Prefix to prepend to files transfered to this location. Can be used to drop all files into a sub-directory.",
+          "default" : ""
+        }
+      },
+      "description" : "Storage configuration details specific to Azure Blob storage."
+    },
+    "PortalMember" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "format" : "email",
+          "example" : "user@example.com",
+          "description" : "The email address of the portal member"
+        },
+        "role" : {
+          "type" : "string",
+          "example" : "Member",
+          "description" : "The role the user is assigned on this portal. Ops is short for operations administrator, and represents an administrator of portal activity. Members are allowed to use the portal to transfer files. The operations administrator role includes the member role.",
+          "default" : "Member",
+          "enum" : [ "Member", "Ops" ]
+        },
+        "portalPermissions" : {
+          "$ref" : "#/definitions/PortalMember_portalPermissions"
+        }
+      },
+      "description" : "An object representing user membership on the portal"
+    },
+    "PortalFolder" : {
+      "type" : "object",
+      "properties" : {
+        "path" : {
+          "type" : "string",
+          "example" : "/example/repository/path",
+          "description" : "The case-sensitive path to the folder relative to the storage repository path.\n\nFor example, if you are using local storage your full path is composed of 2 parts:\n* The repositoryPath (e.g. /example/repository/path)\n* The path here (e.g. /user/portal/folder)\n\nIn the example above the resolved path on the file system would be '/example/repository/path/user/portal/folder'. You should *not* provide the absolute path in the file system here as input, only paths relative to the repositoryPath will function.\n\nThe following paths are forbidden:\n\n* Paths that contain ..\n* Paths that resolve to the same path as another folder.\n* Paths that represent a subfolder of another path.\n\nThis path is *not* verified against the relevant storage, all paths will be accepted but non-existant paths will return no results.\n\nFinally to provide a consistent path presentation this API will normalize any paths provided. So a path like \\my\\.\\example\\path will become /my/example/path\n"
+        },
+        "userHome" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "This folder represents the home folder of the user. All other folders are considered linked folders. When modifying folder permissions exactly one folder must be marked as userHome. Omitted userHome properties are assumed to be false."
+        },
+        "canUpload" : {
+          "type" : "boolean",
+          "description" : "The user can upload content to this folder"
+        },
+        "canDownload" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "The user can download content from this folder"
+        },
+        "canDoFileOperations" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "The user can perform file operations on content in this folder"
+        }
+      },
+      "description" : "Describes a folder for a share portal consisting of a path, a userHome designation, and folder permissions"
+    },
+    "PortalStorage" : {
+      "type" : "object",
+      "properties" : {
+        "storageId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "35460d47-019b-4e06-8108-18343b235108",
+          "description" : "The storageId to which the portal is assigned."
+        },
+        "repositoryPath" : {
+          "type" : "string",
+          "format" : "path",
+          "example" : "/example/repository/path",
+          "description" : "The repository path on the remote server. Not applicable for object-backed cloud storage.",
+          "default" : "/usr/Signiant_Media_Shuttle/repository/<random> or C:/Program Files/Signiant Media Shuttle/repository/<random>"
+        }
+      },
+      "description" : "Associates storage with a portal."
+    },
+    "Transfer" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "69ccc2a2-170d-4866-aca6-9bb1a5944163",
+          "description" : "The transfer identifier"
+        },
+        "portalId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "61a1d109-d553-4052-9c0e-814f1ded4b68",
+          "description" : "The portal identifier"
+        },
+        "packageId" : {
+          "type" : "string",
+          "example" : "m62kqJGGOyGauacKIQUYNO",
+          "description" : "The package identifier"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "The state of the transfer",
+          "enum" : [ "active" ]
+        },
+        "protocol" : {
+          "type" : "string",
+          "description" : "The transfer protocol",
+          "enum" : [ "mxwan", "mxtcp", "http" ]
+        },
+        "direction" : {
+          "type" : "string",
+          "description" : "an upload or download",
+          "enum" : [ "download", "upload" ]
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
+        },
+        "startTime" : {
+          "type" : "string",
+          "format" : "datetime",
+          "example" : "2017-12-11T15:00:56.664Z",
+          "description" : "The start time of the transfer"
+        },
+        "activeTransferDetails" : {
+          "$ref" : "#/definitions/Transfer_activeTransferDetails"
+        }
+      },
+      "description" : "A transfer"
+    },
+    "Package" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "base62uuid",
+          "example" : "6rdz0s60214xGEFu8gWERl",
+          "description" : "Unique package identifier"
+        },
+        "portalId" : {
+          "type" : "string",
+          "format" : "uuid",
+          "example" : "61a1d109-d553-4052-9c0e-814f1ded4b68",
+          "description" : "Associated portal identifier"
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2017-08-15T10:31:58.547Z",
+          "description" : "The package creation date and time"
+        },
+        "metadata" : {
+          "type" : "object",
+          "example" : {
+            "packageTitle" : "An Example Title",
+            "description" : "A description of the file transferred",
+            "fileType" : "video-mp4",
+            "language" : "English"
+          },
+          "description" : "Metadata can be entered by Submit Portal users.",
+          "properties" : { }
+        }
+      }
+    },
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "format" : "email",
+          "example" : "user@example.com",
+          "description" : "The email address of the user."
+        }
+      },
+      "description" : "A Media Shuttle user."
+    },
+    "FileSetRequest" : {
+      "type" : "object",
+      "properties" : {
+        "files" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FileRequest"
+          }
+        }
+      },
+      "description" : "A set of files"
+    },
+    "FileSetResponse" : {
+      "type" : "object",
+      "properties" : {
+        "files" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FileResponse"
+          }
+        }
+      },
+      "description" : "An array of files"
+    },
+    "FileRequest" : {
+      "type" : "object",
+      "properties" : {
+        "path" : {
+          "type" : "string",
+          "example" : "example/example_file.mp4",
+          "description" : "The path to the file."
+        },
+        "isDirectory" : {
+          "type" : "boolean",
+          "example" : false,
+          "description" : "Indicates that the file is a directory.",
+          "default" : false
+        },
+        "size" : {
+          "type" : "number",
+          "format" : "long",
+          "example" : 200000.0,
+          "description" : "The size of the file in bytes."
+        }
+      },
+      "description" : "A file that can be transferred using Media Shuttle."
+    },
+    "FileResponse" : {
+      "type" : "object",
+      "properties" : {
+        "path" : {
+          "type" : "string",
+          "example" : "example/example_file.mp4",
+          "description" : "The path to the file."
+        },
+        "isDirectory" : {
+          "type" : "boolean",
+          "example" : false,
+          "description" : "Indicates that the file is a directory.",
+          "default" : false
+        },
+        "size" : {
+          "type" : "number",
+          "format" : "long",
+          "example" : 200000.0,
+          "description" : "The size of the file in bytes."
+        }
+      },
+      "description" : "A file that can be transferred using Media Shuttle."
+    },
+    "StorageList" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Storage"
+          }
+        }
+      },
+      "description" : "Response from listing storage."
+    },
+    "PortalList" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Portal"
+          }
+        }
+      },
+      "description" : "Response from listing portals."
+    },
+    "PortalStorageList" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PortalStorage"
+          }
+        }
+      },
+      "description" : "Response from listing portal storage."
+    },
+    "TransferList" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Transfer"
+          }
+        }
+      },
+      "description" : "Response from listing transfers."
+    },
+    "PackageEventSetResponse" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PackageEventResponse"
+          }
+        }
+      },
+      "description" : "The set of events that have occurred for a package"
+    },
+    "PackageEventResponse" : {
+      "type" : "object",
+      "properties" : {
+        "action" : {
+          "type" : "string",
+          "example" : "Upload Failed",
+          "description" : "The action that occurred for the event",
+          "enum" : [ "Successful Upload", "Successful Download", "Successful Send Link", "Successful Forward", "Upload Canceled", "Download Canceled", "Upload Failed", "Download Failed", "Failed Forward" ]
+        },
+        "details" : {
+          "type" : "string",
+          "example" : "Failed Upload by user@example.com for file example.mp4",
+          "description" : "Additional event details, such as the email address of the user who performed a successful package transfer or a description of the user and files when a package transfer failed"
+        },
+        "eventType" : {
+          "type" : "string",
+          "example" : "Error",
+          "description" : "The event type",
+          "enum" : [ "Info", "Warning", "Error" ]
+        },
+        "date" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2017-11-30T15:08:12.643Z",
+          "description" : "The date when the event ocurred"
+        }
+      },
+      "description" : "A package event"
+    },
+    "PackageTokenRequest" : {
+      "type" : "object",
+      "properties" : {
+        "user" : {
+          "$ref" : "#/definitions/PackageTokenRequest_user"
+        },
+        "grants" : {
+          "type" : "array",
+          "description" : "The permissions to be granted to the user who will be issued the token. Currently, permission grants are limited to one per token, however, we are reserving the property type as an array for future use in which we envision multiple grants being allowed.\n",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "upload", "download" ]
+          }
+        },
+        "expiresOn" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2017-08-15T10:31:58.547Z",
+          "description" : "The time after which the token will not be accepted for use. Regardless of the value used here the token can only be redeemed once.\n"
+        },
+        "destinationPath" : {
+          "type" : "string",
+          "example" : "/folder1/subfolder2",
+          "description" : "The subdirectory on the portal where the files will be uploaded. Valid for upload grants on share portals only.\n"
+        },
+        "notifications" : {
+          "type" : "array",
+          "description" : "Request notifications for token lifecycle events. Supported events are:\n- tokenRedeemed: When the token is redeemed.\n- package.upload.complete: When a package upload is complete.\n- package.download.complete: When a package download is complete.\n\nUser actions will fire more than one event. For example, successfully uploading content to a package will trigger a package.upload.complete event and a tokenRedeemed event.\n\nSigniant recommends that webhook handlers check the event type to ensure future compatibility.\n",
+          "items" : {
+            "$ref" : "#/definitions/PackageTokenRequest_notifications"
+          }
+        }
+      }
+    },
+    "PackageTokenResponse" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "679b9f1c-795e-4c18-90c3-ed7b4aab898a",
+          "description" : "The token identifier"
+        },
+        "url" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "https://myportal.mediashuttle.com/packageRequest?packageToken=jwt",
+          "description" : "The URL that the user should navigate to in order to perform the transfer."
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2017-08-15T10:31:58.547Z"
+        },
+        "expiresOn" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2017-08-15T10:31:58.547Z",
+          "description" : "The time after which the token will not be accepted for use.\n"
+        },
+        "user" : {
+          "$ref" : "#/definitions/PackageTokenResponse_user"
+        },
+        "grants" : {
+          "type" : "array",
+          "description" : "The permissions to be granted to the user who will be issued the token. Currently, permission grants are limited to one per token, however, we are reserving the property type as an array for future use in which we envision multiple grants being allowed.\n",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "upload", "download" ]
+          }
+        },
+        "destinationPath" : {
+          "type" : "string",
+          "example" : "/folder1/subfolder2",
+          "description" : "The subdirectory on the portal where the files will be uploaded. Valid for upload grants on share portals only.\n"
+        },
+        "notifications" : {
+          "type" : "array",
+          "description" : "Request notifications for token lifecycle events. Supported events are:\n- tokenRedeemed: When the token is redeemed.\n- package.upload.complete: When a package upload is complete.\n- package.download.complete: When a package download is complete.\n\nUser actions will fire more than one event. For example, successfully uploading content to a package will trigger a package.upload.complete event and a tokenRedeemed event.\n",
+          "items" : {
+            "$ref" : "#/definitions/PackageTokenRequest_notifications"
+          }
+        }
+      }
+    },
+    "PortalSubscriptionRequest" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "description" : "Subscription type:\n  * webhook: Subscribe for events to be posted to the URL provided in the details section.\n",
+          "enum" : [ "webhook" ]
+        },
+        "details" : {
+          "$ref" : "#/definitions/PortalSubscriptionRequest_details"
+        }
+      }
+    },
+    "PortalSubscriptionResponse" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "679b9f1c-795e-4c18-90c3-ed7b4aab898a",
+          "description" : "The subscription identifier."
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "Subscription type",
+          "enum" : [ "webhook" ]
+        },
+        "details" : {
+          "$ref" : "#/definitions/PortalSubscriptionResponse_details"
+        }
+      }
+    },
+    "PortalSubscriptionsResponse" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/PortalSubscriptionResponse"
+      }
+    },
+    "Error" : {
+      "type" : "object",
+      "properties" : {
+        "statusCode" : {
+          "type" : "number",
+          "format" : "int",
+          "example" : 500.0,
+          "description" : "The HTTP status code."
+        },
+        "error" : {
+          "type" : "string",
+          "example" : "HTTP Status Code message",
+          "description" : "The error type matching the HTTP status code."
+        },
+        "message" : {
+          "type" : "string",
+          "example" : "Detailed error message",
+          "description" : "A detailed message describing the error that occurred."
+        }
+      },
+      "description" : "An error response body."
+    },
+    "Portal_authentication" : {
+      "properties" : {
+        "mediaShuttle" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "Use Media Shuttle authentication on login.",
+          "default" : true
+        },
+        "saml" : {
+          "type" : "boolean",
+          "example" : false,
+          "description" : "Use SAML authentication on login. This is a licensed feature. An account level SAML configuration must have been previously saved in the Media Shuttle Configuration Console.",
+          "default" : false
+        }
+      },
+      "description" : "The authentication schemes for the portal, where a Share portal cannot be unauthenticated."
+    },
+    "PortalMember_portalPermissions" : {
+      "properties" : {
+        "canSendToMember" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "The user can send content to other portal members for send portals only"
+        },
+        "canSendToNonMember" : {
+          "type" : "boolean",
+          "example" : false,
+          "description" : "The user can send content to other users who are not portal members. This property depends on the canSendToMember property. You can never send to non-members if you cannot send to members."
+        },
+        "canReceive" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "The user can receive content sent by other members, for send portals only"
+        },
+        "canSendFromShare" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "The user can send share portal files to other members"
+        },
+        "canDeliverAutomatically" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "The user is permitted to use the autodelivery feature to automatically send or receive files to a share portal"
+        },
+        "folders" : {
+          "type" : "array",
+          "description" : "The folders associated with this user on a share portal",
+          "items" : {
+            "$ref" : "#/definitions/PortalFolder"
+          }
+        },
+        "canSubmit" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "The user can submit content to a submit portal"
+        }
+      },
+      "description" : "The user's permissions on the portal"
+    },
+    "Transfer_activeTransferDetails_currentFile" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "fileName.mpg",
+          "description" : "The name of the file"
+        },
+        "size" : {
+          "type" : "number",
+          "example" : 1.02255268E8,
+          "description" : "The size of the file in bytes"
+        }
+      },
+      "description" : "The file currently being transfered"
+    },
+    "Transfer_activeTransferDetails" : {
+      "properties" : {
+        "estimatedTimeRemainingInSeconds" : {
+          "type" : "number",
+          "example" : 11.0,
+          "description" : "The estimated transfer time remaining in seconds"
+        },
+        "transferRateInBitsPerSecond" : {
+          "type" : "number",
+          "example" : 1.0091544E8,
+          "description" : "The current transfer rate in bits per second"
+        },
+        "currentFile" : {
+          "$ref" : "#/definitions/Transfer_activeTransferDetails_currentFile"
+        }
+      },
+      "description" : "Additional information about active transfers"
+    },
+    "PackageTokenRequest_user" : {
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "format" : "email",
+          "example" : "user@example.com",
+          "description" : "The email address of the user."
+        }
+      },
+      "description" : "The user who will be issued the token, allowing them to upload or download package files.\n"
+    },
+    "PackageTokenRequest_notifications" : {
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "url" : {
+          "type" : "string",
+          "format" : "uri"
+        }
+      },
+      "example" : "{\"type\":\"webhook\",\"url\":\"https://example.com/hook/catch/abc/\"}"
+    },
+    "PackageTokenResponse_user" : {
+      "properties" : {
+        "email" : {
+          "type" : "string",
+          "format" : "email",
+          "example" : "user@example.com",
+          "description" : "The email address of the user."
+        }
+      },
+      "description" : "The user who will be issued the token allowing them to upload or download package files\n"
+    },
+    "PortalSubscriptionRequest_details" : {
+      "properties" : {
+        "url" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "https://my.example.server.com/REST/myEndpoint",
+          "description" : "The URL that will receive events posted from Media Shuttle."
+        }
+      },
+      "description" : "Subscription details"
+    },
+    "PortalSubscriptionResponse_details" : {
+      "properties" : {
+        "url" : {
+          "type" : "string",
+          "format" : "uri",
+          "example" : "https://my.example.server.com/REST/myEndpoint",
+          "description" : "The URL that will receive events posted from Media Shuttle. The Event payload will adhere to '#/definitions/PortalSubscriptionEvent' model."
+        }
+      },
+      "description" : "Subscription details."
+    }
+  }
+}
