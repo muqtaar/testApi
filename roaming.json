@@ -1,0 +1,3333 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "## Authentication options\n\n### OAuth2 / OpenID Connect\n\nThe supported authentication method is OpenID Connect via Keycloak. For testing APIs via Swaggerhub or Swagger UI, please use **client_id** `swagger`.\n\nWhen developing applications against this API, a separate client application must be registered in Keycloak.\n\n### X-Token header authentication\n\nInternal use only, deprecated. The core services use these authentication headers for system account based requests.\n\n",
+    "version" : "LATEST",
+    "title" : "Roaming REST API"
+  },
+  "host" : "roaming-occ-dev.imobility.azure.altemista.cloud",
+  "basePath" : "/resources",
+  "tags" : [ {
+    "name" : "CSO: Roaming message log API",
+    "description" : "Roaming messages for the CS operator"
+  }, {
+    "name" : "CSO: Roaming contracts API",
+    "description" : "Roaming contracts API for the CS operator"
+  }, {
+    "name" : "EMP: Roaming message log API",
+    "description" : "Roaming messages for the EMP"
+  }, {
+    "name" : "EMP: Roaming contracts API",
+    "description" : "Roaming contracts API for the EMP"
+  }, {
+    "name" : "EMP: Roaming charging commands API",
+    "description" : "Charging station roaming commands for the EMP"
+  }, {
+    "name" : "CSO: Hubject actions",
+    "description" : "Roaming Hubject actions for CSO",
+    "x-internal" : "true"
+  }, {
+    "name" : "EMP: Hubject actions",
+    "description" : "Roaming Hubject actions for EMP",
+    "x-internal" : "true"
+  }, {
+    "name" : "CSO: Internal API",
+    "description" : "Charging station management internal API for CSO",
+    "x-internal" : "true"
+  }, {
+    "name" : "EMP: Internal API",
+    "description" : "Charging station management internal API for EMP",
+    "x-internal" : "true"
+  }, {
+    "name" : "Internal API",
+    "description" : "Common internal API",
+    "x-internal" : "true"
+  } ],
+  "schemes" : [ "https", "http" ],
+  "security" : [ {
+    "SessionToken" : [ ]
+  }, {
+    "OAuth2Implicit" : [ ]
+  } ],
+  "paths" : {
+    "/heartbeat" : {
+      "get" : {
+        "tags" : [ "Internal API" ],
+        "summary" : "Heartbeat endpoint",
+        "description" : "",
+        "operationId" : "heartbeat",
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "security" : [ ],
+        "x-internal" : true
+      }
+    },
+    "/roaming/session/cso/{csoId}/cso-session-id/{csoSessionId}" : {
+      "get" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Internal: Retrieve session by csoSessionId verifying csoId",
+        "description" : "",
+        "operationId" : "findByCsoIdAndCsoSessionId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoSessionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ChargingSessionCorrelationDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/session/cso-session-id/{csoSessionId}" : {
+      "get" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Internal: Retrieve session by csoSessionId",
+        "description" : "",
+        "operationId" : "findByCsoSessionId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoSessionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ChargingSessionCorrelationDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/session/save-or-update-by-cso-session-id" : {
+      "post" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Internal: Save of update based on csoSessionId",
+        "description" : "",
+        "operationId" : "saveOrUpdateByCsoSessionId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/ChargingSessionCorrelationDTO"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/session/emp-session-id/{empSessionId}" : {
+      "get" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Internal: Retrieve session by empSessionId",
+        "description" : "",
+        "operationId" : "findByEmpSessionId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empSessionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ChargingSessionCorrelationDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/session/cso/{csoId}/emp-session-id/{empSessionId}" : {
+      "get" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Internal: Retrieve session by empSessionId verifying csoId",
+        "description" : "",
+        "operationId" : "findByEmpSessionIdVerifyingCsoId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empSessionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ChargingSessionCorrelationDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/elastic/reindex" : {
+      "get" : {
+        "tags" : [ "Internal API" ],
+        "summary" : "Reindex elastic",
+        "description" : "",
+        "operationId" : "reindex",
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "security" : [ ],
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/{csoId}/contract" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "operationId" : "findContractsByCsoId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "headers" : { },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RoamingCsoContractDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/roaming-types" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "Provide a list of supported roaming types",
+        "description" : "",
+        "operationId" : "roamingTypesCso",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/AbstractRoamingTypeDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/roaming-platform/save-or-update" : {
+      "post" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "saves or updates a EMP roaming platform",
+        "description" : "",
+        "operationId" : "saveOrUpdateEmpRoamingPlatform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/roaming-platform/find-by-name/{name}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "finds an EMP roaming plattform by name",
+        "description" : "",
+        "operationId" : "findEmpRoamingPlattform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/contract" : {
+      "post" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "saves or updates a contract for a CSO",
+        "description" : "",
+        "operationId" : "saveOrUpdateCsoContract",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/RoamingCsoContractSaveDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingCsoContractDTO"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "deletes an cso contract",
+        "description" : "",
+        "operationId" : "deleteCsoContract",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/VersionedData"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/roaming/cso/contract/{id}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "finds an cso contract by ID",
+        "description" : "",
+        "operationId" : "findCsoContractById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingCsoContractDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/contract/by-partner-and-platform/{csoId}/{roamingEmpId}/{platformId}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "finds an CSO contract py partner and platform",
+        "description" : "",
+        "operationId" : "findCsoContractByPartnerAndPlatform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "roamingEmpId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "platformId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingCsoContractDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/contract/number/{contractNumber}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "finds a CSO Contract by contract number",
+        "description" : "",
+        "operationId" : "findCsoContractByContractNumber",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "contractNumber",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingCsoContractDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/roaming-platform" : {
+      "delete" : {
+        "tags" : [ "CSO: Roaming contracts API" ],
+        "summary" : "deletes an emp roaming platform",
+        "description" : "",
+        "operationId" : "deleteEmpRoamingPlattform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/VersionedData"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/roaming/cso/{csoId}/pushEvseData" : {
+      "post" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Transfer EVSE Data to EMP System over roaming protocol",
+        "description" : "",
+        "operationId" : "pushEvseDataToEmp",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PushEvseDataDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingAcknowledgementDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/{csoId}/pushEvseStatus" : {
+      "post" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Transfer EVSE Status to EMP System over roaming protocol",
+        "description" : "",
+        "operationId" : "pushEvseStatusToEmp",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PushEvseStatusDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingAcknowledgementDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/{csoId}/authorizeStart" : {
+      "post" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Authorize start charging from charging station",
+        "description" : "",
+        "operationId" : "authorizeStart",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/AuthorizeStartDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/AuthorizeStartResponseDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/{csoId}/authorizeStop" : {
+      "post" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Authorize stop charging from from charging station",
+        "description" : "",
+        "operationId" : "authorizeStop",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/AuthorizeStopDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/AuthorizeStopResponseDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/cdr-state/{evseId}/{csoSessionId}" : {
+      "get" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Obtain Charging Transaction Data transfer status",
+        "description" : "",
+        "operationId" : "findCdrState",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "evseId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "csoSessionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/CdrStateDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/{csoId}/pushCDR" : {
+      "post" : {
+        "tags" : [ "CSO: Internal API" ],
+        "summary" : "Transfer Charging Transaction Data to EMP System over roaming protocol",
+        "description" : "",
+        "operationId" : "pushCDR",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PushCdrDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/PushCdrResponseDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/hubject/pushDataFullLoad" : {
+      "get" : {
+        "tags" : [ "CSO: Hubject actions" ],
+        "summary" : "Push all EVSEs via Roaming (FULLLOAD) for all CSOs",
+        "description" : "This endpoint is only for testing, usually full load is called by the scheduler.",
+        "operationId" : "hubjectPushDataFullLoad",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/hubject/pushDataDeltaLoad" : {
+      "get" : {
+        "tags" : [ "CSO: Hubject actions" ],
+        "summary" : "Push EVSEs via Roaming (INSERT) for all CSOs",
+        "description" : "This endpoint is only for testing, usually delta load is called by the scheduler.",
+        "operationId" : "hubjectPushDataDeltaLoad",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/hubject/pushStatusFullLoad" : {
+      "get" : {
+        "tags" : [ "CSO: Hubject actions" ],
+        "summary" : "Push all EVSE Status via Roaming (FULLLOAD) for all CSOs",
+        "description" : "This endpoint is only for testing, usually full load is called by the scheduler.",
+        "operationId" : "hubjectPushStatusFullLoad",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/hubject/pushStatusDeltaLoad" : {
+      "get" : {
+        "tags" : [ "CSO: Hubject actions" ],
+        "summary" : "Push changed EVSE Status via Roaming for all CSOs",
+        "description" : "This endpoint is only for testing, usually delta load is called by the scheduler.",
+        "operationId" : "hubjectPushStatusDeltaLoad",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/message/delete-old-messages/{now}" : {
+      "delete" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "operationId" : "deleteOldMessages",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "now",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/message/{id}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Get a single message by its internal ID",
+        "description" : "",
+        "operationId" : "findById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "pattern" : "\\d+",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingMessageDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/message/by-params/{messageName}/{direction}/{type}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Search for stored message by message name, message direction and message type",
+        "description" : "",
+        "operationId" : "findLatestCsoRoamingMessageByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        }, {
+          "name" : "type",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingMessageDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/message/all-by-params/{messageName}/{direction}/{type}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Search for stored message by message name, message direction and message type",
+        "description" : "",
+        "operationId" : "findAllCsoRoamingMessagesByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        }, {
+          "name" : "type",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RoamingMessageDTO"
+              }
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/message/delete-all-by-parameters/{messageName}" : {
+      "delete" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Deletes all messages by messageName",
+        "description" : "",
+        "operationId" : "deleteAllByMessageName",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/message/delete-all-by-parameters/{messageName}/{direction}/{type}" : {
+      "delete" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Deletes all messages by parameters",
+        "description" : "",
+        "operationId" : "deleteAllRaomingMessagesByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        }, {
+          "name" : "type",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/message/last-push-to-hubject-message/cso/{csoId}/{messageName}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Get infos about last sent roaming message by cso and message name",
+        "description" : "",
+        "operationId" : "findLastPushToHubjectMessageByCsoAndMessageName",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "csoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "pattern" : "\\d+",
+          "format" : "int64"
+        }, {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/LastRoamingMessageDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/cso/message/by-params/{uniqueMessageId}" : {
+      "get" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Search for stored messages by unique message ID",
+        "description" : "",
+        "operationId" : "findCsoRoamingMessagesByUniqueMessageId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uniqueMessageId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RoamingMessageDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roaming/cso/message/list" : {
+      "post" : {
+        "tags" : [ "CSO: Roaming message log API" ],
+        "summary" : "Search for CSO Roaming Messages",
+        "description" : "",
+        "operationId" : "listCsoRoamingMessages",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/SearchParameterDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SearchResultDTORoamingMessageListDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/roaming-types" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "Provide a list of supported roaming types",
+        "description" : "",
+        "operationId" : "roamingTypesEmp",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/AbstractRoamingTypeDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/roaming-platform/save-or-update" : {
+      "post" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "saves or updates a CSO roaming platform",
+        "description" : "",
+        "operationId" : "saveOrUpdateCsoRoamingPlatform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/roaming-platform/find-by-name/{name}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "finds a cso roaming plattform by name",
+        "description" : "",
+        "operationId" : "findCsoRoamingPlattform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/contract" : {
+      "post" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "saves or updates a contract for an EMP",
+        "description" : "",
+        "operationId" : "saveOrUpdateEmpContract",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/RoamingEmpContractSaveDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingEmpContractDTO"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "deletes an emp contract",
+        "description" : "",
+        "operationId" : "deleteEmpContract",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/VersionedData"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/roaming/emp/contract/{id}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "finds an emp contract by ID",
+        "description" : "",
+        "operationId" : "findEmpContractById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingEmpContractDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/{empId}/contract" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "operationId" : "findContractsByEmpId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "headers" : { },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RoamingEmpContractDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/contract/by-partner-and-platform/{empId}/{roamingCsoId}/{platformId}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "finds an emp contract py partner and platform",
+        "description" : "",
+        "operationId" : "findEmpContractByPartnerAndPlatform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "roamingCsoId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "platformId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingEmpContractDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/contract/number/{contractNumber}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "finds an EMP Contract by contract number",
+        "description" : "",
+        "operationId" : "findEmpContractByContractNumber",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "contractNumber",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingEmpContractDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/roaming-platform" : {
+      "delete" : {
+        "tags" : [ "EMP: Roaming contracts API" ],
+        "summary" : "deletes a cso roaming platform",
+        "description" : "",
+        "operationId" : "deleteCsoRoamingPlattform",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/VersionedData"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/roaming/emp/{empId}/pullEvseStatusByOperatorId" : {
+      "post" : {
+        "tags" : [ "EMP: Internal API" ],
+        "summary" : "Request EVSE status per operator id via roaming protocol",
+        "description" : "",
+        "operationId" : "pullEvseStatusRoamingProtocol",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PullEvseStatusByOperatorIDDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PullEvseStatusByOperatorIDResponseDTO"
+              }
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/{empId}/authorizeRemoteStart" : {
+      "post" : {
+        "tags" : [ "EMP: Roaming charging commands API" ],
+        "summary" : "Transfer Remote Start Request to CSO System over roaming protocol",
+        "description" : "",
+        "operationId" : "authorizeRemoteStart",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/AuthorizeRemoteStartDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Acknowledgement including empSessionId",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingAcknowledgementDTO"
+            }
+          },
+          "412" : {
+            "description" : "The supplied ID tag is not authorized"
+          }
+        }
+      }
+    },
+    "/roaming/emp/{empId}/authorizeRemoteStop" : {
+      "post" : {
+        "tags" : [ "EMP: Roaming charging commands API" ],
+        "summary" : "Transfer Remote Stop Request to CSO System over roaming protocol",
+        "description" : "",
+        "operationId" : "authorizeRemoteStop",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/AuthorizeRemoteStopDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingAcknowledgementDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/{empId}/pullEvseData" : {
+      "post" : {
+        "tags" : [ "EMP: Internal API" ],
+        "summary" : "Request EVSE data via roaming protocol",
+        "description" : "",
+        "operationId" : "pullEvseDataRoamingProtocol",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "empId",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PullEvseDataDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/PullEvseDataResponseDTO"
+              }
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/hubject/pullAll" : {
+      "get" : {
+        "tags" : [ "EMP: Hubject actions" ],
+        "summary" : "Request EVSE data via roaming protocol",
+        "description" : "",
+        "operationId" : "pullEvseAllDataHubject",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/hubject/pullEvseData" : {
+      "post" : {
+        "tags" : [ "EMP: Hubject actions" ],
+        "summary" : "Request EVSE data via roaming protocol",
+        "description" : "",
+        "operationId" : "pullEvseDataHubject",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PullEvseDataDTO"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/hubject/pullEvseStatus" : {
+      "post" : {
+        "tags" : [ "EMP: Hubject actions" ],
+        "summary" : "Request EVSE status via roaming protocol",
+        "description" : "",
+        "operationId" : "pullEvseStatusHubject",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/hubject/api/oicp/charging/v21/operators/{operatorId}/authorize/start" : {
+      "post" : {
+        "tags" : [ "EMP: Hubject actions" ],
+        "summary" : "Request authorization from Hubject",
+        "description" : "",
+        "operationId" : "authorizeStopHubject",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "operatorId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/ERoamingAuthorizeStart"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ERoamingAuthorizeResponse"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/message/delete-old-messages/{now}" : {
+      "delete" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "operationId" : "deleteOldMessages_1",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "now",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/message/{id}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "summary" : "Get a single message by its internal ID",
+        "description" : "",
+        "operationId" : "findById_1",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "pattern" : "\\d+",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingMessageDTO"
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/message/by-params/{messageName}/{messageDirection}/{messageType}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "summary" : "Search for stored message by message name, message direction and message type",
+        "description" : "",
+        "operationId" : "findLatestEmpRoamingMessageByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "messageDirection",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        }, {
+          "name" : "messageType",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/RoamingMessageDTO"
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/message/all-by-params/{messageName}/{messageDirection}/{messageType}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "summary" : "Search for stored message by message name, message direction and message type",
+        "description" : "",
+        "operationId" : "findAllEmpRoamingMessagesByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "messageDirection",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        }, {
+          "name" : "messageType",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RoamingMessageDTO"
+              }
+            }
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/message/delete-all-by-parameters/{messageName}/{messageDirection}/{messageType}" : {
+      "delete" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "operationId" : "deleteAllByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "messageDirection",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        }, {
+          "name" : "messageType",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/message/delete-all-by-parameters/{messageName}" : {
+      "delete" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "operationId" : "deleteAllByParameters_1",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "messageName",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "x-internal" : true
+      }
+    },
+    "/roaming/emp/message/by-params/{uniqueMessageId}" : {
+      "get" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "summary" : "Search for stored messages by unique message ID",
+        "description" : "",
+        "operationId" : "findEmpRoamingMessagesByUniqueMessageId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uniqueMessageId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/RoamingMessageDTO"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roaming/emp/message/list" : {
+      "post" : {
+        "tags" : [ "EMP: Roaming message log API" ],
+        "summary" : "Search for EMP Roaming Messages",
+        "description" : "",
+        "operationId" : "listEmpRoamingMessages",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/SearchParameterDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/SearchResultDTORoamingMessageListDTO"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "OAuth2Implicit" : {
+      "type" : "oauth2",
+      "authorizationUrl" : "https://keycloak-occ-dev.imobility.azure.altemista.cloud/auth/realms/occ-dev/protocol/openid-connect/auth",
+      "flow" : "implicit"
+    },
+    "SessionToken" : {
+      "type" : "apiKey",
+      "name" : "X-TOKEN",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "ChargingSessionCorrelationDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "empSessionId" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "empSessionId" : {
+          "type" : "string"
+        },
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "csoContractId" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "AbstractRoamingPlatformDTO" : {
+      "type" : "object",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "roamingType" : {
+          "$ref" : "#/definitions/AbstractRoamingTypeDTO"
+        }
+      }
+    },
+    "AbstractRoamingTypeDTO" : {
+      "type" : "object",
+      "discriminator" : "roamingType",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        }
+      }
+    },
+    "DirectLocalRoamingTypeDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractRoamingTypeDTO"
+      }, {
+        "type" : "object"
+      } ]
+    },
+    "DirectRoamingTypeDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractRoamingTypeDTO"
+      }, {
+        "type" : "object"
+      } ]
+    },
+    "HubjectRoamingTypeDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractRoamingTypeDTO"
+      }, {
+        "type" : "object",
+        "required" : [ "partnerId", "serviceUrl" ],
+        "properties" : {
+          "partnerId" : {
+            "type" : "string"
+          },
+          "serviceUrl" : {
+            "type" : "string"
+          }
+        }
+      } ]
+    },
+    "RoamingCsoContractDTO" : {
+      "type" : "object",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "bpRoamingContractId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "roamingPlatform" : {
+          "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+        },
+        "contractNumber" : {
+          "type" : "string"
+        }
+      }
+    },
+    "VersionedData" : {
+      "type" : "object",
+      "required" : [ "id", "version" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "RoamingCsoContractSaveDTO" : {
+      "type" : "object",
+      "required" : [ "contractNumber", "csoId", "remoteEmpId", "roamingPlatformId" ],
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "csoId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "remoteEmpId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "roamingPlatformId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "contractNumber" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RoamingAcknowledgementDTO" : {
+      "type" : "object",
+      "properties" : {
+        "csoSessionId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 250
+        },
+        "empSessionId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 250
+        },
+        "sessionId" : {
+          "type" : "string"
+        },
+        "result" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "AdditionalInfoDTO" : {
+      "type" : "object",
+      "required" : [ "lang", "value" ],
+      "properties" : {
+        "lang" : {
+          "type" : "string",
+          "pattern" : "^[a-z]{2,3}(?:-[A-Z]{2,3}(?:-[a-zA-Z]{4})?)?(?:-x-[a-zA-Z0-9]{1,8})?$"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AddressDTO" : {
+      "type" : "object",
+      "required" : [ "city", "country", "street" ],
+      "properties" : {
+        "city" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 50
+        },
+        "country" : {
+          "type" : "string",
+          "minLength" : 3,
+          "maxLength" : 3,
+          "pattern" : "^[A-Z]{3}$"
+        },
+        "floor" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 5
+        },
+        "houseNum" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 10
+        },
+        "postalCode" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 10
+        },
+        "region" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 50
+        },
+        "street" : {
+          "type" : "string",
+          "minLength" : 2,
+          "maxLength" : 100
+        },
+        "timeZone" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ChargingFacilitiesDTO" : {
+      "type" : "object",
+      "properties" : {
+        "powerType" : {
+          "type" : "string",
+          "enum" : [ "AC_1_PHASE", "AC_3_PHASE", "DC", "UNSPECIFIED" ]
+        },
+        "power" : {
+          "type" : "number"
+        },
+        "amperage" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "voltage" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "DecimalDegreeDTO" : {
+      "type" : "object",
+      "required" : [ "latitude", "longitude" ],
+      "properties" : {
+        "latitude" : {
+          "type" : "string",
+          "pattern" : "^-?1?\\d{1,2}\\.\\d{1,6}$"
+        },
+        "longitude" : {
+          "type" : "string",
+          "pattern" : "^-?1?\\d{1,2}\\.\\d{1,6}$"
+        }
+      }
+    },
+    "DegreeMinuteSecondsDTO" : {
+      "type" : "object",
+      "required" : [ "latitude", "longitude" ],
+      "properties" : {
+        "latitude" : {
+          "type" : "string",
+          "pattern" : "^-?1?\\d{1,2}°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$"
+        },
+        "longitude" : {
+          "type" : "string",
+          "pattern" : "^-?1?\\d{1,2}°[ ]?\\d{1,2}'[ ]?\\d{1,2}\\.\\d+''$"
+        }
+      }
+    },
+    "EvseDataRecordDTO" : {
+      "type" : "object",
+      "required" : [ "accessibility", "address", "dynamicInfoAvailable", "evseId", "geoCoordinates", "hotlinePhoneNumber" ],
+      "properties" : {
+        "accessibility" : {
+          "type" : "string",
+          "enum" : [ "UNSPECIFIED", "FREE_PUBLICLY_ACCESSIBLE", "RESTRICTED_ACCESS", "PAYING_PUBLICLY_ACCESSIBLE", "TEST_STATION" ]
+        },
+        "additionalInfo" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AdditionalInfoDTO"
+          }
+        },
+        "address" : {
+          "$ref" : "#/definitions/AddressDTO"
+        },
+        "authenticationModes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "NFC_RFID_CLASSIC", "NFC_RFID_DESFIRE", "PNC", "REMOTE", "DIRECT_PAYMENT" ]
+          }
+        },
+        "chargingFacilities" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ChargingFacilitiesDTO"
+          }
+        },
+        "chargingModes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "MODE_1", "MODE_2", "MODE_3", "MODE_4", "CHADEMO" ]
+          }
+        },
+        "chargingPoolId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 50,
+          "pattern" : "^([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?P[A-Za-z0-9*]{1,30})$"
+        },
+        "chargingStationId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 50
+        },
+        "chargingStationName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 50
+        },
+        "clearinghouseId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        },
+        "dynamicInfoAvailable" : {
+          "type" : "string",
+          "enum" : [ "TRUE", "FALSE", "AUTO" ]
+        },
+        "enChargingStationName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 50
+        },
+        "evseId" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9*]{1,32}))$"
+        },
+        "geoChargingPointEntrance" : {
+          "$ref" : "#/definitions/GeoChargingPointEntranceDTO"
+        },
+        "geoCoordinates" : {
+          "$ref" : "#/definitions/GeoCoordinatesDTO"
+        },
+        "hotlinePhoneNumber" : {
+          "type" : "string",
+          "pattern" : "^\\+[0-9]{5,15}$"
+        },
+        "hubOperatorId" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$"
+        },
+        "publishToHubject" : {
+          "type" : "boolean"
+        },
+        "publicStation" : {
+          "type" : "boolean"
+        },
+        "freeChargingMode" : {
+          "type" : "boolean"
+        },
+        "chargeAndPayAvailable" : {
+          "type" : "boolean"
+        },
+        "open24Hours" : {
+          "type" : "boolean"
+        },
+        "maxCapacity" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "openingTimes" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OpeningTimesDTO"
+          }
+        },
+        "paymentOptions" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "NO_PAYMENT", "DIRECT", "CONTRACT" ]
+          }
+        },
+        "plugs" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "SMALL_PADDLE_INDUCTIVE", "LARGE_PADDLE_INDUCTIVE", "AVCON_CONNECTOR", "TESLA_CONNECTOR", "NEMA_5_20", "TYPE_E_FRENCH_STANDARD", "TYPE_F_SCHUKO", "TYPE_G_BRITISH_STANDARD", "TYPE_J_SWISS_STANDARD", "TYPE_1_CONNECTOR_CABLE_ATTACHED", "TYPE_2_OUTLET", "TYPE_2_CONNECTOR_CABLE_ATTACHED", "TYPE_3_OUTLET", "IEC_60309_SINGLE_PHASE", "IEC_60309_THREE_PHASE", "CCS_COMBO_2_PLUG_CABLE_ATTACHED", "CCS_COMBO_1_PLUG_CABLE_ATTACHED", "CHADEMO", "UNSPECIFIED" ]
+          }
+        },
+        "valueAddedServices" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "RESERVATION", "DYNAMICPRICING", "PARKINGSENSORS", "MAXIMUMPOWERCHARGING", "PREDICTIVECHARGEPOINTUSAGE", "CHARGINGPLANS", "NONE" ]
+          }
+        },
+        "deltaType" : {
+          "type" : "string",
+          "enum" : [ "INSERT", "UPDATE", "DELETE" ]
+        },
+        "lastUpdate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "chargePointVendor" : {
+          "type" : "string"
+        },
+        "chargePointModel" : {
+          "type" : "string"
+        },
+        "installationDate" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "hubjectCompatible" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "GeoChargingPointEntranceDTO" : {
+      "type" : "object",
+      "properties" : {
+        "degreeMinuteSeconds" : {
+          "$ref" : "#/definitions/DegreeMinuteSecondsDTO"
+        },
+        "decimalDegree" : {
+          "$ref" : "#/definitions/DecimalDegreeDTO"
+        },
+        "google" : {
+          "$ref" : "#/definitions/GoogleDTO"
+        }
+      }
+    },
+    "GeoCoordinatesDTO" : {
+      "type" : "object",
+      "properties" : {
+        "degreeMinuteSeconds" : {
+          "$ref" : "#/definitions/DegreeMinuteSecondsDTO"
+        },
+        "decimalDegree" : {
+          "$ref" : "#/definitions/DecimalDegreeDTO"
+        },
+        "google" : {
+          "$ref" : "#/definitions/GoogleDTO"
+        }
+      }
+    },
+    "GoogleDTO" : {
+      "type" : "object",
+      "required" : [ "coordinates" ],
+      "properties" : {
+        "coordinates" : {
+          "type" : "string",
+          "pattern" : "^-?1?\\d{1,2}\\.\\d{1,6}\\s*,?\\s*-?1?\\d{1,2}\\.\\d{1,6}$"
+        }
+      }
+    },
+    "OpeningTimesDTO" : {
+      "type" : "object",
+      "required" : [ "on", "period" ],
+      "properties" : {
+        "period" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PeriodDTO"
+          }
+        },
+        "on" : {
+          "type" : "string",
+          "enum" : [ "EVERYDAY", "WORKDAYS", "WEEKEND", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY", "SUNDAY" ]
+        }
+      }
+    },
+    "OperatorEvseDataDTO" : {
+      "type" : "object",
+      "properties" : {
+        "evseDataRecord" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EvseDataRecordDTO"
+          }
+        },
+        "operatorID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$"
+        },
+        "operatorName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 100
+        }
+      }
+    },
+    "PeriodDTO" : {
+      "type" : "object",
+      "required" : [ "begin", "end" ],
+      "properties" : {
+        "end" : {
+          "type" : "string",
+          "pattern" : "[0-9]{2}:[0-9]{2}"
+        },
+        "begin" : {
+          "type" : "string",
+          "pattern" : "[0-9]{2}:[0-9]{2}"
+        }
+      }
+    },
+    "PushEvseDataDTO" : {
+      "type" : "object",
+      "required" : [ "actionType", "operatorEvseData" ],
+      "properties" : {
+        "actionType" : {
+          "type" : "string",
+          "enum" : [ "FULLLOAD", "UPDATE", "INSERT", "DELETE" ]
+        },
+        "operatorEvseData" : {
+          "$ref" : "#/definitions/OperatorEvseDataDTO"
+        }
+      }
+    },
+    "EvseStatusRecordDTO" : {
+      "type" : "object",
+      "required" : [ "evseID", "evseStatus" ],
+      "properties" : {
+        "evseID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9*]{1,32}))$"
+        },
+        "evseStatus" : {
+          "type" : "string",
+          "enum" : [ "AVAILABLE", "PREPARING", "CHARGING", "SUSPENDED_EVSE", "SUSPENDED_EV", "FINISHING", "OCCUPIED", "RESERVED", "UNAVAILABLE", "FAULTED" ]
+        }
+      }
+    },
+    "OperatorEvseStatusDTO" : {
+      "type" : "object",
+      "required" : [ "operatorID" ],
+      "properties" : {
+        "evseStatusRecord" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EvseStatusRecordDTO"
+          }
+        },
+        "operatorID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$"
+        },
+        "operatorName" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 100
+        }
+      }
+    },
+    "PushEvseStatusDTO" : {
+      "type" : "object",
+      "required" : [ "actionType", "operatorEvseStatus" ],
+      "properties" : {
+        "actionType" : {
+          "type" : "string",
+          "enum" : [ "FULLLOAD", "UPDATE", "INSERT", "DELETE" ]
+        },
+        "operatorEvseStatus" : {
+          "$ref" : "#/definitions/OperatorEvseStatusDTO"
+        }
+      }
+    },
+    "AuthorizeStartResponseDTO" : {
+      "type" : "object",
+      "required" : [ "authorizationStatus" ],
+      "properties" : {
+        "authorizationStatus" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "BLOCKED", "EXPIRED", "INVALID", "CONCURRENT_TX" ]
+        },
+        "empSessionId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AuthorizeStartDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "externalChargingStationId", "idTag", "operatorId" ],
+      "properties" : {
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "empSessionId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string"
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "operatorId" : {
+          "type" : "string"
+        },
+        "evseId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "AuthorizeStopResponseDTO" : {
+      "type" : "object",
+      "required" : [ "authorizationStatus" ],
+      "properties" : {
+        "authorizationStatus" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "BLOCKED", "EXPIRED", "INVALID", "CONCURRENT_TX" ]
+        }
+      }
+    },
+    "AuthorizeStopDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "evseId", "idTag" ],
+      "properties" : {
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "empSessionId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string"
+        },
+        "evseId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CdrStateDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "evseId" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string"
+        },
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "sent" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "PushCdrResponseDTO" : {
+      "type" : "object",
+      "required" : [ "roamingPartnerId", "roamingPlatform", "roamingTransmissionOn" ],
+      "properties" : {
+        "roamingPlatform" : {
+          "$ref" : "#/definitions/AbstractRoamingTypeDTO"
+        },
+        "roamingPartnerId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "roamingTransmissionOn" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "AbstractBusinessPartnerDTO" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "discriminator" : "className",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "name" : {
+          "type" : "string",
+          "pattern" : "^[^\\s/]+$"
+        },
+        "displayName" : {
+          "type" : "string"
+        }
+      },
+      "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+    },
+    "AbstractSingularBusinessPartnerIdentifierDTO" : {
+      "type" : "object",
+      "discriminator" : "className",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        }
+      }
+    },
+    "AbstractUserCoreDTO" : {
+      "type" : "object",
+      "required" : [ "username", "uuid" ],
+      "properties" : {
+        "username" : {
+          "type" : "string",
+          "pattern" : "^[^\\p{Lu}]+$"
+        },
+        "uuid" : {
+          "type" : "string",
+          "format" : "uuid"
+        }
+      }
+    },
+    "AbstractUserDTO" : {
+      "type" : "object",
+      "required" : [ "tenant" ],
+      "discriminator" : "className",
+      "properties" : {
+        "tenant" : {
+          "$ref" : "#/definitions/TenantDTO"
+        },
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "coreData" : {
+          "$ref" : "#/definitions/AbstractUserCoreDTO"
+        }
+      }
+    },
+    "CsmsoDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+      }, {
+        "type" : "object",
+        "required" : [ "tenant" ],
+        "properties" : {
+          "tenant" : {
+            "$ref" : "#/definitions/TenantDTO"
+          }
+        },
+        "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+      } ]
+    },
+    "CsoDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+      }, {
+        "type" : "object",
+        "required" : [ "operatorId", "tenant" ],
+        "properties" : {
+          "tenant" : {
+            "$ref" : "#/definitions/TenantDTO"
+          },
+          "operatorId" : {
+            "type" : "string",
+            "pattern" : "^[A-Z]{2}\\*[A-Z0-9]{3}$"
+          }
+        },
+        "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+      } ]
+    },
+    "EmpDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+      }, {
+        "type" : "object",
+        "required" : [ "tenant" ],
+        "properties" : {
+          "tenant" : {
+            "$ref" : "#/definitions/TenantDTO"
+          },
+          "providerId" : {
+            "type" : "string",
+            "pattern" : "^[A-Z]{2}-[A-Z0-9]{3}$"
+          }
+        },
+        "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+      } ]
+    },
+    "LdapUserCoreDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractUserCoreDTO"
+      }, {
+        "type" : "object"
+      } ]
+    },
+    "LdapUserDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractUserDTO"
+      }, {
+        "type" : "object"
+      } ]
+    },
+    "PushCdrDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "evseId", "idTag" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string"
+        },
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "roamingPartner" : {
+          "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+        },
+        "empSessionId" : {
+          "type" : "string"
+        },
+        "startTransaction" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "endTransaction" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "chargingStart" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "chargingEnd" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "meterStart" : {
+          "type" : "number",
+          "format" : "double"
+        },
+        "meterEnd" : {
+          "type" : "number",
+          "format" : "double"
+        }
+      }
+    },
+    "RoamingCsoDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "identifier" : {
+            "$ref" : "#/definitions/AbstractSingularBusinessPartnerIdentifierDTO"
+          }
+        },
+        "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+      } ]
+    },
+    "RoamingEmpDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "identifier" : {
+            "$ref" : "#/definitions/AbstractSingularBusinessPartnerIdentifierDTO"
+          }
+        },
+        "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+      } ]
+    },
+    "ServiceTechnicianDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "identifier" : {
+            "$ref" : "#/definitions/AbstractSingularBusinessPartnerIdentifierDTO"
+          }
+        },
+        "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+      } ]
+    },
+    "StaffDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractBusinessPartnerDTO"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "identifier" : {
+            "$ref" : "#/definitions/AbstractSingularBusinessPartnerIdentifierDTO"
+          }
+        },
+        "description" : "use className property to define specific DTO type. e.g.: className: 'EmpDto'"
+      } ]
+    },
+    "TenantCoreDTO" : {
+      "type" : "object",
+      "required" : [ "code", "name" ],
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "TenantDTO" : {
+      "type" : "object",
+      "properties" : {
+        "coreData" : {
+          "$ref" : "#/definitions/TenantCoreDTO"
+        },
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        }
+      }
+    },
+    "TenantSingularBusinessPartnerIdentifierDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractSingularBusinessPartnerIdentifierDTO"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "tenant" : {
+            "$ref" : "#/definitions/TenantDTO"
+          }
+        }
+      } ]
+    },
+    "UserCoreDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractUserCoreDTO"
+      }, {
+        "type" : "object"
+      } ]
+    },
+    "UserDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractUserDTO"
+      }, {
+        "type" : "object"
+      } ]
+    },
+    "UserSingularBusinessPartnerIdentifierDTO" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/AbstractSingularBusinessPartnerIdentifierDTO"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "user" : {
+            "$ref" : "#/definitions/AbstractUserDTO"
+          }
+        }
+      } ]
+    },
+    "RoamingMessageDTO" : {
+      "type" : "object",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "direction" : {
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        },
+        "platform" : {
+          "type" : "string",
+          "enum" : [ "DIRECT", "DIRECT_LOCAL", "HUBJECT" ]
+        },
+        "standardRaw" : {
+          "type" : "object",
+          "properties" : { }
+        },
+        "raw" : {
+          "type" : "object",
+          "properties" : { }
+        },
+        "contractNumber" : {
+          "type" : "string"
+        },
+        "roamingPartnerName" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "$ref" : "#/definitions/RoamingMessagePropertiesDTO"
+        }
+      }
+    },
+    "RoamingMessagePropertiesDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "empSessionId", "evseId", "externalChargingStationId", "idTag" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string"
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "empSessionId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string"
+        }
+      }
+    },
+    "LastRoamingMessageDTO" : {
+      "type" : "object",
+      "properties" : {
+        "csoId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lastMessageInstant" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lastMessageDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "messageName" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RoamingMessageListDTO" : {
+      "type" : "object",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "direction" : {
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        },
+        "platform" : {
+          "type" : "string",
+          "enum" : [ "DIRECT", "DIRECT_LOCAL", "HUBJECT" ]
+        },
+        "contractNumber" : {
+          "type" : "string"
+        },
+        "roamingPartnerName" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "$ref" : "#/definitions/RoamingMessagePropertiesDTO"
+        }
+      }
+    },
+    "SearchResultDTO" : {
+      "type" : "object",
+      "properties" : {
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "results" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        }
+      }
+    },
+    "SearchResultDTORoamingMessageListDTO" : {
+      "type" : "object",
+      "properties" : {
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "results" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RoamingMessageListDTO"
+          }
+        }
+      }
+    },
+    "SearchParameterDTO" : {
+      "type" : "object",
+      "properties" : {
+        "filterParameters" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        },
+        "sortProperties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SortPropertyDTO"
+          }
+        },
+        "aggregations" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        },
+        "fullTextSearch" : {
+          "type" : "string"
+        },
+        "fullTextSearchFields" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "limit" : {
+          "type" : "integer",
+          "format" : "int32",
+          "maximum" : 10000
+        },
+        "offset" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "SortPropertyDTO" : {
+      "type" : "object",
+      "properties" : {
+        "propertyName" : {
+          "type" : "string"
+        },
+        "ascending" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "RoamingEmpContractDTO" : {
+      "type" : "object",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "bpRoamingContractId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "roamingPlatform" : {
+          "$ref" : "#/definitions/AbstractRoamingPlatformDTO"
+        },
+        "contractNumber" : {
+          "type" : "string"
+        }
+      }
+    },
+    "RoamingEmpContractSaveDTO" : {
+      "type" : "object",
+      "required" : [ "contractNumber", "empId", "remoteCsoId", "roamingPlatformId" ],
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/VersionedData"
+        },
+        "empId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "remoteCsoId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "roamingPlatformId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "contractNumber" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EvseStatusesDTO" : {
+      "type" : "object",
+      "properties" : {
+        "operatorEvseStatus" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OperatorEvseStatusDTO"
+          }
+        }
+      }
+    },
+    "PullEvseStatusByOperatorIDResponseDTO" : {
+      "type" : "object",
+      "required" : [ "evseStatuses" ],
+      "properties" : {
+        "evseStatuses" : {
+          "$ref" : "#/definitions/EvseStatusesDTO"
+        },
+        "statusCodeDTO" : {
+          "$ref" : "#/definitions/StatusCodeDTO"
+        }
+      }
+    },
+    "StatusCodeDTO" : {
+      "type" : "object",
+      "required" : [ "code" ],
+      "properties" : {
+        "additionalInfo" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 1000
+        },
+        "code" : {
+          "type" : "string",
+          "enum" : [ "CODE_000", "CODE_001", "CODE_002", "CODE_009", "CODE_017", "CODE_018", "CODE_019", "CODE_021", "CODE_022", "CODE_101", "CODE_102", "CODE_103", "CODE_105", "CODE_106", "CODE_110", "CODE_120", "CODE_121", "CODE_122", "CODE_200", "CODE_210", "CODE_300", "CODE_310", "CODE_320", "CODE_400", "CODE_501", "CODE_510", "CODE_601", "CODE_602", "CODE_603", "CODE_604", "CODE_700" ]
+        },
+        "description" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        }
+      }
+    },
+    "PullEvseStatusByOperatorIDDTO" : {
+      "type" : "object",
+      "properties" : {
+        "evseStatus" : {
+          "type" : "string",
+          "enum" : [ "AVAILABLE", "PREPARING", "CHARGING", "SUSPENDED_EVSE", "SUSPENDED_EV", "FINISHING", "OCCUPIED", "RESERVED", "UNAVAILABLE", "FAULTED" ]
+        },
+        "operatorIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "AuthorizeRemoteStartDTO" : {
+      "type" : "object",
+      "required" : [ "evseId", "idTag" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "empSessionId" : {
+          "type" : "string",
+          "description" : "Optional session id from EMP System, internal only. For UI requests, the backend will generated the ID.",
+          "x-internal" : "true"
+        }
+      },
+      "description" : "Transaction remote start request by EMP"
+    },
+    "AuthorizeRemoteStopDTO" : {
+      "type" : "object",
+      "required" : [ "empSessionId", "evseId", "idTag" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "empSessionId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EvseDataDTO" : {
+      "type" : "object",
+      "properties" : {
+        "operatorEvseData" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OperatorEvseDataDTO"
+          }
+        }
+      }
+    },
+    "PullEvseDataResponseDTO" : {
+      "type" : "object",
+      "required" : [ "evseData" ],
+      "properties" : {
+        "evseData" : {
+          "$ref" : "#/definitions/EvseDataDTO"
+        },
+        "statusCodeDTO" : {
+          "$ref" : "#/definitions/StatusCodeDTO"
+        }
+      }
+    },
+    "PullEvseDataDTO" : {
+      "type" : "object",
+      "required" : [ "geoCoordinatesResponseFormat" ],
+      "properties" : {
+        "countryCodes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "geoCoordinatesResponseFormat" : {
+          "type" : "string",
+          "enum" : [ "GOOGLE", "DEGREE_MINUTE_SECONDS", "DECIMAL_DEGREE" ]
+        },
+        "lastCall" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "operatorIds" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "searchCenter" : {
+          "$ref" : "#/definitions/SearchCenterDTO"
+        }
+      }
+    },
+    "SearchCenterDTO" : {
+      "type" : "object",
+      "required" : [ "geoCoordinates", "radius" ],
+      "properties" : {
+        "geoCoordinates" : {
+          "$ref" : "#/definitions/GeoCoordinatesDTO"
+        },
+        "radius" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "AuthorizationStopIdentifications" : {
+      "type" : "object",
+      "properties" : {
+        "PlugAndChargeIdentification" : {
+          "$ref" : "#/definitions/PlugAndChargeIdentification"
+        },
+        "QRCodeIdentification" : {
+          "$ref" : "#/definitions/QRCodeIdentification"
+        },
+        "RFIDIdentification" : {
+          "$ref" : "#/definitions/RFIDIdentification"
+        },
+        "RFIDMifareFamilyIdentification" : {
+          "$ref" : "#/definitions/RFIDMifareFamilyIdentification"
+        },
+        "RemoteIdentification" : {
+          "$ref" : "#/definitions/RemoteIdentification"
+        }
+      }
+    },
+    "ERoamingAuthorizeResponse" : {
+      "type" : "object",
+      "required" : [ "AuthorizationStatus", "StatusCode" ],
+      "properties" : {
+        "AuthorizationStatus" : {
+          "type" : "string",
+          "enum" : [ "AUTHORIZED", "NOTAUTHORIZED" ]
+        },
+        "AuthorizationStopIdentifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AuthorizationStopIdentifications"
+          }
+        },
+        "CPOPartnerSessionID" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 250
+        },
+        "EMPPartnerSessionID" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 250
+        },
+        "ProviderID" : {
+          "type" : "string",
+          "pattern" : "^([A-Za-z]{2}\\-?[A-Za-z0-9]{3}|[A-Za-z]{2}[\\*|-]?[A-Za-z0-9]{3})$"
+        },
+        "SessionID" : {
+          "type" : "string",
+          "pattern" : "[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}"
+        },
+        "StatusCode" : {
+          "$ref" : "#/definitions/StatusCode"
+        }
+      }
+    },
+    "HashedPIN" : {
+      "type" : "object",
+      "required" : [ "Function", "Value" ],
+      "properties" : {
+        "Function" : {
+          "type" : "string",
+          "enum" : [ "BCRYPT" ]
+        },
+        "LegacyHashData" : {
+          "$ref" : "#/definitions/LegacyHashData"
+        },
+        "Value" : {
+          "type" : "string",
+          "pattern" : "^[0-9A-Za-z\\.+/=\\$]{10,100}$"
+        }
+      }
+    },
+    "LegacyHashData" : {
+      "type" : "object",
+      "required" : [ "Function" ],
+      "properties" : {
+        "Function" : {
+          "type" : "string",
+          "enum" : [ "MD5", "SHA_1" ]
+        },
+        "Salt" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 100
+        },
+        "Value" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PlugAndChargeIdentification" : {
+      "type" : "object",
+      "required" : [ "EvcoID" ],
+      "properties" : {
+        "EvcoID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$"
+        }
+      }
+    },
+    "QRCodeIdentification" : {
+      "type" : "object",
+      "required" : [ "EvcoID" ],
+      "properties" : {
+        "EvcoID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$"
+        },
+        "HashedPIN" : {
+          "$ref" : "#/definitions/HashedPIN"
+        },
+        "PIN" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "RFIDIdentification" : {
+      "type" : "object",
+      "required" : [ "RFID", "UID" ],
+      "properties" : {
+        "EvcoID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}-?[A-Za-z0-9]{3}-?C[A-Za-z0-9]{8}-?[\\d|A-Za-z])|([A-Za-z]{2}[*|-]?[A-Za-z0-9]{3}[*|-]?[A-Za-z0-9]{6}[*|-]?[\\d|X]))$"
+        },
+        "ExpiryDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "PrintedNumber" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 150
+        },
+        "RFID" : {
+          "type" : "string",
+          "enum" : [ "MIFARECLS", "MIFAREDES", "CALYPSO", "NFC", "MIFAREFAMILY" ]
+        },
+        "UID" : {
+          "type" : "string",
+          "pattern" : "^([0-9A-F]{8}|[0-9A-F]{14}|[0-9A-F]{20})$"
+        }
+      }
+    },
+    "RFIDMifareFamilyIdentification" : {
+      "type" : "object",
+      "required" : [ "UID" ],
+      "properties" : {
+        "UID" : {
+          "type" : "string",
+          "pattern" : "^([0-9A-F]{8,8}|[0-9A-F]{14,14}|[0-9A-F]{20,20})$"
+        }
+      }
+    },
+    "RemoteIdentification" : {
+      "type" : "object",
+      "required" : [ "EvcoID" ],
+      "properties" : {
+        "EvcoID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\-?[A-Za-z0-9]{3}\\-?C[A-Za-z0-9]{8}\\-?[\\d|A-Za-z])|([A-Za-z]{2}[\\*|\\-]?[A-Za-z0-9]{3}[\\*|\\-]?[A-Za-z0-9]{6}[\\*|\\-]?[\\d|X]))$"
+        }
+      }
+    },
+    "StatusCode" : {
+      "type" : "object",
+      "required" : [ "Code" ],
+      "properties" : {
+        "AdditionalInfo" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 1000
+        },
+        "Code" : {
+          "type" : "string",
+          "enum" : [ "CODE_000", "CODE_001", "CODE_002", "CODE_009", "CODE_017", "CODE_018", "CODE_019", "CODE_021", "CODE_022", "CODE_101", "CODE_102", "CODE_103", "CODE_105", "CODE_106", "CODE_110", "CODE_120", "CODE_121", "CODE_122", "CODE_200", "CODE_210", "CODE_300", "CODE_310", "CODE_320", "CODE_400", "CODE_501", "CODE_510", "CODE_601", "CODE_602", "CODE_603", "CODE_604", "CODE_700" ]
+        },
+        "Description" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 200
+        }
+      }
+    },
+    "ERoamingAuthorizeStart" : {
+      "type" : "object",
+      "required" : [ "Identification", "OperatorID" ],
+      "properties" : {
+        "CPOPartnerSessionID" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 250
+        },
+        "EMPPartnerSessionID" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 250
+        },
+        "EvseID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3}\\*?E[A-Za-z0-9*]{1,30})|(\\+?[0-9]{1,3}\\*[0-9]{3}\\*[0-9*]{1,32}))$"
+        },
+        "Identification" : {
+          "$ref" : "#/definitions/Identification"
+        },
+        "PartnerProductID" : {
+          "type" : "string",
+          "pattern" : "Standardpreis|AC1|AC3|DC|.{0,100}"
+        },
+        "SessionID" : {
+          "type" : "string",
+          "pattern" : "[A-Za-z0-9]{8}(-[A-Za-z0-9]{4}){3}-[A-Za-z0-9]{12}"
+        },
+        "OperatorID" : {
+          "type" : "string",
+          "pattern" : "^(([A-Za-z]{2}\\*?[A-Za-z0-9]{3})|(\\+?[0-9]{1,3}\\*[0-9]{3}))$"
+        }
+      }
+    },
+    "Identification" : {
+      "type" : "object",
+      "properties" : {
+        "qrcodeIdentification" : {
+          "$ref" : "#/definitions/QRCodeIdentification"
+        },
+        "RFIDMifareFamilyIdentification" : {
+          "$ref" : "#/definitions/RFIDMifareFamilyIdentification"
+        },
+        "QRCodeIdentification" : {
+          "$ref" : "#/definitions/QRCodeIdentification"
+        },
+        "PlugAndChargeIdentification" : {
+          "$ref" : "#/definitions/PlugAndChargeIdentification"
+        },
+        "RemoteIdentification" : {
+          "$ref" : "#/definitions/RemoteIdentification"
+        },
+        "RFIDIdentification" : {
+          "$ref" : "#/definitions/RFIDIdentification"
+        }
+      }
+    }
+  },
+  "externalDocs" : {
+    "description" : "General API usage documentation in confluence (read me first)",
+    "url" : "https://i-mobility.atlassian.net/wiki/spaces/IMPlatform/pages/586285133/External+Documentation"
+  }
+}
