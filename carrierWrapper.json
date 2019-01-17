@@ -1,0 +1,1295 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "This documentation is made for carrier wrappers",
+    "version" : "1.0",
+    "title" : "Carrier Wrapper",
+    "contact" : {
+      "email" : "julien@shoprunback.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "#",
+  "tags" : [ {
+    "name" : "general",
+    "description" : "Endpoints for all types of carriers"
+  }, {
+    "name" : "dropoff",
+    "description" : "Endoints for dropoff services only"
+  }, {
+    "name" : "pickup",
+    "description" : "Endpoints for pickup services only"
+  }, {
+    "name" : "postal",
+    "description" : "Endpoints for postal services only"
+  } ],
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/" : {
+      "get" : {
+        "tags" : [ "general" ],
+        "summary" : "This endpoint list all supported endpoints for this wrapper.",
+        "description" : "This is an hardcoded response (ie. the response is not programmatic but set by the developer)",
+        "operationId" : "listEndpoints",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Endpoints not implemented (falsy) are not required in the response.",
+            "schema" : {
+              "$ref" : "#/definitions/ListEndpoint"
+            }
+          }
+        }
+      }
+    },
+    "/type" : {
+      "get" : {
+        "tags" : [ "general" ],
+        "summary" : "Return the type of carrier service.",
+        "description" : "This is an hardcoded response",
+        "operationId" : "type",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Type of carrier service. You must provide the type in String and set boolean values. (for future services which provide multiple types). For most cases, only one boolean will be true.",
+            "schema" : {
+              "$ref" : "#/definitions/Type"
+            }
+          }
+        }
+      }
+    },
+    "/label" : {
+      "post" : {
+        "tags" : [ "general" ],
+        "summary" : "Get the label for a shipment",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Information about the sender, the recipient and the parcel",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Label"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return the parameters used to generate the label plus the ID of the shipment and the tracking URL.",
+            "schema" : {
+              "$ref" : "#/definitions/CreatedLabel"
+            }
+          }
+        }
+      }
+    },
+    "/price" : {
+      "post" : {
+        "tags" : [ "general" ],
+        "summary" : "Get the estimated price for a shipment",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Information about the sender, the recipient and the parcel. This endpoint is not required if the carrier service can't provide a price for a shipment",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Label"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return the parameters used to generate the label plus the ID of the shipment estimantion, the estimated price and the currency.",
+            "schema" : {
+              "$ref" : "#/definitions/EstimatedLabel"
+            }
+          }
+        }
+      }
+    },
+    "/dropoff/points" : {
+      "post" : {
+        "tags" : [ "dropoff" ],
+        "summary" : "Get the 10/20 closest dropoff points for a specified address or GPS coordinates",
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Information about the location of the sender",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/SenderLocation"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/DropoffPoint"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/dropoff/reserve_slot" : {
+      "post" : {
+        "tags" : [ "dropoff" ],
+        "summary" : "Reserve specific dropoff slot",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Information about the dropoff reservation",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DropoffReservationRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Dropoff slot reservation confirmation",
+            "schema" : {
+              "$ref" : "#/definitions/DropoffReservationResponse"
+            }
+          }
+        }
+      }
+    },
+    "/pickup" : {
+      "post" : {
+        "tags" : [ "pickup" ],
+        "summary" : "Request for a pickup",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "description" : "Information about the sender, the recipient and the parcel",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PickupRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Return the parameters used to request the pickup plus the ID of the pickup",
+            "schema" : { }
+          }
+        }
+      }
+    },
+    "/pickup/{pickupId}" : {
+      "delete" : {
+        "tags" : [ "pickup" ],
+        "parameters" : [ {
+          "name" : "pickupId",
+          "in" : "path",
+          "description" : "ID of pickup to be deleted",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "TODO"
+          }
+        }
+      }
+    },
+    "/tracking/{reference}" : {
+      "get" : {
+        "tags" : [ "general" ],
+        "parameters" : [ {
+          "name" : "reference",
+          "in" : "path",
+          "description" : "Reference of the shipment, pickup etc. Could be shipment_id, pickup_id ...",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Tracking response",
+            "schema" : { }
+          }
+        }
+      }
+    },
+    "/status" : {
+      "get" : {
+        "tags" : [ "general" ],
+        "summary" : "Get the status of the service",
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Service status",
+            "schema" : {
+              "$ref" : "#/definitions/Status"
+            }
+          }
+        }
+      }
+    },
+    "/pickup/slots" : {
+      "get" : {
+        "tags" : [ "pickup" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "Return all pickup slots for the 7 coming days",
+            "schema" : {
+              "$ref" : "#/definitions/Slots"
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/subscribe" : {
+      "post" : {
+        "tags" : [ "general" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "TODO"
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "petstore_auth" : {
+      "type" : "oauth2",
+      "authorizationUrl" : "http://petstore.swagger.io/oauth/dialog",
+      "flow" : "implicit",
+      "scopes" : {
+        "write:pets" : "modify pets in your account",
+        "read:pets" : "read your pets"
+      }
+    },
+    "api_key" : {
+      "type" : "apiKey",
+      "name" : "api_key",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "SenderLocation" : {
+      "type" : "object",
+      "properties" : {
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Second part of the address (can be empty)"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "city" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        }
+      }
+    },
+    "DropoffReservationRequest" : {
+      "type" : "object",
+      "properties" : {
+        "booking_reference" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DropoffReservationResponse" : {
+      "type" : "object",
+      "properties" : {
+        "confirmation_id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "DropoffPoint" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Name of the point"
+        },
+        "latitude" : {
+          "type" : "number"
+        },
+        "longitude" : {
+          "type" : "number"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "address line 2"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : "zipcode"
+        },
+        "city" : {
+          "type" : "string",
+          "description" : "City"
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        },
+        "logo_url" : {
+          "type" : "string",
+          "description" : "Logo of the dropoff points (if known)"
+        },
+        "id" : {
+          "type" : "string",
+          "description" : "Unique identifier of the dropoff"
+        },
+        "booking_reference" : {
+          "type" : "string",
+          "description" : "Unique identifier used for booking (can be blank)"
+        },
+        "opening" : {
+          "type" : "array",
+          "description" : "Opening array (0 = monday)",
+          "items" : {
+            "$ref" : "#/definitions/DropoffPoint_opening"
+          }
+        }
+      }
+    },
+    "Label" : {
+      "type" : "object",
+      "properties" : {
+        "shipment_id" : {
+          "type" : "string"
+        },
+        "origin" : {
+          "$ref" : "#/definitions/Label_origin"
+        },
+        "destination" : {
+          "$ref" : "#/definitions/Label_destination"
+        },
+        "parcel" : {
+          "$ref" : "#/definitions/Label_parcel"
+        },
+        "dropoff" : {
+          "$ref" : "#/definitions/Label_dropoff"
+        },
+        "metadata" : {
+          "$ref" : "#/definitions/Label_metadata"
+        }
+      }
+    },
+    "CreatedLabel" : {
+      "type" : "object",
+      "properties" : {
+        "origin" : {
+          "$ref" : "#/definitions/CreatedLabel_origin"
+        },
+        "destination" : {
+          "$ref" : "#/definitions/CreatedLabel_destination"
+        },
+        "parcel" : {
+          "$ref" : "#/definitions/CreatedLabel_parcel"
+        },
+        "dropoff" : {
+          "$ref" : "#/definitions/Label_dropoff"
+        },
+        "carrier_shipment_id" : {
+          "type" : "string",
+          "description" : "Unique identifier of the shipment for this carrier"
+        },
+        "original_label_url" : {
+          "type" : "string",
+          "description" : "Url of the label stored by the carrier"
+        },
+        "label_url" : {
+          "type" : "string",
+          "description" : "URL of the label (PDF)"
+        }
+      }
+    },
+    "PickupRequest" : {
+      "type" : "object",
+      "properties" : {
+        "shipment_id" : {
+          "type" : "string"
+        },
+        "origin" : {
+          "$ref" : "#/definitions/PickupRequest_origin"
+        },
+        "pickup" : {
+          "$ref" : "#/definitions/PickupRequest_pickup"
+        },
+        "destination" : {
+          "$ref" : "#/definitions/PickupRequest_destination"
+        },
+        "parcel" : {
+          "$ref" : "#/definitions/Label_parcel"
+        }
+      }
+    },
+    "PickupResponse" : {
+      "type" : "object",
+      "properties" : {
+        "pickup_id" : {
+          "type" : "string",
+          "description" : "ID return by the carrier"
+        },
+        "carrier_shipment_id" : {
+          "type" : "string",
+          "description" : "Id of the shipment label"
+        },
+        "original_label_url" : {
+          "type" : "string",
+          "description" : "Url of the label stored by the carrier"
+        },
+        "label_url" : {
+          "type" : "string",
+          "description" : "Label url (S3)"
+        },
+        "origin" : {
+          "$ref" : "#/definitions/PickupResponse_origin"
+        },
+        "pickup" : {
+          "$ref" : "#/definitions/PickupRequest_pickup"
+        },
+        "destination" : {
+          "$ref" : "#/definitions/PickupRequest_destination"
+        },
+        "parcel" : {
+          "$ref" : "#/definitions/Label_parcel"
+        }
+      },
+      "description" : "Parameters used to request the pickup plus the ID of the pickup"
+    },
+    "EstimatedLabel" : {
+      "type" : "object",
+      "properties" : {
+        "shipment_id" : {
+          "type" : "string"
+        },
+        "origin" : {
+          "$ref" : "#/definitions/CreatedLabel_origin"
+        },
+        "destination" : {
+          "$ref" : "#/definitions/EstimatedLabel_destination"
+        },
+        "parcel" : {
+          "$ref" : "#/definitions/Label_parcel"
+        },
+        "carrier_shipment_id" : {
+          "type" : "string",
+          "description" : "Unique identifier of the estimated shipment for this carrier"
+        },
+        "price" : {
+          "type" : "number",
+          "description" : "Estimated price"
+        },
+        "currency" : {
+          "type" : "string",
+          "description" : "ISO code of the currency (EUR, USD, ...)"
+        }
+      }
+    },
+    "ListEndpoint" : {
+      "type" : "object",
+      "properties" : {
+        "/" : {
+          "$ref" : "#/definitions/ListEndpoint_"
+        },
+        "type" : {
+          "$ref" : "#/definitions/ListEndpoint_"
+        },
+        "pickup/slots" : {
+          "$ref" : "#/definitions/ListEndpoint_"
+        },
+        "price" : {
+          "$ref" : "#/definitions/ListEndpoint_"
+        },
+        "status" : {
+          "$ref" : "#/definitions/ListEndpoint_"
+        }
+      }
+    },
+    "Type" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "postal", "pickup", "dropoff", "linehaul" ]
+        },
+        "postal" : {
+          "type" : "boolean"
+        },
+        "pickup" : {
+          "type" : "boolean"
+        },
+        "dropoff" : {
+          "type" : "boolean"
+        },
+        "linehaul" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "Status" : {
+      "type" : "object",
+      "properties" : {
+        "available" : {
+          "type" : "boolean",
+          "description" : "Does the service is working properly?"
+        },
+        "response_time" : {
+          "type" : "integer",
+          "description" : "Response time of the service in milliseconds.\n -1 if no API"
+        },
+        "timeout" : {
+          "type" : "boolean",
+          "description" : "Does the API reached the time limit (timeout) before replying?"
+        },
+        "limit" : {
+          "type" : "integer",
+          "description" : "Time in milliseconds set as timeout limit (30s by default)"
+        }
+      }
+    },
+    "Slots" : {
+      "type" : "object",
+      "properties" : {
+        "days" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Slots_days"
+          }
+        }
+      }
+    },
+    "TrackingInformations" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "description" : "Last step's status of the shipment"
+        },
+        "location" : {
+          "type" : "string",
+          "description" : "Last location of the shipment"
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the last event"
+        },
+        "datetime" : {
+          "type" : "string",
+          "description" : "Datetime of the last event"
+        },
+        "steps" : {
+          "$ref" : "#/definitions/TrackingInformations_steps"
+        }
+      }
+    },
+    "DropoffPoint_opening" : {
+      "properties" : {
+        "start_at" : {
+          "type" : "string",
+          "description" : "HH:MM:SS UTC time"
+        },
+        "end_at" : {
+          "type" : "string",
+          "description" : "HH:MM:SS UTC time"
+        }
+      }
+    },
+    "Label_origin" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Identity of the sender (John Doe)"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the sender (John)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the sender (Doe)"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Company name of the sender (can be empty)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Second part of the address (can be empty)"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "city" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Phone number of the sender (international format)"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "Email of the sender"
+        }
+      }
+    },
+    "Label_destination" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Identity of the recipient (Jane Doe)"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the recipient (Jane)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the recipient (Doe)"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Company name of the recipient (can be empty)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Second part of the address (can be empty)"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : "Zipcode destination"
+        },
+        "city" : {
+          "type" : "string",
+          "description" : "City destination"
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Phone number of the recipient (international format)"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "Email of the recipient"
+        }
+      }
+    },
+    "Label_parcel" : {
+      "properties" : {
+        "length_in_cm" : {
+          "type" : "integer"
+        },
+        "width_in_cm" : {
+          "type" : "integer"
+        },
+        "height_in_cm" : {
+          "type" : "integer"
+        },
+        "weight_in_grams" : {
+          "type" : "integer"
+        },
+        "number_of_pieces" : {
+          "type" : "integer",
+          "description" : "Number of pieces of the shipment"
+        }
+      }
+    },
+    "Label_dropoff" : {
+      "properties" : {
+        "point_id" : {
+          "type" : "string",
+          "description" : "ID returned for each points by the /dropoff/points call"
+        }
+      },
+      "description" : "Informations required if it is a dropoff service"
+    },
+    "Label_metadata" : {
+      "properties" : {
+        "RMA" : {
+          "type" : "string",
+          "description" : "example of matadata"
+        }
+      },
+      "description" : "Metadata are data which can be qualified but can be needed for a certain carrier service. When you want a certain data to generate a label, contact us and we will add the needed metadata in this metadata part"
+    },
+    "CreatedLabel_origin" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Identity of the sender (John Doe)"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the sender (John)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the sender (Doe)"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Company name of the sender (can be empty)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Second part of the address (can be empty)"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "city" : {
+          "type" : "string",
+          "description" : "City"
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Phone number of the sender (international format)"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "Email of the sender"
+        }
+      }
+    },
+    "CreatedLabel_destination" : {
+      "properties" : {
+        "carrier_code" : {
+          "type" : "string",
+          "description" : "destination carrier code"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "Identity of the recipient (Jane Doe)"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the recipient (Jane)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the recipient (Doe)"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Company name of the recipient (can be empty)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Second part of the address (can be empty)"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "city" : {
+          "type" : "string",
+          "description" : "City"
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Phone number of the recipient (international format)"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "Email of the recipient"
+        }
+      }
+    },
+    "CreatedLabel_parcel" : {
+      "properties" : {
+        "length_in_cm" : {
+          "type" : "integer"
+        },
+        "width_in_cm" : {
+          "type" : "integer"
+        },
+        "height_in_cm" : {
+          "type" : "integer"
+        },
+        "weight_in_grams" : {
+          "type" : "integer"
+        },
+        "number_of_pieces" : {
+          "type" : "integer",
+          "description" : "Number of pieces of the shipment"
+        },
+        "content" : {
+          "type" : "string",
+          "description" : "Description of the parcel's content"
+        }
+      }
+    },
+    "PickupRequest_origin" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Requestor's name of the pickup"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the recipient (Jane)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the recipient (Doe)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Requestor Contact Phone Number"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Identity of the sender (John Doe)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Address 2"
+        },
+        "package_location" : {
+          "type" : "string",
+          "description" : "Package Location in the pickup place"
+        },
+        "city" : {
+          "type" : "string",
+          "description" : "City of the pickup place"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : "ZipCode"
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "Country code of the pickup place"
+        },
+        "latitude" : {
+          "type" : "number"
+        },
+        "longitude" : {
+          "type" : "number"
+        }
+      }
+    },
+    "PickupRequest_pickup" : {
+      "properties" : {
+        "date" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "The date at which the pick up has been scheduled"
+        },
+        "slot_id" : {
+          "type" : "string",
+          "description" : "slot id if exists"
+        },
+        "slot_start_at" : {
+          "type" : "string",
+          "format" : "time",
+          "description" : "Time in hours and minutes (HH:MM) by which the pick will be ready"
+        },
+        "slot_end_at" : {
+          "type" : "string",
+          "format" : "time",
+          "description" : "Closing time of the pickup location"
+        },
+        "special_instructions" : {
+          "type" : "string",
+          "description" : "special instructions for pickup"
+        }
+      }
+    },
+    "PickupRequest_destination" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Identity of the recipient (Jane Doe)"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the recipient (Jane)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the recipient (Doe)"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Company name of the recipient (can be empty)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Second part of the address (can be empty)"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : "Zipcode destination"
+        },
+        "city" : {
+          "type" : "string",
+          "description" : "City destination"
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Phone number of the recipient (international format)"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "Email of the recipient"
+        },
+        "latitude" : {
+          "type" : "number"
+        },
+        "longitude" : {
+          "type" : "number"
+        }
+      }
+    },
+    "PickupResponse_origin" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "description" : "Requestor's name of the pickup"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the recipient (Jane)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the recipient (Doe)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Requestor Contact Phone Number"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Identity of the sender (John Doe)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Address 2"
+        },
+        "package_location" : {
+          "type" : "string",
+          "description" : "Package Location in the pickup place"
+        },
+        "city" : {
+          "type" : "string",
+          "description" : "City of the pickup place"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : "ZipCode"
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "Country code of the pickup place"
+        }
+      }
+    },
+    "EstimatedLabel_destination" : {
+      "properties" : {
+        "carrier_code" : {
+          "type" : "string",
+          "description" : "destination carrier code"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "Identity of the recipient (Jane Doe)"
+        },
+        "first_name" : {
+          "type" : "string",
+          "description" : "First name of the recipient (Jane)"
+        },
+        "last_name" : {
+          "type" : "string",
+          "description" : "Last name of the recipient (Doe)"
+        },
+        "company" : {
+          "type" : "string",
+          "description" : "Company name of the recipient (can be empty)"
+        },
+        "street_number" : {
+          "type" : "string",
+          "description" : "Number of the street"
+        },
+        "street_name" : {
+          "type" : "string",
+          "description" : "Name of the street"
+        },
+        "line1" : {
+          "type" : "string",
+          "description" : "Full First part of the address"
+        },
+        "line2" : {
+          "type" : "string",
+          "description" : "Second part of the address (can be empty)"
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "(can be empty)"
+        },
+        "zipcode" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "city" : {
+          "type" : "string",
+          "description" : ""
+        },
+        "country_code" : {
+          "type" : "string",
+          "description" : "ISO Code 2 of the country (always provided)"
+        },
+        "phone" : {
+          "type" : "string",
+          "description" : "Phone number of the recipient (international format)"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "Email of the recipient"
+        }
+      }
+    },
+    "ListEndpoint_" : {
+      "properties" : {
+        "get" : {
+          "type" : "boolean",
+          "default" : true
+        }
+      }
+    },
+    "Slots_slots" : {
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "description" : "ID of the slot"
+        },
+        "start_time" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Datetime of the beginning of the slot"
+        },
+        "duration" : {
+          "type" : "integer",
+          "description" : "time in minutes"
+        },
+        "availability" : {
+          "type" : "integer",
+          "description" : "How many courier available for this slot. (set to 1000 when unlimited,  -1 when not known but known as not unlimited)"
+        }
+      }
+    },
+    "Slots_days" : {
+      "properties" : {
+        "date" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "slots" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Slots_slots"
+          }
+        }
+      }
+    },
+    "TrackingInformations_steps" : {
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "description" : "Status of the shipment"
+        },
+        "location" : {
+          "type" : "string",
+          "description" : "Location of the shipment"
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "Description of the event"
+        },
+        "datetime" : {
+          "type" : "string",
+          "description" : "Datetime of the event"
+        }
+      }
+    }
+  }
+}
