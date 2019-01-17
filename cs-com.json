@@ -1,0 +1,3318 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "## Authentication options\n\n### OAuth2 / OpenID Connect\n\nThe supported authentication method is OpenID Connect via Keycloak. For testing APIs via Swaggerhub or Swagger UI,please use **client_id** `swagger`.\n\nWhen developing applications against this API, a separate client application must be registered in Keycloak.\n\n### X-Token header authentication\n\nInternal use only, deprecated. The core services use these authentication headers for system account based requests.\n",
+    "version" : "LATEST",
+    "title" : "API Gateway - CS-Communicator"
+  },
+  "host" : "api-gateway-occ-int.imobility.azure.altemista.cloud",
+  "basePath" : "/resources",
+  "tags" : [ {
+    "name" : "Charging station commands",
+    "description" : "API for sending commands to charging stations"
+  }, {
+    "name" : "Charging transaction commands",
+    "description" : "API for starting and stopping transactions"
+  }, {
+    "name" : "Charging station message log API",
+    "description" : "Communication log with charging stations"
+  } ],
+  "schemes" : [ "https" ],
+  "security" : [ {
+    "SessionToken" : [ ]
+  }, {
+    "OAuth2Implicit" : [ ]
+  } ],
+  "paths" : {
+    "/cso/cs/commands/change-availability" : {
+      "post" : {
+        "tags" : [ "Charging station commands" ],
+        "summary" : "Change availability of an Charging station",
+        "description" : "",
+        "operationId" : "changeAvailabilityForChargingStation",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result.",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "requestName" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                }
+              },
+              "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/commands/change-availability/evse" : {
+      "post" : {
+        "tags" : [ "Charging station commands" ],
+        "summary" : "Change availability of an EVSE",
+        "description" : "",
+        "operationId" : "changeAvailabilityForEvse",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_1"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result.",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "requestName" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                }
+              },
+              "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/message/by-params/{externalChargingStationId}/{uniqueMessageId}/{direction}/{type}" : {
+      "get" : {
+        "tags" : [ "Charging station message log API" ],
+        "summary" : "Search for stored message by external charging station ID, unique message ID, message direction and message type",
+        "description" : "",
+        "operationId" : "findChargingStationMessagesByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "externalChargingStationId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uniqueMessageId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        }, {
+          "name" : "type",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "versionedData" : {
+                  "$ref" : "#/definitions/inline_response_200_1_versionedData"
+                },
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                },
+                "name" : {
+                  "type" : "string"
+                },
+                "direction" : {
+                  "type" : "string",
+                  "enum" : [ "INBOUND", "OUTBOUND" ]
+                },
+                "type" : {
+                  "type" : "string",
+                  "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+                },
+                "standardRaw" : {
+                  "$ref" : "#/definitions/inline_response_200_1_standardRaw"
+                },
+                "createdOn" : {
+                  "type" : "string",
+                  "format" : "date-time"
+                },
+                "properties" : {
+                  "$ref" : "#/definitions/inline_response_200_1_properties"
+                },
+                "protocol" : {
+                  "type" : "string",
+                  "enum" : [ "OCPP15", "OCPP16J" ]
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/message/{id}" : {
+      "get" : {
+        "tags" : [ "Charging station message log API" ],
+        "summary" : "Get a single message by its internal ID",
+        "description" : "",
+        "operationId" : "findChargingStationMessageById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "pattern" : "\\d+",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "versionedData" : {
+                  "$ref" : "#/definitions/inline_response_200_1_versionedData"
+                },
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                },
+                "name" : {
+                  "type" : "string"
+                },
+                "direction" : {
+                  "type" : "string",
+                  "enum" : [ "INBOUND", "OUTBOUND" ]
+                },
+                "type" : {
+                  "type" : "string",
+                  "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+                },
+                "standardRaw" : {
+                  "$ref" : "#/definitions/inline_response_200_1_standardRaw"
+                },
+                "createdOn" : {
+                  "type" : "string",
+                  "format" : "date-time"
+                },
+                "properties" : {
+                  "$ref" : "#/definitions/inline_response_200_1_properties"
+                },
+                "protocol" : {
+                  "type" : "string",
+                  "enum" : [ "OCPP15", "OCPP16J" ]
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/message/{id}/message-object" : {
+      "get" : {
+        "tags" : [ "Charging station message log API" ],
+        "summary" : "Return the message object of the message found by ID",
+        "description" : "",
+        "operationId" : "findStandardMessageObjectOfMessageById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "pattern" : "\\d+",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+              "discriminator" : "className",
+              "properties" : {
+                "protocol" : {
+                  "type" : "string",
+                  "enum" : [ "OCPP15", "OCPP16J" ]
+                },
+                "uniqueMessageId" : {
+                  "type" : "string",
+                  "minLength" : 1,
+                  "maxLength" : 36
+                },
+                "externalChargingStationId" : {
+                  "type" : "string"
+                }
+              },
+              "description" : "All messages received from or sent to charging stations inherit from this type."
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/message/response/{externalChargingStationId}/{uniqueMessageId}" : {
+      "get" : {
+        "tags" : [ "Charging station message log API" ],
+        "summary" : "Search for response or error message by external charging station ID and unique message ID",
+        "description" : "",
+        "operationId" : "findResponseByUniqueMessageId",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "externalChargingStationId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uniqueMessageId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Response message",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "versionedData" : {
+                  "$ref" : "#/definitions/inline_response_200_1_versionedData"
+                },
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                },
+                "name" : {
+                  "type" : "string"
+                },
+                "direction" : {
+                  "type" : "string",
+                  "enum" : [ "INBOUND", "OUTBOUND" ]
+                },
+                "type" : {
+                  "type" : "string",
+                  "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+                },
+                "standardRaw" : {
+                  "$ref" : "#/definitions/inline_response_200_1_standardRaw"
+                },
+                "createdOn" : {
+                  "type" : "string",
+                  "format" : "date-time"
+                },
+                "properties" : {
+                  "$ref" : "#/definitions/inline_response_200_1_properties"
+                },
+                "protocol" : {
+                  "type" : "string",
+                  "enum" : [ "OCPP15", "OCPP16J" ]
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "No response yet"
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/message/scheduled-request-response" : {
+      "post" : {
+        "tags" : [ "Charging station message log API", "Charging station commands" ],
+        "summary" : "Search for response or error message for ExternalRequestScheduledResponse",
+        "description" : "",
+        "operationId" : "findResponseForScheduledRequest",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_2"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Response message",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "versionedData" : {
+                  "$ref" : "#/definitions/inline_response_200_1_versionedData"
+                },
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                },
+                "name" : {
+                  "type" : "string"
+                },
+                "direction" : {
+                  "type" : "string",
+                  "enum" : [ "INBOUND", "OUTBOUND" ]
+                },
+                "type" : {
+                  "type" : "string",
+                  "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+                },
+                "standardRaw" : {
+                  "$ref" : "#/definitions/inline_response_200_1_standardRaw"
+                },
+                "createdOn" : {
+                  "type" : "string",
+                  "format" : "date-time"
+                },
+                "properties" : {
+                  "$ref" : "#/definitions/inline_response_200_1_properties"
+                },
+                "protocol" : {
+                  "type" : "string",
+                  "enum" : [ "OCPP15", "OCPP16J" ]
+                }
+              }
+            }
+          },
+          "404" : {
+            "description" : "No response yet"
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/message/by-params/{externalChargingStationId}/{uniqueMessageId}" : {
+      "get" : {
+        "tags" : [ "Charging station message log API" ],
+        "summary" : "Search for stored messages by external charging station ID and unique message ID",
+        "description" : "",
+        "operationId" : "findAllChargingStationMessagesByParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "externalChargingStationId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uniqueMessageId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "versionedData" : {
+                    "$ref" : "#/definitions/inline_response_200_1_versionedData"
+                  },
+                  "externalChargingStationId" : {
+                    "type" : "string"
+                  },
+                  "uniqueMessageId" : {
+                    "type" : "string"
+                  },
+                  "name" : {
+                    "type" : "string"
+                  },
+                  "direction" : {
+                    "type" : "string",
+                    "enum" : [ "INBOUND", "OUTBOUND" ]
+                  },
+                  "type" : {
+                    "type" : "string",
+                    "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+                  },
+                  "standardRaw" : {
+                    "$ref" : "#/definitions/inline_response_200_1_standardRaw"
+                  },
+                  "createdOn" : {
+                    "type" : "string",
+                    "format" : "date-time"
+                  },
+                  "properties" : {
+                    "$ref" : "#/definitions/inline_response_200_1_properties"
+                  },
+                  "protocol" : {
+                    "type" : "string",
+                    "enum" : [ "OCPP15", "OCPP16J" ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/message/list" : {
+      "post" : {
+        "tags" : [ "Charging station message log API" ],
+        "summary" : "Search for stored messages",
+        "description" : "",
+        "operationId" : "searchChargingStationMessages",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_3"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "totalCount" : {
+                  "type" : "integer",
+                  "format" : "int64"
+                },
+                "results" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/definitions/inline_response_200_2_results"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/commands/reset" : {
+      "post" : {
+        "tags" : [ "Charging station commands" ],
+        "summary" : "Reset charging station",
+        "description" : "",
+        "operationId" : "reset",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_4"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result.",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "requestName" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                }
+              },
+              "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/commands/send-local-list" : {
+      "post" : {
+        "tags" : [ "Charging station commands" ],
+        "summary" : "Send local list (whitelist) to the charging station",
+        "description" : "",
+        "operationId" : "sendLocalList",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_5"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result.",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "requestName" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                }
+              },
+              "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/transaction/commands/remote-start" : {
+      "post" : {
+        "tags" : [ "Charging transaction commands" ],
+        "summary" : "Remote start a charging transaction",
+        "description" : "",
+        "operationId" : "remoteStart",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_6"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "required" : [ "csoSessionId", "evseId", "status" ],
+              "properties" : {
+                "csoSessionId" : {
+                  "type" : "string"
+                },
+                "evseId" : {
+                  "type" : "string"
+                },
+                "idTag" : {
+                  "type" : "string",
+                  "minLength" : 1,
+                  "maxLength" : 20
+                },
+                "status" : {
+                  "type" : "string",
+                  "enum" : [ "PENDING_REMOTE_START_REQUEST", "PENDING_REMOTE_START_RESPONSE", "REJECTED_BY_CHARGING_STATION", "REJECTED_BY_CENTRAL_SYSTEM", "PENDING_START_TRANSACTION", "CHARGING", "PENDING_STOP_TRANSACTION", "FINISHED", "FAILURE" ]
+                },
+                "versionedData" : {
+                  "$ref" : "#/definitions/inline_response_200_1_versionedData"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/transaction/commands/remote-stop" : {
+      "post" : {
+        "tags" : [ "Charging transaction commands" ],
+        "summary" : "Remote stop a charging transaction",
+        "description" : "",
+        "operationId" : "remoteStop",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_7"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    },
+    "/cso/cs/commands/unlock-connector" : {
+      "post" : {
+        "tags" : [ "Charging station commands" ],
+        "summary" : "Unlock connector of an EVSE",
+        "description" : "",
+        "operationId" : "unlockConnector",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/body_8"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result.",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "externalChargingStationId" : {
+                  "type" : "string"
+                },
+                "requestName" : {
+                  "type" : "string"
+                },
+                "uniqueMessageId" : {
+                  "type" : "string"
+                }
+              },
+              "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+            }
+          }
+        },
+        "security" : [ {
+          "SessionToken" : [ ]
+        }, {
+          "OAuth2Implicit" : [ ]
+        } ]
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "OAuth2Implicit" : {
+      "type" : "oauth2",
+      "authorizationUrl" : "https://keycloak-occ-int.imobility.azure.altemista.cloud/auth/realms/occ-int/protocol/openid-connect/auth",
+      "flow" : "implicit"
+    },
+    "SessionToken" : {
+      "type" : "apiKey",
+      "name" : "X-TOKEN",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "ExternalRequestScheduledResponse" : {
+      "type" : "object",
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "requestName" : {
+          "type" : "string"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+    },
+    "ChangeAvailabilityForChargingStationExternalRequestDTO" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "type" ],
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string",
+          "description" : "Official Charging station Id to change the availability for",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "INOPERATIVE", "OPERATIVE" ]
+        }
+      },
+      "description" : "Change availability for Charging station request"
+    },
+    "ChangeAvailabilityForEvseExternalRequestDTO" : {
+      "type" : "object",
+      "required" : [ "evseId", "type" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to change the availability for",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "INOPERATIVE", "OPERATIVE" ]
+        }
+      },
+      "description" : "Change availability for EVSE request"
+    },
+    "AbstractRequestDTO" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+      "properties" : {
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 36
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "remoteAddress" : {
+          "type" : "string"
+        },
+        "centralSystemRequestedAt" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "description" : "All messages received from or sent to charging stations inherit from this type."
+    },
+    "AbstractResponseDTO" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+      "properties" : {
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 36
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        }
+      },
+      "description" : "All messages received from or sent to charging stations inherit from this type."
+    },
+    "ErrorDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "errorCode", "errorDescription" ],
+        "properties" : {
+          "errorCode" : {
+            "type" : "string",
+            "enum" : [ "NOT_IMPLEMENTED", "NOT_SUPPORTED", "INTERNAL_ERROR", "PROTOCOL_ERROR", "SECURITY_ERROR", "FORMATION_VIOLATION", "PROPERTY_CONSTRAINT_VIOLATION", "OCCURENCE_CONSTRAINT_VIOLATION", "TYPE_CONSTRAINT_VIOLATION", "GENERIC_ERROR" ]
+          },
+          "errorDescription" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "ChargingStationMessageDTO" : {
+      "type" : "object",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/inline_response_200_1_versionedData"
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "direction" : {
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        },
+        "standardRaw" : {
+          "$ref" : "#/definitions/inline_response_200_1_standardRaw"
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "properties" : {
+          "$ref" : "#/definitions/inline_response_200_1_properties"
+        },
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        }
+      }
+    },
+    "ChargingStationMessagePropertiesDTO" : {
+      "type" : "object",
+      "properties" : {
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "evseId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string"
+        }
+      }
+    },
+    "VersionedData" : {
+      "type" : "object",
+      "required" : [ "id", "version" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "AbstractMessageDTO" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+      "discriminator" : "className",
+      "properties" : {
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 36
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        }
+      },
+      "description" : "All messages received from or sent to charging stations inherit from this type."
+    },
+    "AuthorisationDataDTO" : {
+      "type" : "object",
+      "required" : [ "idTag" ],
+      "properties" : {
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "idTagInfo" : {
+          "$ref" : "#/definitions/csocscommandssendlocallist_idTagInfo"
+        }
+      }
+    },
+    "AuthorizeRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "idTag" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "idTag" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "AuthorizeResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "idTagInfo" ],
+        "properties" : {
+          "idTagInfo" : {
+            "$ref" : "#/definitions/csocscommandssendlocallist_idTagInfo"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "BootNotificationRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "chargePointModel", "chargePointVendor" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "chargePointVendor" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          },
+          "chargePointModel" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          },
+          "chargePointSerialNumber" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 25
+          },
+          "chargeBoxSerialNumber" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 25
+          },
+          "firmwareVersion" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 50
+          },
+          "iccid" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          },
+          "imsi" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          },
+          "meterType" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 25
+          },
+          "meterSerialNumber" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 25
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "BootNotificationResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "currentTime", "interval", "status" ],
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACCEPTED", "PENDING", "REJECTED" ]
+          },
+          "currentTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "interval" : {
+            "type" : "number"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "ChangeAvailabilityRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "externalConnectorId", "type" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "externalConnectorId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "INOPERATIVE", "OPERATIVE" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "ChangeAvailabilityResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "status" ],
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACCEPTED", "REJECTED", "SCHEDULED" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "ChargingProfileDTO" : {
+      "type" : "object",
+      "required" : [ "chargingProfileId", "chargingProfileKind", "chargingProfilePurpose", "chargingSchedule", "stackLevel" ],
+      "properties" : {
+        "chargingProfileId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "transactionId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "stackLevel" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "chargingProfilePurpose" : {
+          "type" : "string",
+          "enum" : [ "CHARGE_POINT_MAX_PROFILE", "TX_DEFAULT_PROFILE", "TX_PROFILE" ]
+        },
+        "chargingProfileKind" : {
+          "type" : "string",
+          "enum" : [ "ABSOLUTE", "RECURRING", "RELATIVE" ]
+        },
+        "recurrencyKind" : {
+          "type" : "string",
+          "enum" : [ "DAILY", "WEEKLY" ]
+        },
+        "validFrom" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "validTo" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "chargingSchedule" : {
+          "$ref" : "#/definitions/ChargingProfileDTO_chargingSchedule"
+        }
+      }
+    },
+    "ChargingScheduleDTO" : {
+      "type" : "object",
+      "required" : [ "chargingRateUnit", "chargingSchedulePeriod" ],
+      "properties" : {
+        "startSchedule" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "chargingRateUnit" : {
+          "type" : "string",
+          "enum" : [ "A", "W" ]
+        },
+        "chargingSchedulePeriod" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ChargingProfileDTO_chargingSchedule_chargingSchedulePeriod"
+          }
+        },
+        "minChargingRate" : {
+          "type" : "number"
+        },
+        "duration" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ChargingSchedulePeriodDTO" : {
+      "type" : "object",
+      "required" : [ "limit", "startPeriod" ],
+      "properties" : {
+        "startPeriod" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "limit" : {
+          "type" : "number"
+        },
+        "numberPhases" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "DataTransferRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "vendorId" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "vendorId" : {
+            "type" : "string"
+          },
+          "data" : {
+            "type" : "string"
+          },
+          "messageId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "DataTransferResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "string"
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACCEPTED", "REJECTED", "UNKNOWN_MESSAGE_ID", "UNKNOWN_VENDOR_ID" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "HeartbeatRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "HeartbeatResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "properties" : {
+          "currentTime" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "IdTagInfoDTO" : {
+      "type" : "object",
+      "required" : [ "status" ],
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "BLOCKED", "EXPIRED", "INVALID", "CONCURRENT_TX" ]
+        },
+        "expiryDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "parentIdTag" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "MeterValueDTO" : {
+      "type" : "object",
+      "required" : [ "sampledValue", "timestamp" ],
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "sampledValue" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MeterValueDTO_sampledValue"
+          }
+        }
+      }
+    },
+    "MeterValuesRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "externalConnectorId", "meterValue" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "externalConnectorId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "transactionId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "meterValue" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/MeterValuesRequestDTO_meterValue"
+            }
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "MeterValuesResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "RemoteStartTransactionRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "idTag" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "externalConnectorId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "idTag" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          },
+          "chargingProfile" : {
+            "$ref" : "#/definitions/RemoteStartTransactionRequestDTO_chargingProfile"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "RemoteStartTransactionResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "status" ],
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACCEPTED", "REJECTED" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "RemoteStopTransactionRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "transactionId" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "transactionId" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "RemoteStopTransactionResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "status" ],
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACCEPTED", "REJECTED" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "ResetRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "type" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "type" : {
+            "type" : "string",
+            "enum" : [ "HARD", "SOFT" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "ResetResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "status" ],
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACCEPTED", "REJECTED" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "SampledValueDTO" : {
+      "type" : "object",
+      "required" : [ "value" ],
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "context" : {
+          "type" : "string",
+          "enum" : [ "INTERRUPTION_BEGIN", "INTERRUPTION_END", "SAMPLE_CLOCK", "SAMPLE_PERIODIC", "TRANSACTION_BEGIN", "TRANSACTION_END", "TRIGGER", "OTHER" ]
+        },
+        "format" : {
+          "type" : "string",
+          "enum" : [ "RAW", "SIGNED_DATA" ]
+        },
+        "measurand" : {
+          "type" : "string",
+          "enum" : [ "ENERGY_ACTIVE_EXPORT_REGISTER", "ENERGY_ACTIVE_IMPORT_REGISTER", "ENERGY_REACTIVE_EXPORT_REGISTER", "ENERGY_REACTIVE_IMPORT_REGISTER", "ENERGY_ACTIVE_EXPORT_INTERVAL", "ENERGY_ACTIVE_IMPORT_INTERVAL", "ENERGY_REACTIVE_EXPORT_INTERVAL", "ENERGY_REACTIVE_IMPORT_INTERVAL", "POWER_ACTIVE_EXPORT", "POWER_ACTIVE_IMPORT", "POWER_OFFERED", "POWER_REACTIVE_EXPORT", "POWER_REACTIVE_IMPORT", "POWER_FACTOR", "CURRENT_IMPORT", "CURRENT_EXPORT", "CURRENT_OFFERED", "VOLTAGE", "FREQUENCY", "TEMPERATURE", "SO_C", "RPM" ]
+        },
+        "phase" : {
+          "type" : "string",
+          "enum" : [ "L_1", "L_2", "L_3", "N", "L_1_N", "L_2_N", "L_3_N", "L_1_L_2", "L_2_L_3", "L_3_L_1" ]
+        },
+        "location" : {
+          "type" : "string",
+          "enum" : [ "CABLE", "EV", "INLET", "OUTLET", "BODY" ]
+        },
+        "unit" : {
+          "type" : "string",
+          "enum" : [ "WH", "K_WH", "VARH", "KVARH", "W", "K_W", "VA", "K_VA", "VAR", "KVAR", "A", "V", "K", "CELCIUS", "FAHRENHEIT", "PERCENT" ]
+        }
+      }
+    },
+    "SendLocalListRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "listVersion", "localAuthorisationList", "updateType" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "updateType" : {
+            "type" : "string",
+            "enum" : [ "DIFFERENTIAL", "FULL" ]
+          },
+          "listVersion" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "localAuthorisationList" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/csocscommandssendlocallist_localAuthorisationList"
+            }
+          },
+          "hash" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "SendLocalListResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "status" ],
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "ACCEPTED", "FAILED", "HASH_ERROR", "NOT_SUPPORTED", "VERSION_MISMATCH" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "StartTransactionRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "externalConnectorId", "idTag", "meterStart", "timestamp" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "externalConnectorId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "idTag" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          },
+          "meterStart" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "reservationId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "date-time"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "StartTransactionResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "idTagInfo", "transactionId" ],
+        "properties" : {
+          "idTagInfo" : {
+            "$ref" : "#/definitions/csocscommandssendlocallist_idTagInfo"
+          },
+          "transactionId" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "StatusNotificationRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "errorCode", "externalConnectorId", "status" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "externalConnectorId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "errorCode" : {
+            "type" : "string",
+            "enum" : [ "CONNECTOR_LOCK_FAILURE", "EV_COMMUNICATION_ERROR", "GROUND_FAILURE", "HIGH_TEMPERATURE", "INTERNAL_ERROR", "LOCAL_LIST_CONFLICT", "NO_ERROR", "OTHER_ERROR", "OVER_CURRENT_FAILURE", "POWER_METER_FAILURE", "POWER_SWITCH_FAILURE", "READER_FAILURE", "RESET_FAILURE", "UNDER_VOLTAGE", "OVER_VOLTAGE", "WEAK_SIGNAL" ]
+          },
+          "info" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 50
+          },
+          "status" : {
+            "type" : "string",
+            "enum" : [ "AVAILABLE", "PREPARING", "CHARGING", "SUSPENDED_EVSE", "SUSPENDED_EV", "FINISHING", "OCCUPIED", "RESERVED", "UNAVAILABLE", "FAULTED" ]
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "vendorId" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 255
+          },
+          "vendorErrorCode" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 50
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "StatusNotificationResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "StopTransactionRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "meterStop", "reason", "timestamp", "transactionId" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "idTag" : {
+            "type" : "string",
+            "minLength" : 0,
+            "maxLength" : 20
+          },
+          "meterStop" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "timestamp" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "transactionId" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "reason" : {
+            "type" : "string",
+            "description" : "Default reason is Local",
+            "enum" : [ "EMERGENCY_STOP", "EV_DISCONNECTED", "HARD_RESET", "LOCAL", "OTHER", "POWER_LOSS", "REBOOT", "REMOTE", "SOFT_RESET", "UNLOCK_COMMAND", "DE_AUTHORIZED", "UNKNOWN" ]
+          },
+          "transactionData" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/MeterValuesRequestDTO_meterValue"
+            }
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "StopTransactionResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "properties" : {
+          "idTagInfo" : {
+            "$ref" : "#/definitions/csocscommandssendlocallist_idTagInfo"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "TransactionDatumDTO" : {
+      "type" : "object",
+      "required" : [ "sampledValue", "timestamp" ],
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "sampledValue" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MeterValueDTO_sampledValue"
+          }
+        }
+      }
+    },
+    "UnlockConnectorRequestDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "externalConnectorId" ],
+        "properties" : {
+          "remoteAddress" : {
+            "type" : "string"
+          },
+          "centralSystemRequestedAt" : {
+            "type" : "string",
+            "format" : "date-time"
+          },
+          "externalConnectorId" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "UnlockConnectorResponseDTO" : {
+      "allOf" : [ {
+        "type" : "object",
+        "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+        "discriminator" : "className",
+        "properties" : {
+          "protocol" : {
+            "type" : "string",
+            "enum" : [ "OCPP15", "OCPP16J" ]
+          },
+          "uniqueMessageId" : {
+            "type" : "string",
+            "minLength" : 1,
+            "maxLength" : 36
+          },
+          "externalChargingStationId" : {
+            "type" : "string"
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      }, {
+        "type" : "object",
+        "required" : [ "status" ],
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "enum" : [ "UNLOCKED", "UNLOCK_FAILED", "NOT_SUPPORTED", "ACCEPTED", "REJECTED" ]
+          }
+        },
+        "description" : "All messages received from or sent to charging stations inherit from this type."
+      } ]
+    },
+    "ChargingStationMessageListDTO" : {
+      "type" : "object",
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/inline_response_200_1_versionedData"
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "direction" : {
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        },
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        },
+        "properties" : {
+          "$ref" : "#/definitions/inline_response_200_1_properties"
+        }
+      }
+    },
+    "SearchResultDTO" : {
+      "type" : "object",
+      "properties" : {
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "results" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        }
+      }
+    },
+    "SearchResultDTOChargingStationMessageListDTO" : {
+      "type" : "object",
+      "properties" : {
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "results" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/inline_response_200_2_results"
+          }
+        }
+      }
+    },
+    "SearchParameterDTO" : {
+      "type" : "object",
+      "properties" : {
+        "filterParameters" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        },
+        "sortProperties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/csocsmessagelist_sortProperties"
+          }
+        },
+        "aggregations" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        },
+        "fullTextSearch" : {
+          "type" : "string"
+        },
+        "fullTextSearchFields" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "limit" : {
+          "type" : "integer",
+          "format" : "int32",
+          "maximum" : 10000
+        },
+        "offset" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "SortPropertyDTO" : {
+      "type" : "object",
+      "properties" : {
+        "propertyName" : {
+          "type" : "string"
+        },
+        "ascending" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "ResetExternalRequestDTO" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "type" ],
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string",
+          "description" : "External charging station ID"
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "Type of reset to perform",
+          "enum" : [ "HARD", "SOFT" ]
+        }
+      },
+      "description" : "Reset request"
+    },
+    "SendLocalListExternalRequestDTO" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "localAuthorisationList", "updateType" ],
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string",
+          "description" : "External charging station ID"
+        },
+        "updateType" : {
+          "type" : "string",
+          "description" : "Update type",
+          "enum" : [ "DIFFERENTIAL", "FULL" ]
+        },
+        "listVersion" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Version of the list"
+        },
+        "localAuthorisationList" : {
+          "type" : "array",
+          "description" : "Authorisation list",
+          "items" : {
+            "$ref" : "#/definitions/csocscommandssendlocallist_localAuthorisationList"
+          }
+        },
+        "hash" : {
+          "type" : "string",
+          "description" : "Hash value"
+        }
+      },
+      "description" : "SendLocalList request"
+    },
+    "ChargingTransactionDTO" : {
+      "type" : "object",
+      "required" : [ "authorizationStatus", "csoId", "csoSessionId", "externalChargingStationId", "externalTransactionId", "idTag", "status" ],
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/inline_response_200_1_versionedData"
+        },
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "empSessionId" : {
+          "type" : "string"
+        },
+        "csoId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "evseId" : {
+          "type" : "string",
+          "description" : "EVSE-ID - optional for a transaction only authorized but not yet started.",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "PENDING_REMOTE_START_REQUEST", "PENDING_REMOTE_START_RESPONSE", "REJECTED_BY_CHARGING_STATION", "REJECTED_BY_CENTRAL_SYSTEM", "PENDING_START_TRANSACTION", "CHARGING", "PENDING_STOP_TRANSACTION", "FINISHED", "FAILURE" ]
+        },
+        "authorizationStatus" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "BLOCKED", "EXPIRED", "INVALID", "CONCURRENT_TX" ]
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "externalConnectorId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "externalTransactionId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "startInfo" : {
+          "$ref" : "#/definitions/ChargingTransactionDTO_startInfo"
+        },
+        "stopInfo" : {
+          "$ref" : "#/definitions/ChargingTransactionDTO_stopInfo"
+        },
+        "remoteStartInfo" : {
+          "$ref" : "#/definitions/ChargingTransactionDTO_remoteStartInfo"
+        },
+        "remoteStopInfo" : {
+          "$ref" : "#/definitions/ChargingTransactionDTO_remoteStartInfo"
+        }
+      }
+    },
+    "RemoteStartInfoDTO" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "REJECTED" ]
+        },
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 36
+        }
+      }
+    },
+    "RemoteStopInfoDTO" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "REJECTED" ]
+        },
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 36
+        }
+      }
+    },
+    "StartInfoDTO" : {
+      "type" : "object",
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 36
+        },
+        "reservationId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "meterWattHours" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "StopInfoDTO" : {
+      "type" : "object",
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 36
+        },
+        "stopReason" : {
+          "type" : "string",
+          "enum" : [ "EMERGENCY_STOP", "EV_DISCONNECTED", "HARD_RESET", "LOCAL", "OTHER", "POWER_LOSS", "REBOOT", "REMOTE", "SOFT_RESET", "UNLOCK_COMMAND", "DE_AUTHORIZED", "UNKNOWN" ]
+        },
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "authorizationStatus" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "BLOCKED", "EXPIRED", "INVALID", "CONCURRENT_TX" ]
+        },
+        "meterWattHours" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "RemoteStartExternalResponseDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "evseId", "status" ],
+      "properties" : {
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "evseId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "PENDING_REMOTE_START_REQUEST", "PENDING_REMOTE_START_RESPONSE", "REJECTED_BY_CHARGING_STATION", "REJECTED_BY_CENTRAL_SYSTEM", "PENDING_START_TRANSACTION", "CHARGING", "PENDING_STOP_TRANSACTION", "FINISHED", "FAILURE" ]
+        },
+        "versionedData" : {
+          "$ref" : "#/definitions/inline_response_200_1_versionedData"
+        }
+      }
+    },
+    "RemoteStartExternalRequestDTO" : {
+      "type" : "object",
+      "required" : [ "evseId", "idTag" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to start the transaction",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "idTag" : {
+          "type" : "string",
+          "description" : "Id tag the EMP customer",
+          "minLength" : 1,
+          "maxLength" : 20
+        }
+      },
+      "description" : "Transaction remote start request"
+    },
+    "RemoteStopExternalRequestDTO" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "evseId" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to start the transaction",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "csoSessionId" : {
+          "type" : "string",
+          "description" : "Session id from CSO System"
+        }
+      },
+      "description" : "Transaction remote start request"
+    },
+    "UnlockConnectorExternalRequestDTO" : {
+      "type" : "object",
+      "required" : [ "evseId" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to unlock",
+          "minLength" : 1,
+          "maxLength" : 38
+        }
+      },
+      "description" : "Unlock Connector request"
+    },
+    "body" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "type" ],
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string",
+          "description" : "Official Charging station Id to change the availability for",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "INOPERATIVE", "OPERATIVE" ]
+        }
+      },
+      "description" : "Change availability for Charging station request"
+    },
+    "inline_response_200" : {
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "requestName" : {
+          "type" : "string"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+    },
+    "body_1" : {
+      "type" : "object",
+      "required" : [ "evseId", "type" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to change the availability for",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "INOPERATIVE", "OPERATIVE" ]
+        }
+      },
+      "description" : "Change availability for EVSE request"
+    },
+    "inline_response_200_1_versionedData" : {
+      "required" : [ "id", "version" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "inline_response_200_1_standardRaw" : {
+      "required" : [ "externalChargingStationId", "protocol", "uniqueMessageId" ],
+      "properties" : {
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 36
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        }
+      },
+      "description" : "All messages received from or sent to charging stations inherit from this type."
+    },
+    "inline_response_200_1_properties" : {
+      "properties" : {
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "evseId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string"
+        }
+      }
+    },
+    "inline_response_200_1" : {
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/inline_response_200_1_versionedData"
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "direction" : {
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        },
+        "standardRaw" : {
+          "$ref" : "#/definitions/inline_response_200_1_standardRaw"
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "properties" : {
+          "$ref" : "#/definitions/inline_response_200_1_properties"
+        },
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        }
+      }
+    },
+    "body_2" : {
+      "type" : "object",
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "requestName" : {
+          "type" : "string"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        }
+      },
+      "description" : "Reference of async scheduled request, see cso/cs/message/scheduled-request-response endpoint to check for result."
+    },
+    "csocsmessagelist_sortProperties" : {
+      "properties" : {
+        "propertyName" : {
+          "type" : "string"
+        },
+        "ascending" : {
+          "type" : "boolean"
+        }
+      }
+    },
+    "body_3" : {
+      "type" : "object",
+      "properties" : {
+        "filterParameters" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        },
+        "sortProperties" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/csocsmessagelist_sortProperties"
+          }
+        },
+        "aggregations" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        },
+        "fullTextSearch" : {
+          "type" : "string"
+        },
+        "fullTextSearchFields" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "limit" : {
+          "type" : "integer",
+          "format" : "int32",
+          "maximum" : 10000
+        },
+        "offset" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "inline_response_200_2_results" : {
+      "properties" : {
+        "versionedData" : {
+          "$ref" : "#/definitions/inline_response_200_1_versionedData"
+        },
+        "createdOn" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "externalChargingStationId" : {
+          "type" : "string"
+        },
+        "uniqueMessageId" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "direction" : {
+          "type" : "string",
+          "enum" : [ "INBOUND", "OUTBOUND" ]
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "REQUEST", "RESPONSE", "ERROR" ]
+        },
+        "protocol" : {
+          "type" : "string",
+          "enum" : [ "OCPP15", "OCPP16J" ]
+        },
+        "properties" : {
+          "$ref" : "#/definitions/inline_response_200_1_properties"
+        }
+      }
+    },
+    "inline_response_200_2" : {
+      "properties" : {
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "results" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/inline_response_200_2_results"
+          }
+        }
+      }
+    },
+    "body_4" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "type" ],
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string",
+          "description" : "External charging station ID"
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "Type of reset to perform",
+          "enum" : [ "HARD", "SOFT" ]
+        }
+      },
+      "description" : "Reset request"
+    },
+    "csocscommandssendlocallist_idTagInfo" : {
+      "required" : [ "status" ],
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "BLOCKED", "EXPIRED", "INVALID", "CONCURRENT_TX" ]
+        },
+        "expiryDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "parentIdTag" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 20
+        }
+      }
+    },
+    "csocscommandssendlocallist_localAuthorisationList" : {
+      "required" : [ "idTag" ],
+      "properties" : {
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "idTagInfo" : {
+          "$ref" : "#/definitions/csocscommandssendlocallist_idTagInfo"
+        }
+      }
+    },
+    "body_5" : {
+      "type" : "object",
+      "required" : [ "externalChargingStationId", "localAuthorisationList", "updateType" ],
+      "properties" : {
+        "externalChargingStationId" : {
+          "type" : "string",
+          "description" : "External charging station ID"
+        },
+        "updateType" : {
+          "type" : "string",
+          "description" : "Update type",
+          "enum" : [ "DIFFERENTIAL", "FULL" ]
+        },
+        "listVersion" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Version of the list"
+        },
+        "localAuthorisationList" : {
+          "type" : "array",
+          "description" : "Authorisation list",
+          "items" : {
+            "$ref" : "#/definitions/csocscommandssendlocallist_localAuthorisationList"
+          }
+        },
+        "hash" : {
+          "type" : "string",
+          "description" : "Hash value"
+        }
+      },
+      "description" : "SendLocalList request"
+    },
+    "body_6" : {
+      "type" : "object",
+      "required" : [ "evseId", "idTag" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to start the transaction",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "idTag" : {
+          "type" : "string",
+          "description" : "Id tag the EMP customer",
+          "minLength" : 1,
+          "maxLength" : 20
+        }
+      },
+      "description" : "Transaction remote start request"
+    },
+    "inline_response_200_3" : {
+      "required" : [ "csoSessionId", "evseId", "status" ],
+      "properties" : {
+        "csoSessionId" : {
+          "type" : "string"
+        },
+        "evseId" : {
+          "type" : "string"
+        },
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "PENDING_REMOTE_START_REQUEST", "PENDING_REMOTE_START_RESPONSE", "REJECTED_BY_CHARGING_STATION", "REJECTED_BY_CENTRAL_SYSTEM", "PENDING_START_TRANSACTION", "CHARGING", "PENDING_STOP_TRANSACTION", "FINISHED", "FAILURE" ]
+        },
+        "versionedData" : {
+          "$ref" : "#/definitions/inline_response_200_1_versionedData"
+        }
+      }
+    },
+    "body_7" : {
+      "type" : "object",
+      "required" : [ "csoSessionId", "evseId" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to start the transaction",
+          "minLength" : 1,
+          "maxLength" : 38
+        },
+        "csoSessionId" : {
+          "type" : "string",
+          "description" : "Session id from CSO System"
+        }
+      },
+      "description" : "Transaction remote start request"
+    },
+    "body_8" : {
+      "type" : "object",
+      "required" : [ "evseId" ],
+      "properties" : {
+        "evseId" : {
+          "type" : "string",
+          "description" : "Official EVSE Id of the charge point / connector to unlock",
+          "minLength" : 1,
+          "maxLength" : 38
+        }
+      },
+      "description" : "Unlock Connector request"
+    },
+    "ChargingProfileDTO_chargingSchedule_chargingSchedulePeriod" : {
+      "required" : [ "limit", "startPeriod" ],
+      "properties" : {
+        "startPeriod" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "limit" : {
+          "type" : "number"
+        },
+        "numberPhases" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ChargingProfileDTO_chargingSchedule" : {
+      "required" : [ "chargingRateUnit", "chargingSchedulePeriod" ],
+      "properties" : {
+        "startSchedule" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "chargingRateUnit" : {
+          "type" : "string",
+          "enum" : [ "A", "W" ]
+        },
+        "chargingSchedulePeriod" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ChargingProfileDTO_chargingSchedule_chargingSchedulePeriod"
+          }
+        },
+        "minChargingRate" : {
+          "type" : "number"
+        },
+        "duration" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "MeterValueDTO_sampledValue" : {
+      "required" : [ "value" ],
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "context" : {
+          "type" : "string",
+          "enum" : [ "INTERRUPTION_BEGIN", "INTERRUPTION_END", "SAMPLE_CLOCK", "SAMPLE_PERIODIC", "TRANSACTION_BEGIN", "TRANSACTION_END", "TRIGGER", "OTHER" ]
+        },
+        "format" : {
+          "type" : "string",
+          "enum" : [ "RAW", "SIGNED_DATA" ]
+        },
+        "measurand" : {
+          "type" : "string",
+          "enum" : [ "ENERGY_ACTIVE_EXPORT_REGISTER", "ENERGY_ACTIVE_IMPORT_REGISTER", "ENERGY_REACTIVE_EXPORT_REGISTER", "ENERGY_REACTIVE_IMPORT_REGISTER", "ENERGY_ACTIVE_EXPORT_INTERVAL", "ENERGY_ACTIVE_IMPORT_INTERVAL", "ENERGY_REACTIVE_EXPORT_INTERVAL", "ENERGY_REACTIVE_IMPORT_INTERVAL", "POWER_ACTIVE_EXPORT", "POWER_ACTIVE_IMPORT", "POWER_OFFERED", "POWER_REACTIVE_EXPORT", "POWER_REACTIVE_IMPORT", "POWER_FACTOR", "CURRENT_IMPORT", "CURRENT_EXPORT", "CURRENT_OFFERED", "VOLTAGE", "FREQUENCY", "TEMPERATURE", "SO_C", "RPM" ]
+        },
+        "phase" : {
+          "type" : "string",
+          "enum" : [ "L_1", "L_2", "L_3", "N", "L_1_N", "L_2_N", "L_3_N", "L_1_L_2", "L_2_L_3", "L_3_L_1" ]
+        },
+        "location" : {
+          "type" : "string",
+          "enum" : [ "CABLE", "EV", "INLET", "OUTLET", "BODY" ]
+        },
+        "unit" : {
+          "type" : "string",
+          "enum" : [ "WH", "K_WH", "VARH", "KVARH", "W", "K_W", "VA", "K_VA", "VAR", "KVAR", "A", "V", "K", "CELCIUS", "FAHRENHEIT", "PERCENT" ]
+        }
+      }
+    },
+    "MeterValuesRequestDTO_meterValue" : {
+      "required" : [ "sampledValue", "timestamp" ],
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "sampledValue" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MeterValueDTO_sampledValue"
+          }
+        }
+      }
+    },
+    "RemoteStartTransactionRequestDTO_chargingProfile" : {
+      "required" : [ "chargingProfileId", "chargingProfileKind", "chargingProfilePurpose", "chargingSchedule", "stackLevel" ],
+      "properties" : {
+        "chargingProfileId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "transactionId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "stackLevel" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "chargingProfilePurpose" : {
+          "type" : "string",
+          "enum" : [ "CHARGE_POINT_MAX_PROFILE", "TX_DEFAULT_PROFILE", "TX_PROFILE" ]
+        },
+        "chargingProfileKind" : {
+          "type" : "string",
+          "enum" : [ "ABSOLUTE", "RECURRING", "RELATIVE" ]
+        },
+        "recurrencyKind" : {
+          "type" : "string",
+          "enum" : [ "DAILY", "WEEKLY" ]
+        },
+        "validFrom" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "validTo" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "chargingSchedule" : {
+          "$ref" : "#/definitions/ChargingProfileDTO_chargingSchedule"
+        }
+      }
+    },
+    "ChargingTransactionDTO_startInfo" : {
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 36
+        },
+        "reservationId" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "meterWattHours" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ChargingTransactionDTO_stopInfo" : {
+      "properties" : {
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 36
+        },
+        "stopReason" : {
+          "type" : "string",
+          "enum" : [ "EMERGENCY_STOP", "EV_DISCONNECTED", "HARD_RESET", "LOCAL", "OTHER", "POWER_LOSS", "REBOOT", "REMOTE", "SOFT_RESET", "UNLOCK_COMMAND", "DE_AUTHORIZED", "UNKNOWN" ]
+        },
+        "idTag" : {
+          "type" : "string",
+          "minLength" : 1,
+          "maxLength" : 20
+        },
+        "authorizationStatus" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "BLOCKED", "EXPIRED", "INVALID", "CONCURRENT_TX" ]
+        },
+        "meterWattHours" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ChargingTransactionDTO_remoteStartInfo" : {
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ACCEPTED", "REJECTED" ]
+        },
+        "timestamp" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "uniqueMessageId" : {
+          "type" : "string",
+          "minLength" : 0,
+          "maxLength" : 36
+        }
+      }
+    }
+  },
+  "externalDocs" : {
+    "description" : "General API usage documentation in confluence (read me first)",
+    "url" : "https://i-mobility.atlassian.net/wiki/spaces/IMPlatform/pages/586285133/External+Documentation"
+  }
+}
