@@ -1,0 +1,4743 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "REST-API utilzada para integração dos dados entre SAP e Insoft4.\n",
+    "version" : "2.3.4",
+    "title" : "Insoft4 SAP REST API",
+    "contact" : {
+      "url" : "https://www.insoft4.com.br/",
+      "email" : "desenvolvimento@insoft4.com.br"
+    }
+  },
+  "basePath" : "/insoft-sap-api",
+  "tags" : [ {
+    "name" : "init",
+    "description" : "Processo Inicial a ser realizado para realizar a autenticação do usuário na API."
+  }, {
+    "name" : "organizacionais",
+    "description" : "Interfaces da estrutura organizacional"
+  }, {
+    "name" : "horarios",
+    "description" : "Interfaces relacionadas ao cadastro de horários de trabalho. Enviar dados apenas do registro vigente de cada tabela. Integração não prevê alterações para vigências passadas."
+  }, {
+    "name" : "funcionario",
+    "description" : "Interfaces associadas aos funcionários"
+  }, {
+    "name" : "temporárias",
+    "description" : "Interfaces temporárias à serem utilizadas enquanto o GTSoft não estiver implantado."
+  } ],
+  "schemes" : [ "https", "http" ],
+  "paths" : {
+    "/auth" : {
+      "post" : {
+        "tags" : [ "init" ],
+        "summary" : "Recebe a chave da API e retorna o Token de Autenticação para ser utilizado na chamada das outras interfaces",
+        "operationId" : "authUser",
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "usuario",
+          "in" : "formData",
+          "description" : "O nome de usuário para login, em texto puro",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "senha",
+          "in" : "formData",
+          "description" : "A senha para login, em texto puro",
+          "required" : true,
+          "type" : "string",
+          "format" : "password"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Usuário Autenticado",
+            "schema" : {
+              "$ref" : "#/definitions/AuthUserResponse"
+            }
+          },
+          "403" : {
+            "description" : "Erro de autenticação"
+          }
+        },
+        "security" : [ {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/funcionario" : {
+      "post" : {
+        "tags" : [ "funcionario" ],
+        "summary" : "Insere o colaborador e seus históricos no Pontosoft. ATENÇÃO! Deve ser enviado o histórico completo do funcionário no POST, com todas suas tabelas filhas, no cadastro inicial. Para alterações, enviar o registro vigente da IT0000 e o objeto filho que possuirá inclusão ou alteração.",
+        "operationId" : "addFuncionario",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "funcionario",
+          "description" : "Estrutura do cadastro do colaborador que será inserido",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Funcionario"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "406" : {
+            "description" : "Organograma Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/ocorrencia" : {
+      "post" : {
+        "tags" : [ "funcionario" ],
+        "summary" : "Insere no sistema ocorrências legais dos colaboradores",
+        "operationId" : "addOcorrencia",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "ocorrencia",
+          "description" : "Estrutura do cadastro da ocorrência a ser integrada",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Ocorrencia"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "404" : {
+            "description" : "Colaborador não encontrado",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "406" : {
+            "description" : "De-para não encontrado",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/cargSetor" : {
+      "post" : {
+        "tags" : [ "organizacionais" ],
+        "summary" : "Insere os setores e cargos no sistema",
+        "operationId" : "addCargSet",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "cargSetor",
+          "description" : "Estrutura do setor ou cargo que será inserido. Necessário enviar os registros onde o campo OTYPE seja 'O', 'C' ou 'S'.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CargSetor"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/organograma" : {
+      "post" : {
+        "tags" : [ "organizacionais" ],
+        "summary" : "Insere o oganograma dos setores no sistema",
+        "operationId" : "addOrganograma",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "organograma",
+          "description" : "Estrutura do organograma para o cadastro de setores. Necessário enviar os registros onde o campo OTYPE seja 'O', 'C','S' ou 'K'.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Organograma"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/centroCusto" : {
+      "post" : {
+        "tags" : [ "organizacionais" ],
+        "summary" : "Insere o centro de custo dos setores",
+        "operationId" : "addCentroCusto",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "centroCusto",
+          "description" : "Estrutura do centro de custo dos setores",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CentroCusto"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/bloqueioEmpresa" : {
+      "post" : {
+        "tags" : [ "temporárias" ],
+        "summary" : "Insere um afastamento para as pessoas associadas ao fornecedor",
+        "operationId" : "bloqCompany",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "bloqueioEmpresa",
+          "description" : "Dados necessários para realizar o bloqueio",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/BloqueioEmpresa"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/bloqueioPessoa" : {
+      "post" : {
+        "tags" : [ "temporárias" ],
+        "summary" : "Insere um afastamento para a pessoa com documentação vencida",
+        "operationId" : "bloqPerson",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "bloqueioPessoa",
+          "description" : "Dados necessários para realizar o bloqueio",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/BloqueioPessoa"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/prestador" : {
+      "post" : {
+        "tags" : [ "temporárias" ],
+        "summary" : "Cadastro de prestadores de serviço fixos ou eventuais",
+        "operationId" : "addProvider",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "prestadorServiço",
+          "description" : "Dados necessários para o cadastro do prestador de serviço",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Prestador"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/substituicao" : {
+      "post" : {
+        "tags" : [ "funcionario" ],
+        "summary" : "Lançamento de substituição da jornada para um dia específico",
+        "operationId" : "addSubstitution",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "substituicao",
+          "description" : "Dados necessários para o lançamento da substituição",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Substituicao"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/escalaIntervalo" : {
+      "post" : {
+        "tags" : [ "horarios" ],
+        "summary" : "Cadastro da escala de intervalo intrajornada",
+        "operationId" : "addT550p",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "planoMensal",
+          "description" : "Dados necessários para envio da escala de intervalo",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EscalaIntervalo"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/planoDiario" : {
+      "post" : {
+        "tags" : [ "horarios" ],
+        "summary" : "Cadastro do plano de horário de trabalho diário",
+        "operationId" : "addT550a",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "planoMensal",
+          "description" : "Dados necessários para envio do plano diário",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PlanoDiario"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/planoPeriodico" : {
+      "post" : {
+        "tags" : [ "horarios" ],
+        "summary" : "Cadastro do plano de horário de trabalho periódico",
+        "operationId" : "addT551a",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "planoMensal",
+          "description" : "Dados necessários para envio do plano periodo",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/PlanoPeriodico"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/parametros" : {
+      "post" : {
+        "tags" : [ "horarios" ],
+        "summary" : "Parâmetros adicionais necessários para o cadastro no Ponto.",
+        "operationId" : "addParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "parametros",
+          "description" : "Dados necessários para o cadastro do horário de trabalho.",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Parametros"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    },
+    "/regraHorario" : {
+      "post" : {
+        "tags" : [ "horarios" ],
+        "summary" : "Cadastro da regra do plano de horário de trabalho. ATENÇÃO! Enviar apenas onde ZEITY = 1 quando existir registro duplicado para ZEITY = 3.",
+        "operationId" : "addT508a",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "planoMensal",
+          "description" : "Dados necessários para envio da regra do horário",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RegraHorario"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Registro processado com sucesso",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "400" : {
+            "description" : "Dados Inválidos",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          },
+          "401" : {
+            "description" : "Token Inválido",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse"
+            }
+          }
+        },
+        "security" : [ {
+          "Auth-Token" : [ ]
+        }, {
+          "Api-Key" : [ ]
+        } ]
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "Auth-Token" : {
+      "type" : "apiKey",
+      "name" : "Auth-Token",
+      "in" : "header"
+    },
+    "Api-Key" : {
+      "type" : "apiKey",
+      "name" : "Api-Key",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "CargSetor" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "mandt", "objid", "operacao", "otype", "plvar", "seqnr" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "minLength" : 1,
+          "maxLength" : 3
+        },
+        "plvar" : {
+          "type" : "string",
+          "description" : "Variante do Planejamento",
+          "minLength" : 1,
+          "maxLength" : 2
+        },
+        "otype" : {
+          "type" : "string",
+          "description" : "Tipo do Objeto",
+          "minLength" : 1,
+          "maxLength" : 2
+        },
+        "objid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Id do Objeto"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 1000",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "1000"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "istat" : {
+          "type" : "string",
+          "description" : "Status do planejamento",
+          "maxLength" : 1
+        },
+        "priox" : {
+          "type" : "string",
+          "description" : "Prioridade",
+          "maxLength" : 2
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término"
+        },
+        "langu" : {
+          "type" : "string",
+          "description" : "Código do idioma",
+          "maxLength" : 1
+        },
+        "dummy" : {
+          "type" : "string",
+          "description" : "Função Dummy",
+          "maxLength" : 9
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário",
+          "maxLength" : 12
+        },
+        "reasn" : {
+          "type" : "string",
+          "description" : "Motivo",
+          "maxLength" : 2
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Código do registro histórico",
+          "maxLength" : 1
+        },
+        "itxnr" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Módulo de texto para infotipo"
+        },
+        "sigla" : {
+          "type" : "string",
+          "description" : "Abreviatura do objeto(Campo short)",
+          "maxLength" : 12
+        },
+        "stext" : {
+          "type" : "string",
+          "description" : "Denominação do objeto",
+          "maxLength" : 40
+        },
+        "gdate" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de delimitação"
+        }
+      },
+      "description" : "Modelo do cadastro de setores e cargos referente ao infotipo 1000"
+    },
+    "Organograma" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "mandt", "objid", "operacao", "otype", "plvar", "relat", "rsign", "sclas", "seqnr", "sobid", "varyf" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "minLength" : 1,
+          "maxLength" : 3
+        },
+        "plvar" : {
+          "type" : "string",
+          "description" : "Variante do Planejamento",
+          "minLength" : 1,
+          "maxLength" : 2
+        },
+        "otype" : {
+          "type" : "string",
+          "description" : "Tipo do Objeto",
+          "minLength" : 1,
+          "maxLength" : 2
+        },
+        "objid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Id do Objeto"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 1001",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "1001"
+        },
+        "rsign" : {
+          "type" : "string",
+          "description" : "Modalidade de ligação",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "relat" : {
+          "type" : "string",
+          "description" : "Ligação entre objetos",
+          "minLength" : 1,
+          "maxLength" : 3
+        },
+        "istat" : {
+          "type" : "string",
+          "description" : "Status de planejamento",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "priox" : {
+          "type" : "string",
+          "description" : "Prioridade",
+          "maxLength" : 2
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de fim"
+        },
+        "varyf" : {
+          "type" : "string",
+          "description" : "Campo de variação para aquivo PLOG",
+          "minLength" : 1,
+          "maxLength" : 10
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Número de registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do Usuário",
+          "maxLength" : 12
+        },
+        "reasn" : {
+          "type" : "string",
+          "description" : "Motivo",
+          "maxLength" : 2
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Códgo de registro histórico",
+          "maxLength" : 1
+        },
+        "itxnr" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Módulo de texto para infotipo"
+        },
+        "sclas" : {
+          "type" : "string",
+          "description" : "Tipo do objeto vinculado",
+          "maxLength" : 2
+        },
+        "sobid" : {
+          "type" : "string",
+          "description" : "ID do objeto vinculado",
+          "maxLength" : 45
+        },
+        "prozt" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Porcentagem de ponderação",
+          "maximum" : 99999.99
+        },
+        "adata" : {
+          "type" : "string",
+          "description" : "Dados de ligação",
+          "maxLength" : 600
+        }
+      },
+      "description" : "Modelo do cadastro de organograma de setores referente ao infotipo 1001"
+    },
+    "CentroCusto" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "mandt", "objid", "operacao", "otype", "plvar", "seqnr" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "minLength" : 1,
+          "maxLength" : 3
+        },
+        "plvar" : {
+          "type" : "string",
+          "description" : "Variante do Planejamento",
+          "minLength" : 1,
+          "maxLength" : 2
+        },
+        "otype" : {
+          "type" : "string",
+          "description" : "Tipo do Objeto",
+          "minLength" : 1,
+          "maxLength" : 2
+        },
+        "objid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Id do Objeto"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 1009",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "1008"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "istat" : {
+          "type" : "string",
+          "description" : "Status do planejamento",
+          "maxLength" : 1
+        },
+        "priox" : {
+          "type" : "string",
+          "description" : "Prioridade",
+          "maxLength" : 2
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término"
+        },
+        "varyf" : {
+          "type" : "string",
+          "description" : "Campo de variação para arquivo PLOG",
+          "maxLength" : 10
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário",
+          "maxLength" : 12
+        },
+        "reasn" : {
+          "type" : "string",
+          "description" : "Motivo",
+          "maxLength" : 2
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Código de registro histórico",
+          "maxLength" : 2
+        },
+        "itxnr" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Módulo de texto para Infotipo"
+        },
+        "bukrs" : {
+          "type" : "string",
+          "description" : "Empresa",
+          "maxLength" : 4
+        },
+        "gsber" : {
+          "type" : "string",
+          "description" : "Divisão",
+          "maxLength" : 4
+        },
+        "werks" : {
+          "type" : "string",
+          "description" : "Centro",
+          "maxLength" : 4
+        },
+        "persa" : {
+          "type" : "string",
+          "description" : "Área de Recursos Humanos",
+          "maxLength" : 4
+        },
+        "btrtl" : {
+          "type" : "string",
+          "description" : "Sub Área de Recursos Humanos",
+          "maxLength" : 4
+        },
+        "kokrs" : {
+          "type" : "string",
+          "description" : "Área de Contabilidade de Custos",
+          "maxLength" : 4
+        }
+      },
+      "description" : "Modeo do cadastro de centro de custo referente ao infotipo 1008"
+    },
+    "Funcionario" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "massg", "massn", "operacao", "pernr", "seqnr", "stat2" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0000",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0000"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de admissão"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "massn" : {
+          "type" : "string",
+          "description" : "Tipo de medida",
+          "maxLength" : 2
+        },
+        "massg" : {
+          "type" : "string",
+          "description" : "Motivo da medida",
+          "maxLength" : 2
+        },
+        "stat1" : {
+          "type" : "string",
+          "description" : "Status especifico de cliente",
+          "maxLength" : 1
+        },
+        "stat2" : {
+          "type" : "string",
+          "description" : "Status da ocupacão",
+          "maxLength" : 1
+        },
+        "stat3" : {
+          "type" : "string",
+          "description" : "Status pagamento especial",
+          "maxLength" : 1
+        },
+        "histOrganizacionais" : {
+          "type" : "array",
+          "description" : "Histórico organizacional completo do funcionário, referente ao infotipo 1",
+          "items" : {
+            "$ref" : "#/definitions/HistOrganizacional"
+          }
+        },
+        "histDados" : {
+          "type" : "array",
+          "description" : "Histórico cadastral completo do funcionário, referente ao infotipo 2",
+          "items" : {
+            "$ref" : "#/definitions/HistDados"
+          }
+        },
+        "histEnderecos" : {
+          "type" : "array",
+          "description" : "Histórico cadastro do endereço do funcionário, referente ao infotipo 6",
+          "items" : {
+            "$ref" : "#/definitions/HistEndereco"
+          }
+        },
+        "histHorarios" : {
+          "type" : "array",
+          "description" : "Histórico de horários de trabalho do funcionario, referente ao infotipo 7",
+          "items" : {
+            "$ref" : "#/definitions/HistHorario"
+          }
+        },
+        "histEmails" : {
+          "type" : "array",
+          "description" : "Histórico de e-mails do funcionário, referente ao infotipo 105",
+          "items" : {
+            "$ref" : "#/definitions/HistEmail"
+          }
+        },
+        "histDocumentos" : {
+          "type" : "array",
+          "description" : "Histórico documental completo do funcionário, referente ao infotipo 465",
+          "items" : {
+            "$ref" : "#/definitions/HistDocumento"
+          }
+        },
+        "histTransportes" : {
+          "type" : "array",
+          "description" : "OPTIONAL. Histórico da linha de transporte do funcionário, referente ao infotipo 9015",
+          "items" : {
+            "$ref" : "#/definitions/HistTransporte"
+          }
+        },
+        "histCompradores" : {
+          "type" : "array",
+          "description" : "OPTIONAL. Histório do código de comprador do funcionáro, referente ao infotipo 0901",
+          "items" : {
+            "$ref" : "#/definitions/HistComprador"
+          }
+        }
+      },
+      "description" : "Modelo do cadastro do funcionário referente ao infotipo 0"
+    },
+    "HistOrganizacional" : {
+      "type" : "object",
+      "required" : [ "begda", "bukrs", "ename", "endda", "infty", "kostl", "orgeh", "pernr", "persg", "persk", "plans", "seqnr", "stell" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0001",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0001"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "bukrs" : {
+          "type" : "string",
+          "description" : "Empresa",
+          "maxLength" : 4
+        },
+        "werks" : {
+          "type" : "string",
+          "description" : "Área de Recursos Humanos",
+          "maxLength" : 4
+        },
+        "persg" : {
+          "type" : "string",
+          "description" : "Grupo de Empregados",
+          "maxLength" : 1
+        },
+        "persk" : {
+          "type" : "string",
+          "description" : "Subgrupo de Empregados",
+          "maxLength" : 2
+        },
+        "vdsk1" : {
+          "type" : "string",
+          "description" : "Chave da organização",
+          "maxLength" : 14
+        },
+        "gsber" : {
+          "type" : "string",
+          "description" : "Divisão",
+          "maxLength" : 4
+        },
+        "btrtl" : {
+          "type" : "string",
+          "description" : "Sub-área de Recursos Humanos",
+          "maxLength" : 4
+        },
+        "juper" : {
+          "type" : "string",
+          "description" : "Pessoa Jurídica",
+          "maxLength" : 4
+        },
+        "abkrs" : {
+          "type" : "string",
+          "description" : "Area de processamento da folha de pagamento",
+          "maxLength" : 2
+        },
+        "ansvh" : {
+          "type" : "string",
+          "description" : "Tipo de Mão de Obra",
+          "maxLength" : 2
+        },
+        "kostl" : {
+          "type" : "string",
+          "description" : "Centro de Custo",
+          "maxLength" : 10
+        },
+        "orgeh" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Unidade Organizacional"
+        },
+        "plans" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Posição"
+        },
+        "stell" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Cargo"
+        },
+        "mstbr" : {
+          "type" : "string",
+          "description" : "Área do Superior",
+          "maxLength" : 8
+        },
+        "sacha" : {
+          "type" : "string",
+          "description" : "Encarregado para calculo das folhas de pagamento",
+          "maxLength" : 3
+        },
+        "sachp" : {
+          "type" : "string",
+          "description" : "Encarregado para dados mestre de pessoal",
+          "maxLength" : 3
+        },
+        "sachz" : {
+          "type" : "string",
+          "description" : "Encarregado do registro de horas",
+          "maxLength" : 3
+        },
+        "sname" : {
+          "type" : "string",
+          "description" : "Nome do empregado(SOBRENOME NOME)",
+          "maxLength" : 30
+        },
+        "ename" : {
+          "type" : "string",
+          "description" : "Nome editado do empregado",
+          "maxLength" : 40
+        },
+        "otype" : {
+          "type" : "string",
+          "description" : "Tipo do Objeto",
+          "maxLength" : 2
+        },
+        "sbmod" : {
+          "type" : "string",
+          "description" : "Grupo de Encarregados",
+          "maxLength" : 4
+        },
+        "kokrs" : {
+          "type" : "string",
+          "description" : "Área de contablidade de custos",
+          "maxLength" : 4
+        },
+        "fistl" : {
+          "type" : "string",
+          "description" : "Centro Financeiro",
+          "maxLength" : 16
+        },
+        "geber" : {
+          "type" : "string",
+          "description" : "Fundos",
+          "maxLength" : 10
+        },
+        "fkber" : {
+          "type" : "string",
+          "description" : "Área Funcional",
+          "maxLength" : 16
+        },
+        "grantNbr" : {
+          "type" : "string",
+          "description" : "Subsídio público",
+          "maxLength" : 20
+        },
+        "sgmnt" : {
+          "type" : "string",
+          "description" : "Segmento",
+          "maxLength" : 10
+        },
+        "budgetPd" : {
+          "type" : "string",
+          "description" : "Período de Orçamento",
+          "maxLength" : 10
+        }
+      },
+      "description" : "Modelo referente ao infotipo 1"
+    },
+    "HistDados" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "gbdat", "gesch", "infty", "pernr", "seqnr" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0002",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0002"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "inits" : {
+          "type" : "string",
+          "description" : "Iniciais",
+          "maxLength" : 10
+        },
+        "nachn" : {
+          "type" : "string",
+          "description" : "Sobrenome",
+          "maxLength" : 40
+        },
+        "name2" : {
+          "type" : "string",
+          "description" : "Sobrenome de solteiro",
+          "maxLength" : 40
+        },
+        "nach2" : {
+          "type" : "string",
+          "description" : "Segundo Nome",
+          "maxLength" : 40
+        },
+        "vorna" : {
+          "type" : "string",
+          "description" : "Primeiro Nome",
+          "maxLength" : 40
+        },
+        "cname" : {
+          "type" : "string",
+          "description" : "Nome Completo",
+          "maxLength" : 80
+        },
+        "titel" : {
+          "type" : "string",
+          "description" : "Título",
+          "maxLength" : 15
+        },
+        "titl2" : {
+          "type" : "string",
+          "description" : "Título 2",
+          "maxLength" : 15
+        },
+        "namzu" : {
+          "type" : "string",
+          "description" : "Título de Nobreza",
+          "maxLength" : 15
+        },
+        "vorsw" : {
+          "type" : "string",
+          "description" : "Prefixo",
+          "maxLength" : 15
+        },
+        "vors2" : {
+          "type" : "string",
+          "description" : "Segundo prefixo",
+          "maxLength" : 15
+        },
+        "rufnm" : {
+          "type" : "string",
+          "description" : "Conhecido como",
+          "maxLength" : 40
+        },
+        "midnm" : {
+          "type" : "string",
+          "description" : "Nome do Meio",
+          "maxLength" : 40
+        },
+        "knznm" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Codido edição de nomes de um empregado em uma lista"
+        },
+        "anred" : {
+          "type" : "string",
+          "description" : "Chave de forma de tratamento",
+          "maxLength" : 1
+        },
+        "gesch" : {
+          "type" : "string",
+          "description" : "Chave do sexo",
+          "maxLength" : 1
+        },
+        "gbdat" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de Nascimento"
+        },
+        "gblnd" : {
+          "type" : "string",
+          "description" : "País de Nascimento",
+          "maxLength" : 3
+        },
+        "gbdep" : {
+          "type" : "string",
+          "description" : "Estado",
+          "maxLength" : 3
+        },
+        "gbort" : {
+          "type" : "string",
+          "description" : "Localidade de Nascimento",
+          "maxLength" : 40
+        },
+        "natio" : {
+          "type" : "string",
+          "description" : "Nacionalidade",
+          "maxLength" : 3
+        },
+        "nati2" : {
+          "type" : "string",
+          "description" : "Segunda Nacionalidade",
+          "maxLength" : 3
+        },
+        "nati3" : {
+          "type" : "string",
+          "description" : "Terceira Nacionalidade",
+          "maxLength" : 3
+        },
+        "sprsl" : {
+          "type" : "string",
+          "description" : "Idioma de Comunicação",
+          "maxLength" : 1
+        },
+        "konfe" : {
+          "type" : "string",
+          "description" : "Chave de Religião",
+          "maxLength" : 2
+        },
+        "famst" : {
+          "type" : "string",
+          "description" : "Chave para Estado Civil",
+          "maxLength" : 1
+        },
+        "famdt" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Inicio da Validade do Estado Civil Atual"
+        },
+        "anzkd" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Número de Filhos"
+        },
+        "nacon" : {
+          "type" : "string",
+          "description" : "Conexão de Nomes",
+          "maxLength" : 1
+        },
+        "permo" : {
+          "type" : "string",
+          "description" : "Modificador p/ID Pessoal",
+          "maxLength" : 2
+        },
+        "perid" : {
+          "type" : "string",
+          "description" : "Número identificador pessoal",
+          "maxLength" : 20
+        },
+        "gbpas" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de Nascimento do Segundo Passaporte"
+        },
+        "fnamk" : {
+          "type" : "string",
+          "description" : "Primero Nome (Katakana)",
+          "maxLength" : 40
+        },
+        "lnamk" : {
+          "type" : "string",
+          "description" : "Relevante Apenas Para o Japão",
+          "maxLength" : 40
+        },
+        "fnamr" : {
+          "type" : "string",
+          "description" : "Primeiro Nome (Romaji)",
+          "maxLength" : 40
+        },
+        "lnamr" : {
+          "type" : "string",
+          "description" : "Sobrenome (Romaji)",
+          "maxLength" : 40
+        },
+        "nabik" : {
+          "type" : "string",
+          "description" : "Nome de Solteiro (Katakana)",
+          "maxLength" : 40
+        },
+        "nabir" : {
+          "type" : "string",
+          "description" : "Nome de Solteiro (Romaji)",
+          "maxLength" : 40
+        },
+        "nickk" : {
+          "type" : "string",
+          "description" : "Koseki (Katakan)",
+          "maxLength" : 40
+        },
+        "nickr" : {
+          "type" : "string",
+          "description" : "Koseki (Romaji)",
+          "maxLength" : 40
+        },
+        "gbjhr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Ano de Nascimento"
+        },
+        "gbmon" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Mês de Nascimento"
+        },
+        "gbtag" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Data de Nascimento (em um mes/ano)"
+        },
+        "nchmc" : {
+          "type" : "string",
+          "description" : "Sobrenome (campo para ajuda e pesquisa)",
+          "maxLength" : 25
+        },
+        "vnamc" : {
+          "type" : "string",
+          "description" : "Primeiro Nome (campo para ajuda e pesquisa)",
+          "maxLength" : 25
+        },
+        "namz2" : {
+          "type" : "string",
+          "description" : "Complemento do nome para sobrenome de solteiro",
+          "maxLength" : 15
+        },
+        "cname40" : {
+          "type" : "string",
+          "maxLength" : 80
+        }
+      },
+      "description" : "Modelo referente ao infotipo 2"
+    },
+    "HistEndereco" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "pernr", "seqnr" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0006",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0006"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "anssa" : {
+          "type" : "string",
+          "description" : "Tipo de registro do endereço",
+          "maxLength" : 4
+        },
+        "name2" : {
+          "type" : "string",
+          "description" : "Ponto de referência",
+          "maxLength" : 40
+        },
+        "stras" : {
+          "type" : "string",
+          "description" : "Rua e Nº",
+          "maxLength" : 60
+        },
+        "ort01" : {
+          "type" : "string",
+          "description" : "Cidade",
+          "maxLength" : 40
+        },
+        "ort02" : {
+          "type" : "string",
+          "description" : "Bairro",
+          "maxLength" : 40
+        },
+        "pstlz" : {
+          "type" : "string",
+          "description" : "Código Postal",
+          "maxLength" : 10
+        },
+        "land1" : {
+          "type" : "string",
+          "description" : "Chave do País",
+          "maxLength" : 3
+        },
+        "telnr" : {
+          "type" : "string",
+          "description" : "Número de telefone",
+          "maxLength" : 14
+        },
+        "entkm" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Distância em Km"
+        },
+        "wkwng" : {
+          "type" : "string",
+          "description" : "Alojamento de empresa",
+          "maxLength" : 1
+        },
+        "busrt" : {
+          "type" : "string",
+          "description" : "Rota de ônibus",
+          "maxLength" : 3
+        },
+        "locat" : {
+          "type" : "string",
+          "description" : "Complemento de endereço",
+          "maxLength" : 40
+        },
+        "adr03" : {
+          "type" : "string",
+          "description" : "Rua 2",
+          "maxLength" : 40
+        },
+        "adr04" : {
+          "type" : "string",
+          "description" : "Rua 3",
+          "maxLength" : 40
+        },
+        "state" : {
+          "type" : "string",
+          "description" : "Região (País, Estado, Província, Condado)",
+          "maxLength" : 3
+        },
+        "hsnmr" : {
+          "type" : "string",
+          "description" : "Número",
+          "maxLength" : 10
+        },
+        "posta" : {
+          "type" : "string",
+          "description" : "Identificação de habitação edifício",
+          "maxLength" : 10
+        },
+        "bldng" : {
+          "type" : "string",
+          "description" : "Edifício (Número ou Sigla)",
+          "maxLength" : 10
+        },
+        "floor" : {
+          "type" : "string",
+          "description" : "Andar",
+          "maxLength" : 10
+        },
+        "strds" : {
+          "type" : "string",
+          "description" : "Sigla da via pública",
+          "maxLength" : 2
+        },
+        "entk2" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Distância em Km"
+        },
+        "com01" : {
+          "type" : "string",
+          "description" : "Meio de comunicação",
+          "maxLength" : 4
+        },
+        "num01" : {
+          "type" : "string",
+          "description" : "Número Comunicação",
+          "maxLength" : 20
+        },
+        "com02" : {
+          "type" : "string",
+          "description" : "Meio de comunicação",
+          "maxLength" : 4
+        },
+        "num02" : {
+          "type" : "string",
+          "description" : "Número Comunicação",
+          "maxLength" : 20
+        },
+        "com03" : {
+          "type" : "string",
+          "description" : "Meio de comunicação",
+          "maxLength" : 4
+        },
+        "num03" : {
+          "type" : "string",
+          "description" : "Número Comunicação",
+          "maxLength" : 20
+        },
+        "com04" : {
+          "type" : "string",
+          "description" : "Meio de comunicação",
+          "maxLength" : 4
+        },
+        "num04" : {
+          "type" : "string",
+          "description" : "Número Comunicação",
+          "maxLength" : 20
+        },
+        "com05" : {
+          "type" : "string",
+          "description" : "Meio de comunicação",
+          "maxLength" : 4
+        },
+        "num05" : {
+          "type" : "string",
+          "description" : "Número Comunicação",
+          "maxLength" : 20
+        },
+        "com06" : {
+          "type" : "string",
+          "description" : "Meio de comunicação",
+          "maxLength" : 4
+        },
+        "num06" : {
+          "type" : "string",
+          "description" : "Número Comunicação",
+          "maxLength" : 20
+        },
+        "indrl" : {
+          "type" : "string",
+          "description" : "Relevante apenas para o Japão",
+          "maxLength" : 2
+        },
+        "counc" : {
+          "type" : "string",
+          "description" : "Código de distrito",
+          "maxLength" : 2
+        },
+        "rctvc" : {
+          "type" : "string",
+          "description" : "Código de cidade municipal",
+          "maxLength" : 6
+        },
+        "or2kk" : {
+          "type" : "string",
+          "description" : "Relevante apenas para o Japão",
+          "maxLength" : 40
+        },
+        "conkk" : {
+          "type" : "string",
+          "description" : "Relevante apenas para o Japão",
+          "maxLength" : 40
+        },
+        "or1kk" : {
+          "type" : "string",
+          "description" : "Relevante apenas para o Japão",
+          "maxLength" : 40
+        },
+        "railw" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Subscrição social ferrovia"
+        }
+      },
+      "description" : "Modelo referente ao infotipo 6"
+    },
+    "HistHorario" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "kztim", "mostd", "pernr", "schkz", "seqnr" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0007",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0007"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "schkz" : {
+          "type" : "string",
+          "description" : "Regra do plano de horário de trabalho",
+          "maxLength" : 8
+        },
+        "zterf" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Status de empregado para gerenciamento de tempos"
+        },
+        "empct" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Porcentagem Hr.Trab.",
+          "maximum" : 99999.99
+        },
+        "mostd" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas do Mês.",
+          "maximum" : 99999.99
+        },
+        "wostd" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas Semanais.",
+          "maximum" : 99999.99
+        },
+        "arbst" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de trabalho Diárias.",
+          "maximum" : 99999.99
+        },
+        "wkwdy" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Dias de Trabalho Semanais.",
+          "maximum" : 9999.99
+        },
+        "jrstd" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de Trabalho Por Ano.",
+          "maximum" : 9999999.99
+        },
+        "teilk" : {
+          "type" : "string",
+          "description" : "Código do Empregado a tempo parcial",
+          "maxLength" : 1
+        },
+        "minta" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Mínimo de Horas Trabalhadas por Dia.",
+          "maximum" : 99999.99
+        },
+        "maxta" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Máximo de Horas Trabalhadas por Dia.",
+          "maximum" : 99999.99
+        },
+        "minwo" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Mínimo de Horas Trabalhadas por Semana.",
+          "maximum" : 99999.99
+        },
+        "maxwo" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Máximo de Horas Trabalhadas por Semana.",
+          "maximum" : 99999.99
+        },
+        "minmo" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Mínimo de Horas Trabalhadas por Mês.",
+          "maximum" : 99999.99
+        },
+        "maxmo" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Máximo de Horas Trabalhadas por Mês.",
+          "maximum" : 99999.99
+        },
+        "minja" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Mínimo de Horas Trabalhadas por Ano.",
+          "maximum" : 9999999.99
+        },
+        "maxja" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número Máximo de Horas Trabalhadas por Ano.",
+          "maximum" : 9999999.99
+        },
+        "dysch" : {
+          "type" : "string",
+          "description" : "Criação dinamica do plano de horario de trabalho diario.",
+          "maxLength" : 1
+        },
+        "kztim" : {
+          "type" : "string",
+          "description" : "Código Suplementar de Gerenciamento de Tempos",
+          "maxLength" : 2
+        },
+        "wweek" : {
+          "type" : "string",
+          "description" : "Semana de trabalho.",
+          "maxLength" : 2
+        },
+        "awtyp" : {
+          "type" : "string",
+          "description" : "Operação de referência",
+          "maxLength" : 5
+        }
+      },
+      "description" : "Modelo referente ao infotipo 7"
+    },
+    "HistEmail" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "pernr", "seqnr", "subty", "usridLong" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0105",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0105"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "usrty" : {
+          "type" : "string",
+          "description" : "Meio de Comunicação",
+          "maxLength" : 4
+        },
+        "usrid" : {
+          "type" : "string",
+          "description" : "Comunicação/identificação número",
+          "maxLength" : 30
+        },
+        "usridLong" : {
+          "type" : "string",
+          "description" : "Comunicação/identificação número descritivo",
+          "maxLength" : 241
+        }
+      },
+      "description" : "Modelo referente ao infotipo 105"
+    },
+    "HistDocumento" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "pernr", "seqnr", "subty", "tpdoc" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0465",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0465"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "tpdoc" : {
+          "type" : "string",
+          "description" : "Tipo Documento",
+          "maxLength" : 4
+        },
+        "dtEmis" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de Emissão do Documento"
+        },
+        "esEmis" : {
+          "type" : "string",
+          "description" : "Estado(UF)",
+          "maxLength" : 3
+        },
+        "cpfNr" : {
+          "type" : "string",
+          "description" : "CPF",
+          "maxLength" : 15
+        },
+        "identNr" : {
+          "type" : "string",
+          "description" : "Número do Documento de Identidade",
+          "maxLength" : 16
+        },
+        "identOrg" : {
+          "type" : "string",
+          "description" : "Orgão Expeditor do Documento de Identidade",
+          "maxLength" : 8
+        },
+        "ctpsNr" : {
+          "type" : "string",
+          "description" : "Número do CTPS",
+          "maxLength" : 10
+        },
+        "ctpsSerie" : {
+          "type" : "string",
+          "description" : "Número de Série do CTPS",
+          "maxLength" : 6
+        },
+        "cregNr" : {
+          "type" : "string",
+          "description" : "Conselho Regional / Concessão de Aposentadoria",
+          "maxLength" : 15
+        },
+        "cregName" : {
+          "type" : "string",
+          "description" : "Número Conselho Regional / Concessão de Aposentadoria",
+          "maxLength" : 90
+        },
+        "cregInit" : {
+          "type" : "string",
+          "description" : "Número Conselho Regional / Concessão de Aposentadoria",
+          "maxLength" : 10
+        },
+        "elecNr" : {
+          "type" : "string",
+          "description" : "Número do Título de Eleitor",
+          "maxLength" : 15
+        },
+        "elecZone" : {
+          "type" : "string",
+          "description" : "Zona do Título de Eleitor",
+          "maxLength" : 5
+        },
+        "elecSect" : {
+          "type" : "string",
+          "description" : "Seção Eleitoral",
+          "maxLength" : 5
+        },
+        "pisNr" : {
+          "type" : "string",
+          "description" : "Número PIS / PASEP",
+          "maxLength" : 20
+        },
+        "milNr" : {
+          "type" : "string",
+          "description" : "Número do Certificado Militar",
+          "maxLength" : 12
+        },
+        "milType" : {
+          "type" : "string",
+          "description" : "Espécie do Certificado Militar",
+          "maxLength" : 8
+        },
+        "milCat" : {
+          "type" : "string",
+          "description" : "Categoria do Certificado Militar",
+          "maxLength" : 3
+        },
+        "idforNr" : {
+          "type" : "string",
+          "description" : "Número do Documento de Identidade Estrangeiro",
+          "maxLength" : 20
+        },
+        "visaNr" : {
+          "type" : "string",
+          "description" : "Número de série do visto",
+          "maxLength" : 6
+        },
+        "visaType" : {
+          "type" : "string",
+          "description" : "Tipo de Visto",
+          "maxLength" : 20
+        },
+        "marryBr" : {
+          "type" : "string",
+          "description" : "Conjugue Brasileiro(a)",
+          "maxLength" : 1
+        },
+        "dtArrv" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de chegada ao Brasil"
+        },
+        "driveNr" : {
+          "type" : "string",
+          "description" : "Número da Carteira de Habilitação",
+          "maxLength" : 12
+        },
+        "driveCat" : {
+          "type" : "string",
+          "description" : "Categoria da Carteira de Habilitação",
+          "maxLength" : 3
+        },
+        "passNr" : {
+          "type" : "string",
+          "description" : "Número do Passaporte",
+          "maxLength" : 15
+        },
+        "nitNr" : {
+          "type" : "string",
+          "description" : "Número de Identificação do Trabalhador (NIT)",
+          "maxLength" : 11
+        },
+        "carto" : {
+          "type" : "string",
+          "description" : "Nome do Cartório",
+          "maxLength" : 40
+        },
+        "cdeat" : {
+          "type" : "string",
+          "description" : "Certidão de Óbito",
+          "maxLength" : 10
+        },
+        "death" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de comunicação do óbito"
+        },
+        "caude" : {
+          "type" : "string",
+          "description" : "Causa da Morte",
+          "maxLength" : 1
+        }
+      },
+      "description" : "Modelo referente ao infotipo 465"
+    },
+    "HistTransporte" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "pernr", "seqnr", "zhrtrCod" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "zhritCod" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código do itinerário"
+        },
+        "zhrtrCod" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código do Transporte"
+        }
+      },
+      "description" : "Modelo referente ao infotipo 9015"
+    },
+    "HistComprador" : {
+      "type" : "object",
+      "required" : [ "begda", "ekgrp", "endda", "infty", "pernr", "seqnr" ],
+      "properties" : {
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 0901",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "0901"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "ekorg" : {
+          "type" : "string",
+          "description" : "Organização de Compras",
+          "maxLength" : 4
+        },
+        "ekgrp" : {
+          "type" : "string",
+          "description" : "Grupo de Compradores",
+          "minLength" : 1,
+          "maxLength" : 3
+        },
+        "sortl" : {
+          "type" : "string",
+          "description" : "Campo de seleção",
+          "maxLength" : 10
+        }
+      },
+      "description" : "Modelo referente ao infotipo 901"
+    },
+    "Ocorrencia" : {
+      "type" : "object",
+      "required" : [ "awart", "begda", "endda", "infty", "operacao", "pernr", "seqnr" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "maxLength" : 3
+        },
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 2001",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "2001"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Código do registro histórico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "beguz" : {
+          "type" : "string",
+          "description" : "Hora de Início",
+          "maxLength" : 6
+        },
+        "enduz" : {
+          "type" : "string",
+          "description" : "Hora de Fim",
+          "maxLength" : 6
+        },
+        "vtken" : {
+          "type" : "string",
+          "description" : "Código do Dia Anterior",
+          "maxLength" : 1
+        },
+        "awart" : {
+          "type" : "string",
+          "description" : "Tipo de Ausência ou Presença",
+          "maxLength" : 4
+        },
+        "abwtg" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Dias de ausência/presença",
+          "maximum" : 999999.99
+        },
+        "stdaz" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de Ausência",
+          "maximum" : 9999999.99
+        },
+        "abrtg" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Dias de processamento de folha de pagamento",
+          "maximum" : 999999.99
+        },
+        "abrst" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas processadas na folha de pagamento",
+          "maximum" : 9999999.99
+        },
+        "anrtg" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Dias calculáveis para controle do pagamento em caso de doença",
+          "maximum" : 999999.99
+        },
+        "lfzed" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Fim da continuação de pagamento do salário em caso de doença"
+        },
+        "krged" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Fim do auxílio doença"
+        },
+        "kbbeg" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Início certificado para doença"
+        },
+        "rmdda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de confirmação da doença"
+        },
+        "kenn1" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código para doença subsequente"
+        },
+        "kenn2" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código para doenças múltiplas"
+        },
+        "kaltg" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Dias de calendário",
+          "maximum" : 999999.99
+        },
+        "urman" : {
+          "type" : "string",
+          "description" : "Código dedução manual de férias",
+          "maxLength" : 1
+        },
+        "begva" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Ano de início para dedução de férias"
+        },
+        "bwgrl" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Dias de calendário",
+          "maximum" : 999999.99
+        },
+        "aufkz" : {
+          "type" : "string",
+          "description" : "Código de pagamento extra",
+          "maxLength" : 1
+        },
+        "trfgr" : {
+          "type" : "string",
+          "description" : "Faixa salarial",
+          "maxLength" : 8
+        },
+        "trfst" : {
+          "type" : "string",
+          "description" : "Nível Salarial",
+          "maxLength" : 2
+        },
+        "prakn" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Número do prêmio"
+        },
+        "prakz" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código de premio"
+        },
+        "otype" : {
+          "type" : "string",
+          "description" : "Tipo de Objeto",
+          "maxLength" : 2
+        },
+        "plans" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Posição"
+        },
+        "mldda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da mensagem"
+        },
+        "mlduz" : {
+          "type" : "string",
+          "description" : "Hora de mensagem",
+          "maxLength" : 6
+        },
+        "rmduz" : {
+          "type" : "string",
+          "description" : "Hora da confirmação da doença",
+          "maxLength" : 6
+        },
+        "vorgs" : {
+          "type" : "string",
+          "description" : "Doença do Superior",
+          "maxLength" : 15
+        },
+        "umskd" : {
+          "type" : "string",
+          "description" : "Código de descrição da doença",
+          "maxLength" : 6
+        },
+        "umsch" : {
+          "type" : "string",
+          "description" : "Descrição da doença",
+          "maxLength" : 20
+        },
+        "refnr" : {
+          "type" : "string",
+          "description" : "Número de Referência",
+          "maxLength" : 8
+        },
+        "unfal" : {
+          "type" : "string",
+          "description" : "Ausência devida a acidente",
+          "maxLength" : 1
+        },
+        "stkrv" : {
+          "type" : "string",
+          "description" : "Subtipo para acompanhamento da doença",
+          "maxLength" : 4
+        },
+        "stund" : {
+          "type" : "string",
+          "description" : "Subtipo para dados de acidente",
+          "maxLength" : 4
+        },
+        "psarb" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Porcentagem da capacidade de trabalho",
+          "maximum" : 9999.99
+        },
+        "ainft" : {
+          "type" : "string",
+          "description" : "Infotipo que atualiza P2001",
+          "maxLength" : 4
+        },
+        "gener" : {
+          "type" : "string",
+          "description" : "Flag de geração",
+          "maxLength" : 1
+        },
+        "hrsif" : {
+          "type" : "string",
+          "description" : "Número de horas indicadas",
+          "maxLength" : 1
+        },
+        "alldf" : {
+          "type" : "string",
+          "description" : "Registro para todo o dia",
+          "maxLength" : 1
+        },
+        "waers" : {
+          "type" : "string",
+          "description" : "Código da moeda",
+          "maxLength" : 5
+        },
+        "logsys" : {
+          "type" : "string",
+          "description" : "Sistema lógico",
+          "maxLength" : 10
+        },
+        "awtyp" : {
+          "type" : "string",
+          "description" : "Operação de Referência",
+          "maxLength" : 5
+        },
+        "awref" : {
+          "type" : "string",
+          "description" : "Número do Documento de referência",
+          "maxLength" : 10
+        },
+        "aworg" : {
+          "type" : "string",
+          "description" : "Unidades organizacionais de referência",
+          "maxLength" : 10
+        },
+        "docsy" : {
+          "type" : "string",
+          "description" : "Sistema lógico do documento",
+          "maxLength" : 10
+        },
+        "docnr" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Número do documento para dados pessoais"
+        },
+        "payty" : {
+          "type" : "string",
+          "description" : "Categoria de folha de pagamento",
+          "maxLength" : 1
+        },
+        "payid" : {
+          "type" : "string",
+          "description" : "Identificador do cálculo de folha de pagamento",
+          "maxLength" : 1
+        },
+        "bondt" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de pagamento da folha para pagamento off-cycle"
+        },
+        "ocrsn" : {
+          "type" : "string",
+          "description" : "Motivo para folha de pagamento off-cycle",
+          "maxLength" : 4
+        },
+        "sppe1" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Dt.fim periodo continuação pagamento salario em caso doenca"
+        },
+        "sppe2" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Dt.fim periodo continuação pagamento salario em caso doenca"
+        },
+        "sppe3" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Dt.fim periodo continuação pagamento salario em caso doenca"
+        },
+        "sppin" : {
+          "type" : "string",
+          "description" : "Código para modificações manuais",
+          "maxLength" : 1
+        },
+        "zkmkt" : {
+          "type" : "string",
+          "description" : "Status of Sickness Notification",
+          "maxLength" : 1
+        },
+        "faprs" : {
+          "type" : "string",
+          "description" : "Tipo de Análise para presencas/ausencias",
+          "maxLength" : 2
+        },
+        "tdlangu" : {
+          "type" : "string",
+          "description" : "Área de definição para denominações breves",
+          "maxLength" : 10
+        },
+        "tdsubla" : {
+          "type" : "string",
+          "description" : "Subconjunto da area de definição para denominações breves",
+          "maxLength" : 3
+        },
+        "tdtype" : {
+          "type" : "string",
+          "description" : "Denominação breve para o tipo da especificação de tempo",
+          "maxLength" : 4
+        },
+        "nxdfl" : {
+          "type" : "string",
+          "description" : "Código do dia seguinte",
+          "maxLength" : 1
+        }
+      },
+      "description" : "Modelo referente ao infotipo 2001"
+    },
+    "BloqueioEmpresa" : {
+      "type" : "object",
+      "required" : [ "dataFimBloqueio", "dataInicioBloqueio", "lifnr", "operacao" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "lifnr" : {
+          "type" : "string",
+          "description" : "Código da empresa",
+          "minLength" : 1,
+          "maxLength" : 10
+        },
+        "cnpj" : {
+          "type" : "string",
+          "description" : "CNPJ da empresa prestadora de serviço que deve bloquear o acesso.",
+          "maxLength" : 14
+        },
+        "dataInicioBloqueio" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de inicio do bloqueio do acesso."
+        },
+        "dataFimBloqueio" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "OPTIONAL Data de fim do bloqueio do acesso."
+        }
+      },
+      "description" : "Modelo para o bloqueio dos prestadores de serviço associados a empresa."
+    },
+    "BloqueioPessoa" : {
+      "type" : "object",
+      "required" : [ "dataFimBloqueio", "dataInicioBloqueio", "operacao" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "rg" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "RG da Pessoa"
+        },
+        "ufRg" : {
+          "type" : "string",
+          "description" : "UF do RG da Pessoa",
+          "maxLength" : 2
+        },
+        "cpf" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "CPF da Pessoa"
+        },
+        "dataInicioBloqueio" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de inicio do bloqueio do acesso."
+        },
+        "dataFimBloqueio" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "OPTIONAL Data de fim do bloqueio do acesso."
+        }
+      },
+      "description" : "Modelo para o bloqueio do prestador de serviço. Deve ser informado RG ou CPF."
+    },
+    "Prestador" : {
+      "type" : "object",
+      "required" : [ "acessoRefeitorio", "lifnr", "nome", "operacao", "sexo", "tipoPessoa", "turnoTrabalho" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "rg" : {
+          "type" : "string",
+          "description" : "RG da Pessoa",
+          "maxLength" : 14
+        },
+        "ufRg" : {
+          "type" : "string",
+          "description" : "UF do RG da Pessoa",
+          "maxLength" : 2
+        },
+        "cpf" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "CPF da Pessoa"
+        },
+        "lifnr" : {
+          "type" : "string",
+          "description" : "Código da Empresa à qual a pessoa estará associada",
+          "minLength" : 1,
+          "maxLength" : 10
+        },
+        "nome" : {
+          "type" : "string",
+          "description" : "Nome da Pessoa",
+          "minLength" : 1,
+          "maxLength" : 60
+        },
+        "sexo" : {
+          "type" : "string",
+          "description" : "Sexo:\n * `M` - Masculino\n * `F` - Feminino\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "M", "F" ]
+        },
+        "tipoPessoa" : {
+          "type" : "string",
+          "description" : "Tipo da Pessoa:\n * `F` - Fixo\n * `E` - Eventual\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "F", "E" ]
+        },
+        "cracha" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Código do crachá associado a pessoa"
+        },
+        "acessoRefeitorio" : {
+          "type" : "string",
+          "description" : "Acesso ao refeitório:\n * `S` - Sim\n * `N` - Não\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "S", "N" ]
+        },
+        "turnoTrabalho" : {
+          "type" : "string",
+          "description" : "Turno de Trabalho do prestador:\n * `1` - Turno 1\n * `2` - Turno 2\n * `2A10` - 2A C/REF 10:00 as 11:15\n * `2A11` - 2A C/REF 11:15 as 12:15\n * `2A12` - 2A C/REF 12:15 as 13:15\n * `2E`   - Turno 2E\n * `3` - Turno 3\n * `24`- Livre 24/7\n",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "enum" : [ "1", "2", "2A10", "2A11", "2A12", "2E", "3", "24" ]
+        }
+      },
+      "description" : "Modelo para o cadastro do prestador de serviço no sistema. Deve ser informado RG ou CPF."
+    },
+    "Substituicao" : {
+      "type" : "object",
+      "required" : [ "begda", "endda", "infty", "operacao", "pernr", "seqnr", "tprog" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "pernr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Matrícula"
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "maxLength" : 3
+        },
+        "infty" : {
+          "type" : "string",
+          "description" : "Campo indicando o Infotipo, deve ser enviado 2003",
+          "minLength" : 1,
+          "maxLength" : 4,
+          "default" : "2003"
+        },
+        "subty" : {
+          "type" : "string",
+          "description" : "Campo do subinfotipo",
+          "maxLength" : 4
+        },
+        "objps" : {
+          "type" : "string",
+          "description" : "Identificação do objeto",
+          "maxLength" : 2
+        },
+        "sprps" : {
+          "type" : "string",
+          "description" : "Código de bloqueio para registro mestre HR",
+          "maxLength" : 1
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "seqnr" : {
+          "type" : "integer",
+          "description" : "Número de um registro de infotipo com a mesma chave"
+        },
+        "aedtm" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data da última modificação"
+        },
+        "uname" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 12
+        },
+        "histo" : {
+          "type" : "string",
+          "description" : "Codigo de registro historico",
+          "maxLength" : 1
+        },
+        "itxex" : {
+          "type" : "string",
+          "description" : "Existe texto de infotipo",
+          "maxLength" : 1
+        },
+        "refex" : {
+          "type" : "string",
+          "description" : "Existem campos de referencia (custos primarios/secundarios)",
+          "minLength" : 1,
+          "maxLength" : 1
+        },
+        "ordex" : {
+          "type" : "string",
+          "description" : "Existem campos de confirmacão",
+          "maxLength" : 1
+        },
+        "itbld" : {
+          "type" : "string",
+          "description" : "Controle de tela infotipo",
+          "maxLength" : 2
+        },
+        "preas" : {
+          "type" : "string",
+          "description" : "Motivo de modificacão dados mestre",
+          "maxLength" : 2
+        },
+        "flag1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "flag3" : {
+          "type" : "string",
+          "description" : "Nome do usuário responsável pela modificação",
+          "maxLength" : 1
+        },
+        "flag4" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 1
+        },
+        "rese1" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "rese2" : {
+          "type" : "string",
+          "description" : "Campo de reserva / campo não utilizado",
+          "maxLength" : 2
+        },
+        "grpvl" : {
+          "type" : "string",
+          "description" : "Valor de agrupamento para contratos de ocupacão",
+          "maxLength" : 4
+        },
+        "beguz" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Hora de Início"
+        },
+        "enduz" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Hora de Fim"
+        },
+        "vtken" : {
+          "type" : "string",
+          "description" : "Código de dia anterior",
+          "maxLength" : 1
+        },
+        "vtart" : {
+          "type" : "string",
+          "description" : "Tipo de substituição",
+          "maxLength" : 2
+        },
+        "stdaz" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de substituição",
+          "maximum" : 9999999.99
+        },
+        "pamod" : {
+          "type" : "string",
+          "description" : "Escala de intervalo intrajornada",
+          "maxLength" : 4
+        },
+        "pbeg1" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início do Intervalo"
+        },
+        "pend1" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim do Intervalo"
+        },
+        "pbez1" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Duração do intervalo remunerado",
+          "maximum" : 9999.99
+        },
+        "punb1" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Duração do intervalo não remunerado",
+          "maximum" : 9999.99
+        },
+        "pbeg2" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início do Intervalo"
+        },
+        "pend2" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim do Intervalo"
+        },
+        "pbez2" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Duração do intervalo remunerado",
+          "maximum" : 9999.99
+        },
+        "punb2" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Duração do intervalo não remunerado",
+          "maximum" : 9999.99
+        },
+        "zeity" : {
+          "type" : "string",
+          "description" : "Agrupamento subgrupo empregados p/planos horário de trab.",
+          "maxLength" : 1
+        },
+        "mofid" : {
+          "type" : "string",
+          "description" : "Calendário de feriados",
+          "maxLength" : 2
+        },
+        "mosid" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Agrupamento subáreas recursos humanos p/plano horário trab."
+        },
+        "schkz" : {
+          "type" : "string",
+          "description" : "Regra do plano do horário de trabalho",
+          "maxLength" : 8
+        },
+        "motpr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Agrup. subáreas recursos humanos p/plano horário trab. diário"
+        },
+        "tprog" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "maxLength" : 4
+        },
+        "varia" : {
+          "type" : "string",
+          "description" : "Variante de um plano de horário de trabalho diário",
+          "maxLength" : 1
+        },
+        "tagty" : {
+          "type" : "string",
+          "description" : "Tipo de dia",
+          "maxLength" : 1
+        },
+        "tpkla" : {
+          "type" : "string",
+          "description" : "Classe do plano de horário de trabalho diário",
+          "maxLength" : 1
+        },
+        "vpern" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Número de pessoal a substituir"
+        },
+        "aufkz" : {
+          "type" : "string",
+          "description" : "Código de pagamento extra",
+          "maxLength" : 1
+        },
+        "bwgrl" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Base de valorização para remuneração diferente",
+          "maximum" : 999999999999.99
+        },
+        "trfgr" : {
+          "type" : "string",
+          "description" : "Faixa salarial",
+          "maxLength" : 8
+        },
+        "trfst" : {
+          "type" : "string",
+          "description" : "Nível salarial",
+          "maxLength" : 2
+        },
+        "prakn" : {
+          "type" : "string",
+          "description" : "Número Prêmio",
+          "maxLength" : 2
+        },
+        "prakz" : {
+          "type" : "string",
+          "description" : "Código de prêmio",
+          "maxLength" : 4
+        },
+        "otype" : {
+          "type" : "string",
+          "description" : "Tipo de objeto",
+          "maxLength" : 2
+        },
+        "plans" : {
+          "type" : "integer",
+          "format" : "int64",
+          "description" : "Posição"
+        },
+        "exbel" : {
+          "type" : "string",
+          "description" : "Número externo de documento",
+          "maxLength" : 8
+        },
+        "waers" : {
+          "type" : "string",
+          "description" : "Código da moeda",
+          "maxLength" : 5
+        },
+        "wtart" : {
+          "type" : "string",
+          "description" : "Work Tax Area",
+          "maxLength" : 4
+        },
+        "tdlangu" : {
+          "type" : "string",
+          "description" : "Área de definição para denominações breves",
+          "maxLength" : 10
+        },
+        "tdsubla" : {
+          "type" : "string",
+          "description" : "Subconjunto da área de definição para denominações breves",
+          "maxLength" : 10
+        },
+        "tdtype" : {
+          "type" : "string",
+          "description" : "Denominação breve para o tipo da especificação de tempo",
+          "maxLength" : 10
+        },
+        "logsys" : {
+          "type" : "string",
+          "description" : "Sistema lógico",
+          "maxLength" : 10
+        },
+        "awtyp" : {
+          "type" : "string",
+          "description" : "Operação de referência",
+          "maxLength" : 5
+        },
+        "awref" : {
+          "type" : "string",
+          "description" : "Número do documento de referência",
+          "maxLength" : 10
+        },
+        "aworg" : {
+          "type" : "string",
+          "description" : "Unidades organizacionais de referência",
+          "maxLength" : 10
+        },
+        "nxdfl" : {
+          "type" : "string",
+          "description" : "Código do dia seguinte",
+          "maxLength" : 1
+        },
+        "ftkla" : {
+          "type" : "string",
+          "description" : "Classe de feriado",
+          "maxLength" : 1
+        }
+      },
+      "description" : "Modelo referente ao infotipo 2003"
+    },
+    "RegraHorario" : {
+      "type" : "object",
+      "required" : [ "begda", "bzpkt", "endda", "offbz", "operacao", "schkz", "zmodn" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "maxLength" : 3
+        },
+        "zeity" : {
+          "type" : "string",
+          "description" : "Agrupamento subgrupo empregados p/planos horário de trab.",
+          "maxLength" : 1
+        },
+        "mofid" : {
+          "type" : "string",
+          "description" : "Calendário de Feriados",
+          "maxLength" : 2
+        },
+        "mosid" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Agrupamento subáreas recursos humanos p/plano horário trab."
+        },
+        "schkz" : {
+          "type" : "string",
+          "description" : "Regra do plano de horário de trabalho",
+          "maxLength" : 8
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "kugkz" : {
+          "type" : "string",
+          "description" : "Regra plano horário trabalho p/redução da jornada trabalho",
+          "maxLength" : 1
+        },
+        "schzu" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Adicional de turno"
+        },
+        "zmodn" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho específico",
+          "maxLength" : 4
+        },
+        "kugkn" : {
+          "type" : "string",
+          "description" : "Rgr.plano horário trabalho CHR p/esta rgr.plano horário trab",
+          "maxLength" : 8
+        },
+        "kkrkh" : {
+          "type" : "string",
+          "maxLength" : 1
+        },
+        "bzpkt" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data referência para plano de horário de trabalho periódico."
+        },
+        "offbz" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Ponto de reinício no plano de horário de trabalho periódico"
+        },
+        "motpr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Agrup.subáreas recursos humanos p/plano horário trab.diário"
+        },
+        "motty" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Regra de definição para tipos de dia"
+        },
+        "tgstd" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas diárias",
+          "maximum" : 99999.99
+        },
+        "wostd" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas semanais",
+          "maximum" : 99999.99
+        },
+        "m1std" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas do mês",
+          "maximum" : 99999.99
+        },
+        "m2std" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Número de horas mensais adicionais",
+          "maximum" : 99999.99
+        },
+        "wkwdy" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Dias de trabalho semanais",
+          "maximum" : 99999.99
+        },
+        "jrstd" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de trabalho por ano",
+          "maximum" : 9999999.99
+        },
+        "staby" : {
+          "type" : "string",
+          "description" : "Código se regra PTH permitida para o plantão",
+          "maxLength" : 1
+        },
+        "genws" : {
+          "type" : "string",
+          "description" : "Geração posterior automática planos horário trabalho mensal",
+          "maxLength" : 1
+        }
+      },
+      "description" : "Modelo referente ao infotipo T508A. Contém o cadastro do código e descrição do horário de trabalho."
+    },
+    "EscalaIntervalo" : {
+      "type" : "object",
+      "required" : [ "operacao", "pabeg", "paend", "pamod", "pdbez", "pdunb" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "maxLength" : 3
+        },
+        "motpr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Agrup.subáreas recursos humanos p/plano horário trab.diário"
+        },
+        "pamod" : {
+          "type" : "string",
+          "description" : "Escala de intervalo intrajornada",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "seqno" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Número sequencial"
+        },
+        "pabeg" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início do Intervalo"
+        },
+        "paend" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim do Intervalo"
+        },
+        "vtken" : {
+          "type" : "string",
+          "description" : "Código do dia anterior",
+          "maxLength" : 1
+        },
+        "pdbez" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Duração do intervalo remunerado",
+          "maximum" : 9999.99
+        },
+        "pdunb" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Duração do intervalo não remunerado",
+          "maximum" : 9999.99
+        },
+        "stdaz" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Intervalo após horas",
+          "maximum" : 99999.99
+        },
+        "ptyp1" : {
+          "type" : "string",
+          "description" : "Tipo de pausa 1",
+          "maxLength" : 1
+        },
+        "ptyp2" : {
+          "type" : "string",
+          "description" : "Tipo de pausa 2",
+          "maxLength" : 1
+        },
+        "pnorm" : {
+          "type" : "string",
+          "description" : "Data e hora de referência p/intervalo flexível",
+          "maxLength" : 1
+        },
+        "nxdfl" : {
+          "type" : "string",
+          "description" : "Código do dia seguinte",
+          "maxLength" : 1
+        }
+      },
+      "description" : "Modelo referente ao infotipo T550P. Contém os dados do cadastro de intervalos intrajornada."
+    },
+    "PlanoDiario" : {
+      "type" : "object",
+      "required" : [ "begda", "btbeg", "endda", "etend", "operacao", "pamod", "sobeg", "soend", "sollz", "tprog" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "maxLength" : 3
+        },
+        "motpr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Agrup.subáreas recursos humanos p/plano horário trab.diário"
+        },
+        "tprog" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "varia" : {
+          "type" : "string",
+          "description" : "Variante de um plano de horário de trabalho diário",
+          "maxLength" : 1
+        },
+        "seqno" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Nº consecutivo do plano de horário de trabalho diário"
+        },
+        "begda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de início da validade"
+        },
+        "endda" : {
+          "type" : "string",
+          "format" : "date",
+          "description" : "Data de término da validade"
+        },
+        "regel" : {
+          "type" : "string",
+          "description" : "Regra de seleção do plano de horário de trabalho diário",
+          "maxLength" : 2
+        },
+        "tpkla" : {
+          "type" : "string",
+          "description" : "Classe do plano de horário de trabalho diário",
+          "maxLength" : 1
+        },
+        "sollz" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de trabalho teóricas",
+          "maximum" : 99999.99
+        },
+        "somin" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de trabalho mínimo",
+          "maximum" : 9999.99
+        },
+        "somax" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas de trabalho máximo",
+          "maximum" : 9999.99
+        },
+        "vorho" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Tempo de trabalho acumulado",
+          "maximum" : 99999.99
+        },
+        "nobeg" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Jornada de trabalho normal"
+        },
+        "noend" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim da jornada de trabalho normal"
+        },
+        "btbeg" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início da hora de tolerância"
+        },
+        "sobeg" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início do tempo de trabalho teórico"
+        },
+        "btend" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim iníco da tolerância"
+        },
+        "k1beg" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início do período fixo 1"
+        },
+        "k1end" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim do período fixo 1"
+        },
+        "k2beg" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início do período fixo 2"
+        },
+        "k2end" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim do período fixo 2"
+        },
+        "etbeg" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Início do fim da tolerância"
+        },
+        "soend" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Fim do trabalho teórico"
+        },
+        "etend" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Hora Final do Fim da Tolerância"
+        },
+        "zustd" : {
+          "type" : "number",
+          "format" : "double",
+          "description" : "Horas adicionais",
+          "maximum" : 9999.99
+        },
+        "pamod" : {
+          "type" : "string",
+          "description" : "Escala do intervalo intrajornada",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "rmehr" : {
+          "type" : "string",
+          "description" : "Código se horas extras são permitidas",
+          "maxLength" : 1
+        },
+        "rkern" : {
+          "type" : "string",
+          "description" : "Reação em caso de horas extras em período fixo",
+          "maxLength" : 1
+        },
+        "rkepa" : {
+          "type" : "string",
+          "description" : "Código para a livre disposição",
+          "maxLength" : 1
+        },
+        "staby" : {
+          "type" : "string",
+          "description" : "Código se regra PTH permitida para o plantão",
+          "maxLength" : 1
+        },
+        "ovpos" : {
+          "type" : "string",
+          "description" : "Horas Extras Automáticas",
+          "maxLength" : 1
+        },
+        "startPrevDay" : {
+          "type" : "string",
+          "description" : "Início no dia anterior",
+          "maxLength" : 1
+        }
+      },
+      "description" : "Modelo referente ao infotipo T550A. Contém o plano diário do horário de trabalho. ATENÇÃO! Nos campos date-time, onde no SAP é apenas Hora, enviar a data 01/01/0001."
+    },
+    "PlanoPeriodico" : {
+      "type" : "object",
+      "required" : [ "operacao", "tprg1", "tprg2", "tprg3", "tprg4", "tprg5", "tprg6", "tprg7", "wonum", "zmodn" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "mandt" : {
+          "type" : "string",
+          "description" : "Mandante",
+          "maxLength" : 3
+        },
+        "motpr" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Agrup.subáreas recursos humanos p/plano horário trab.diário"
+        },
+        "zmodn" : {
+          "type" : "string",
+          "description" : "Plano do horário de trabalho periódico.",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "wonum" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Nº Semana. Se há mais de um registro de semana para o mesmo plano, indica que é um horário de escala."
+        },
+        "tprg1" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "tprg2" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "tprg3" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "tprg4" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "tprg5" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "tprg6" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        },
+        "tprg7" : {
+          "type" : "string",
+          "description" : "Plano de horário de trabalho diário",
+          "minLength" : 1,
+          "maxLength" : 4
+        }
+      },
+      "description" : "Modelo referente ao infotipo T551A. Contém o plano períodico(semanal) do horário de trabalho."
+    },
+    "Parametros" : {
+      "type" : "object",
+      "required" : [ "calculaHoraReduzidaOcor", "codTurno", "descontaIntervaloHorasNotur", "horasFeriado", "horasFolga", "operacao", "schkz" ],
+      "properties" : {
+        "operacao" : {
+          "type" : "string",
+          "description" : "Operação do Registro:\n * `I` - Insert\n * `U` - Update\n * `D` - Delete\n",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "I", "U", "D" ]
+        },
+        "schkz" : {
+          "type" : "string",
+          "description" : "Regra do plano de horário de trabalho",
+          "minLength" : 1,
+          "maxLength" : 8
+        },
+        "horasFolga" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de horas para um dia de DSR em minutos"
+        },
+        "horasFeriado" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Quantidade de horas para um dia de feriado em minutos"
+        },
+        "intervaloGeradoIni" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Hora que deve gerar a marcação automática do início do intervalo."
+        },
+        "intervaloGeradoFin" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Hora que deve gerar a marcação automática do fim do intervalo."
+        },
+        "codHoraExtra" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código do parâmetro de hora extra que o horário utilizará para a geração das horas extras. Caso não informado, irá utilizar o parâmetro padrão."
+        },
+        "codParamOcorrencia" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código do parâmetro de ocorrência que o horário utilizará para a geração das ocorrências. Caso não informado, irá utilizar o parâmetro padrão."
+        },
+        "codTurno" : {
+          "type" : "integer",
+          "format" : "int32",
+          "description" : "Código do turno do horário de trabalho."
+        },
+        "calculaHoraReduzidaOcor" : {
+          "type" : "string",
+          "description" : "Indicador(Sim/Nao) se deve gerar hora reduzida noturna nas ocorrências que possuem quantidade de horas noturnas.",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "S", "N" ]
+        },
+        "descontaIntervaloHorasNotur" : {
+          "type" : "string",
+          "description" : "Indicador(Sim/Nao) se deve descontar o intervalo das horas noturnas.",
+          "minLength" : 1,
+          "maxLength" : 1,
+          "enum" : [ "S", "N" ]
+        }
+      },
+      "description" : "Modelo para envio dos parâmetros adicionais necessários para o cadastro do horário de trabalho no Pontosoft."
+    },
+    "AuthUserResponse" : {
+      "type" : "object",
+      "properties" : {
+        "success" : {
+          "type" : "boolean"
+        },
+        "token" : {
+          "type" : "string",
+          "description" : "Token a ser utilizado para autenticação na chamada dos métodos"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "user" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ApiResponse" : {
+      "type" : "object",
+      "properties" : {
+        "success" : {
+          "type" : "boolean"
+        },
+        "observacao" : {
+          "type" : "string",
+          "maxLength" : 80
+        }
+      }
+    }
+  },
+  "externalDocs" : {
+    "description" : "Find out more about Swagger",
+    "url" : "http://swagger.io"
+  }
+}
