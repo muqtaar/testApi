@@ -1,0 +1,1049 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "CTS API",
+    "version" : "1.0.0",
+    "title" : "CTS API"
+  },
+  "host" : "CheckWithDeveloper",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "Accounts",
+    "description" : "Accounts specific functions"
+  }, {
+    "name" : "Order",
+    "description" : "Orders specific functions"
+  }, {
+    "name" : "Global WiFi",
+    "description" : "Global WiFi reservation specific functions"
+  }, {
+    "name" : "Local WiFi",
+    "description" : "Local WiFi reservation specific functions"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/Account/Register" : {
+      "post" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "to register new user account",
+        "description" : "To register user account credentials, successful authentication will return access token for subsequent actions.\n",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Request"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "$ref" : "#/definitions/Account"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_credentials",
+                "msg" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "409" : {
+            "description" : "Conflict",
+            "examples" : {
+              "Example" : {
+                "type" : "existing_account",
+                "msg" : "Email address already exist in the system."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Account/Authenticate" : {
+      "post" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "authenticate user account and get access token",
+        "description" : "To authenticate user account credentials, successful authentication will return access token for subsequent actions.\n",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/Request_1"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Account"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_credentials",
+                "msg" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Account/GetCustomerInfo" : {
+      "post" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "retrieve customer information",
+        "description" : "with a valid access token you will be able to retrieve customer information\n",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Request_2"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Account"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_token",
+                "message" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Account/RefreshToken" : {
+      "post" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "extend validity of token",
+        "description" : "with a valid access token you will be able to extend the validity of this token\n",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Request_3"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/RefreshToken"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_token",
+                "message" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Account/Redeem" : {
+      "post" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "redeem customers' loyalty points",
+        "description" : "with a valid access token you will be able to redeem customer's points\n",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Request_4"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "type" : {
+                  "type" : "string",
+                  "example" : "transaction_failed"
+                },
+                "msg" : {
+                  "type" : "string",
+                  "example" : "- Duplicate transaction",
+                  "description" : "Error messages:\n- Duplicate transaction\n- Insufficient points.\n"
+                },
+                "transaction" : {
+                  "$ref" : "#/definitions/inline_response_200_transaction"
+                }
+              }
+            }
+          },
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "transaction" : {
+                  "$ref" : "#/definitions/Transaction"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_token",
+                "message" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Account/Refund" : {
+      "post" : {
+        "tags" : [ "Accounts" ],
+        "summary" : "refund customers' transaction",
+        "description" : "with a valid access token you will be able to refund customer's transaction. Refund can only be done within `30 minutes` of transaction\n",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Request_5"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "type" : {
+                  "type" : "string",
+                  "example" : "transaction_failed"
+                },
+                "msg" : {
+                  "type" : "string",
+                  "example" : "- Invalid transaction_id",
+                  "description" : "Error messages:\n- Invalid transaction_id.\n- Refund can only be performed within 30 minutes.\n"
+                },
+                "transaction" : {
+                  "$ref" : "#/definitions/inline_response_200_transaction"
+                }
+              }
+            }
+          },
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "token" : {
+                  "$ref" : "#/definitions/Token"
+                },
+                "user" : {
+                  "$ref" : "#/definitions/User"
+                },
+                "transaction" : {
+                  "$ref" : "#/definitions/Transaction"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_token",
+                "message" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/CreateOrder" : {
+      "post" : {
+        "tags" : [ "Order" ],
+        "summary" : "submit order to CTS",
+        "description" : "to submit order to CTS\n",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Request_6"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "success" : {
+                  "type" : "boolean",
+                  "example" : true
+                },
+                "order_no" : {
+                  "type" : "string",
+                  "example" : "100000"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_credentials",
+                "msg" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    },
+    "/Order/VerifyVoucher" : {
+      "post" : {
+        "tags" : [ "Order" ],
+        "summary" : "to verify amount and validity of voucher code",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Accept",
+          "in" : "header",
+          "description" : "Must be application/json",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Request",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Request_7"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "valid_voucher" : {
+                  "type" : "boolean",
+                  "example" : true
+                },
+                "voucher_code" : {
+                  "type" : "string",
+                  "example" : "ABCDE1234"
+                },
+                "voucher_amount" : {
+                  "type" : "number",
+                  "example" : 10.0
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_input",
+                "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized",
+            "examples" : {
+              "Example" : {
+                "type" : "invalid_credentials",
+                "msg" : "You have entered an invalid access_token. Please verify and try again."
+              }
+            }
+          },
+          "500" : {
+            "description" : "Server Error",
+            "examples" : {
+              "Example" : {
+                "type" : "unknown_internal_error",
+                "msg" : "An internal server error has occurred."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "RefreshToken" : {
+      "type" : "object",
+      "properties" : {
+        "token" : {
+          "$ref" : "#/definitions/Token"
+        }
+      }
+    },
+    "Account" : {
+      "type" : "object",
+      "properties" : {
+        "token" : {
+          "$ref" : "#/definitions/Token"
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
+        }
+      }
+    },
+    "Token" : {
+      "type" : "object",
+      "properties" : {
+        "access_token" : {
+          "type" : "string",
+          "example" : "94af51cf-1975-4636-a80e-11bbc9f780a8"
+        },
+        "expires_in" : {
+          "type" : "number",
+          "example" : 60.0,
+          "description" : "expiry in `minutes`"
+        }
+      },
+      "description" : "Access token information"
+    },
+    "User" : {
+      "properties" : {
+        "name" : {
+          "type" : "string",
+          "example" : "Firstname Lastname"
+        },
+        "email" : {
+          "type" : "string",
+          "example" : "email@domain.com"
+        },
+        "loyalty_points" : {
+          "type" : "number",
+          "example" : 100.0,
+          "description" : "the amount of loyalty points available for usage in dollar"
+        },
+        "expiring_points" : {
+          "type" : "number",
+          "example" : 50.0,
+          "description" : "the amount of points expiring by the next expiry period"
+        },
+        "expriy_period" : {
+          "type" : "string",
+          "example" : "2018-12-31 23:59",
+          "description" : "the next expiry period"
+        }
+      }
+    },
+    "Transaction" : {
+      "type" : "object",
+      "properties" : {
+        "success" : {
+          "type" : "boolean",
+          "example" : true,
+          "description" : "to check if true to confirm transaction has completed successfully"
+        },
+        "id" : {
+          "type" : "number",
+          "example" : 12345.0,
+          "description" : "transaction id"
+        }
+      },
+      "description" : "Redeem response"
+    },
+    "Request" : {
+      "type" : "object",
+      "required" : [ "user_email", "user_name", "user_pwd" ],
+      "properties" : {
+        "user_email" : {
+          "type" : "string",
+          "example" : "email@domain.com",
+          "maxLength" : 255
+        },
+        "user_pwd" : {
+          "type" : "string",
+          "example" : "U2FsdGVkX1/7opvZ4KWpBqzGppRsJ6CyZGALJj4mu7U=",
+          "description" : "To be encrypted using AES 256 Encryption with `Shared Secret`"
+        },
+        "user_name" : {
+          "type" : "string",
+          "example" : "Firstname Lastname",
+          "description" : "user full name",
+          "maxLength" : 255
+        }
+      }
+    },
+    "Request_1" : {
+      "type" : "object",
+      "required" : [ "user_email", "user_pwd" ],
+      "properties" : {
+        "user_email" : {
+          "type" : "string",
+          "example" : "email@domain.com"
+        },
+        "user_pwd" : {
+          "type" : "string",
+          "example" : "U2FsdGVkX1/7opvZ4KWpBqzGppRsJ6CyZGALJj4mu7U=",
+          "description" : "To be encrypted using AES 256 Encryption with `Shared Secret`"
+        }
+      }
+    },
+    "Request_2" : {
+      "type" : "object",
+      "required" : [ "access_token" ],
+      "properties" : {
+        "access_token" : {
+          "type" : "string",
+          "example" : "94af51cf-1975-4636-a80e-11bbc9f780a8"
+        }
+      }
+    },
+    "Request_3" : {
+      "type" : "object",
+      "required" : [ "access_token" ],
+      "properties" : {
+        "access_token" : {
+          "type" : "string",
+          "example" : "94af51cf-1975-4636-a80e-11bbc9f780a8"
+        }
+      }
+    },
+    "Request_4" : {
+      "type" : "object",
+      "required" : [ "access_token", "points", "ref_no" ],
+      "properties" : {
+        "access_token" : {
+          "type" : "string",
+          "example" : "94af51cf-1975-4636-a80e-11bbc9f780a8"
+        },
+        "ref_no" : {
+          "type" : "string",
+          "example" : "1234567",
+          "description" : "Merchants' unique order/payment reference number for checking of duplicates"
+        },
+        "points" : {
+          "type" : "number",
+          "example" : 8.88
+        }
+      }
+    },
+    "inline_response_200_transaction" : {
+      "properties" : {
+        "success" : {
+          "type" : "boolean",
+          "example" : false
+        }
+      },
+      "description" : "Redeem response"
+    },
+    "inline_response_200" : {
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "example" : "transaction_failed"
+        },
+        "msg" : {
+          "type" : "string",
+          "example" : "- Duplicate transaction",
+          "description" : "Error messages:\n- Duplicate transaction\n- Insufficient points.\n"
+        },
+        "transaction" : {
+          "$ref" : "#/definitions/inline_response_200_transaction"
+        }
+      }
+    },
+    "inline_response_201" : {
+      "properties" : {
+        "transaction" : {
+          "$ref" : "#/definitions/Transaction"
+        }
+      }
+    },
+    "Request_5" : {
+      "type" : "object",
+      "required" : [ "access_token", "ref_no", "transaction_id" ],
+      "properties" : {
+        "access_token" : {
+          "type" : "string",
+          "example" : "94af51cf-1975-4636-a80e-11bbc9f780a8"
+        },
+        "ref_no" : {
+          "type" : "string",
+          "example" : "1234567",
+          "description" : "Merchants' unique order/payment reference number for checking of duplicates"
+        },
+        "transaction_id" : {
+          "type" : "number",
+          "example" : 1234.0,
+          "description" : "the id received from Redeem successful transaction"
+        }
+      }
+    },
+    "inline_response_200_1" : {
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "example" : "transaction_failed"
+        },
+        "msg" : {
+          "type" : "string",
+          "example" : "- Invalid transaction_id",
+          "description" : "Error messages:\n- Invalid transaction_id.\n- Refund can only be performed within 30 minutes.\n"
+        },
+        "transaction" : {
+          "$ref" : "#/definitions/inline_response_200_transaction"
+        }
+      }
+    },
+    "inline_response_201_1" : {
+      "properties" : {
+        "token" : {
+          "$ref" : "#/definitions/Token"
+        },
+        "user" : {
+          "$ref" : "#/definitions/User"
+        },
+        "transaction" : {
+          "$ref" : "#/definitions/Transaction"
+        }
+      }
+    },
+    "OrderCreateOrder_payment" : {
+      "properties" : {
+        "ref_no" : {
+          "type" : "string",
+          "example" : "123456"
+        },
+        "card_type" : {
+          "type" : "string",
+          "example" : "VISA",
+          "enum" : [ "VISA", "ECMC", "AMEX" ]
+        },
+        "cash_amount" : {
+          "type" : "number",
+          "example" : 0.0
+        },
+        "card_amount" : {
+          "type" : "number",
+          "example" : 5.0
+        },
+        "voucher_amount" : {
+          "type" : "number",
+          "example" : 5.0
+        },
+        "points" : {
+          "type" : "number",
+          "example" : 0.0,
+          "description" : "loyalty points"
+        }
+      }
+    },
+    "OrderCreateOrder_items" : {
+      "required" : [ "product_code", "product_name", "qty" ],
+      "properties" : {
+        "product_code" : {
+          "type" : "string",
+          "example" : "ABCD0123"
+        },
+        "product_name" : {
+          "type" : "string",
+          "example" : "Name of product"
+        },
+        "qty" : {
+          "type" : "number",
+          "example" : 3.0
+        }
+      }
+    },
+    "Request_6" : {
+      "type" : "object",
+      "required" : [ "discount", "grand_total", "items", "payment", "subtotal", "user_email" ],
+      "properties" : {
+        "user_email" : {
+          "type" : "string",
+          "example" : "email@domain.com"
+        },
+        "subtotal" : {
+          "type" : "number",
+          "example" : 15.0
+        },
+        "discount" : {
+          "type" : "number",
+          "example" : 5.0
+        },
+        "grand_total" : {
+          "type" : "number",
+          "example" : 10.0
+        },
+        "payment" : {
+          "$ref" : "#/definitions/OrderCreateOrder_payment"
+        },
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrderCreateOrder_items"
+          }
+        },
+        "vouchers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "123456789"
+          }
+        }
+      }
+    },
+    "inline_response_201_2" : {
+      "properties" : {
+        "success" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "order_no" : {
+          "type" : "string",
+          "example" : "100000"
+        }
+      }
+    },
+    "Request_7" : {
+      "type" : "object",
+      "required" : [ "voucher_code" ],
+      "properties" : {
+        "voucher_code" : {
+          "type" : "string",
+          "example" : "ABCDE1234"
+        }
+      }
+    },
+    "inline_response_200_2" : {
+      "properties" : {
+        "valid_voucher" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "voucher_code" : {
+          "type" : "string",
+          "example" : "ABCDE1234"
+        },
+        "voucher_amount" : {
+          "type" : "number",
+          "example" : 10.0
+        }
+      }
+    }
+  },
+  "parameters" : {
+    "accept" : {
+      "name" : "Accept",
+      "in" : "header",
+      "description" : "Must be application/json",
+      "required" : true,
+      "type" : "string"
+    },
+    "acceptEncoding" : {
+      "name" : "Accept-Encoding",
+      "in" : "header",
+      "description" : "Must be application/gzip",
+      "required" : true,
+      "type" : "string"
+    },
+    "authorization" : {
+      "name" : "Authorization",
+      "in" : "header",
+      "description" : "The custom generated authentication header.<br>\nYour signature value is the unsalted SHA-512 hash of the concatenation of your `API Key` + `Shared Secret` + `UNIX Timestamp` in seconds.\n\nYour timestamp value must be the same value used to generate your signature. If a different timestamp value is provided, KSO will not be able to verify your signature hash value and your request will be rejected.\n\nHere is an example complete Authorization header:\n`Authorization: APIKey=dkc4wrkp7w58wx5v2jxen2kx,Signature=bewr1246wd9123,timestamp=1530511382`\n",
+      "required" : true,
+      "type" : "string"
+    }
+  },
+  "responses" : {
+    "Error400" : {
+      "description" : "Bad Request",
+      "examples" : {
+        "Example" : {
+          "type" : "invalid_input",
+          "msg" : "An invalid request was sent in, please check that you have conform to the specifications for your request inputs."
+        }
+      }
+    },
+    "Error401Token" : {
+      "description" : "Unauthorized",
+      "examples" : {
+        "Example" : {
+          "type" : "invalid_token",
+          "message" : "You have entered an invalid access_token. Please verify and try again."
+        }
+      }
+    },
+    "Error401" : {
+      "description" : "Unauthorized",
+      "examples" : {
+        "Example" : {
+          "type" : "invalid_credentials",
+          "msg" : "You have entered an invalid access_token. Please verify and try again."
+        }
+      }
+    },
+    "Error409" : {
+      "description" : "Conflict",
+      "examples" : {
+        "Example" : {
+          "type" : "duplicate_data",
+          "msg" : "Duplicate orderRefNo XXXXXXXX already exist."
+        }
+      }
+    },
+    "Error500" : {
+      "description" : "Server Error",
+      "examples" : {
+        "Example" : {
+          "type" : "unknown_internal_error",
+          "msg" : "An internal server error has occurred."
+        }
+      }
+    }
+  }
+}
