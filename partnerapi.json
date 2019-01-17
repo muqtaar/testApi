@@ -1,0 +1,1824 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "API Gateway resources for 3rd parties to integrate with GetUpside as a PaaS.  This API provides resources for user management, offer generation and claiming, transaction uploading and user balance management. Security is implemented via AWS IAM and requires clients to implement (or, recommend, use the AWS SDK) the AWS Signature v4 header signing routine to gain access to requested resources.\n\n If at all possible, this API attempts to return _some_ response with a 200 code.  Any internal errors processing the request are caught and a more detailed response is returned instead of just a 500.  All responses are returned as payload data within a 'wrapper' object that includes an upsideCode.  The upsideCode points to a very specific success or failure condition.  The current upsideCodes are:\n 12000=Offers refreshed for user\n 12001=Offer claimed\n 12002=Successfully uploaded receipt\n 12003=Offer reconciled\n 12004=Offer already reconciled\n 12500=No such offer found when attepting to claim\n 12501=No user_uuid specified when looking for offer(s), unable to proceed\n 12502=No list of offer_uuids specified when attempting real time offer reconciliation, unable to proceeed\n 12503=No offers were found in the list of provided offer_uuids\n 12504=The site_uuid in the transaction data did not match any of the user's PENDING offers\n 12505=No offers in the list of provided offer_uuids are valid to be reconciled \n 12506=The fuelType attribute was missing in the transaction data\n 12507=The fuel_type attribute did not correspond to a type referenced in the accepted offer's discounts array\n 12508=There were multiple discounts in one offer listed for the same fuel_type\n 12509=The fuelQuantity attribute was missing in the transaction data\n 12510=POST failure against offer-service when trying to reconcile an offer\n 12511=Failure to refresh offer after successful reconciliation\n 12512=When trying to replace a stale ReconciliationResult with updated Offer (post-reconciliation), could not find the stale entity to replace\n 12513=Invalid content-type received, unable to upload receipt image \n 12514=Receipt image was missing, cannot upload",
+    "version" : "1.0.4",
+    "title" : "PartnerAPI"
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/tvaughan77/getupside/1.0.0",
+  "tags" : [ {
+    "name" : "transaction",
+    "description" : "Resource related to uploading transaction data associated with offers (in lieu of receipt uploading and OCR processing of receipt images)"
+  }, {
+    "name" : "user",
+    "description" : "Resource related to the management of GetUpside User entities"
+  }, {
+    "name" : "offer",
+    "description" : "Resource related to the generation of personalized offers and (un)claiming offers on behalf of a user"
+  }, {
+    "name" : "balance",
+    "description" : "Resource related to a user's current GetUpside balance (i.e. accumulated cash back)"
+  }, {
+    "name" : "unimplemented",
+    "description" : "Tag to indicate the resource is planned, but not yet implemented"
+  }, {
+    "name" : "ignore",
+    "description" : "This swagger doc needs to be AWS/API Gateway compatible, so it's rife with a bunch of stuff the human reader of this documentation should just ignore (e.g. all the OPTIONS resources)"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/" : {
+      "get" : {
+        "tags" : [ "unimplemented" ],
+        "summary" : "Provides API documentation",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "https://www.getupside.com/",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "GET",
+          "type" : "http"
+        }
+      }
+    },
+    "/transaction" : {
+      "options" : {
+        "tags" : [ "transaction", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/transaction/gasbuddy" : {
+      "options" : {
+        "tags" : [ "transaction", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/transaction/gasbuddy/pwgb" : {
+      "post" : {
+        "tags" : [ "transaction" ],
+        "summary" : "Upload a new PayWithGasBuddy transaction to GetUpside for ASAP offer reconciliation",
+        "operationId" : "postPWGBData",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "TransactionUploadPWGBRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TransactionUploadPWGBRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Non-fatal response containing a 'wrapped' payload of the input Transaction if the transaction was successfully imported.  Errors are described in the response 'errors' array if anything went wrong. UpsideCode field within the wrapped response relates to specific error cases that may go wrong.",
+            "schema" : {
+              "$ref" : "#/definitions/TransactionUploadResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:337068080576:function:${stageVariables.stageName}-partner-api-transaction/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
+        }
+      },
+      "options" : {
+        "tags" : [ "transaction", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user" : {
+      "post" : {
+        "tags" : [ "user" ],
+        "summary" : "Create a new GetUpside user account associated with a partner's user account",
+        "operationId" : "UserCreate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "User",
+          "description" : "The only required fields are 'partner' and 'partnerUserId', which will result in a bare-bones GetUpside user account being provisioned and associated with the 'partnerUserId'",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/User"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A 'wrapped' response containing - if successful - the input User data echoed back in the 'payload' element, along with additional provided User attributes including, and most importantly, the GetUpside userUuid which should be saved by the caller for future queries to this API about their user's offers and balance.",
+            "schema" : {
+              "$ref" : "#/definitions/UserResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:337068080576:function:${stageVariables.stageName}-partner-api-user/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
+        }
+      },
+      "options" : {
+        "tags" : [ "user", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}" : {
+      "get" : {
+        "tags" : [ "user" ],
+        "summary" : "Get a user by their GetUpside UUID",
+        "operationId" : "UserGet",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "If found, a 'wrapped' response containing the user in the 'payload' attribute of the response.  If no such user with requested userUuid is found, the wrapped response will have its 'httpStatusCode' set to 404 and the 'payload' attribute will be an empty list.",
+            "schema" : {
+              "$ref" : "#/definitions/UserResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:337068080576:function:${stageVariables.stageName}-partner-api-user/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
+        }
+      },
+      "delete" : {
+        "tags" : [ "user" ],
+        "summary" : "Soft delete the GetUpside user account associated with a partner's user account",
+        "operationId" : "UserDelete",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "If successfully deleted, a 'wrapped' response containing the user record just before it was deleted in this response's 'payload' array.  If unsuccessful, a non-empty 'errors' array will describe what went wrong.",
+            "schema" : {
+              "$ref" : "#/definitions/UserResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:337068080576:function:${stageVariables.stageName}-partner-api-user/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
+        }
+      },
+      "options" : {
+        "tags" : [ "user", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}/balance" : {
+      "options" : {
+        "tags" : [ "balance", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}/balance/withdraw" : {
+      "post" : {
+        "tags" : [ "balance", "unimplemented" ],
+        "summary" : "Request a user's accumulated cash-back balance be withdrawn and transferred to a designated location",
+        "operationId" : "cashOut",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "CashOutRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CashOutRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/CashOutResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "5\\d{2}" : {
+              "statusCode" : "500"
+            },
+            "2\\d{2}" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      },
+      "options" : {
+        "tags" : [ "balance", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}/offer" : {
+      "options" : {
+        "tags" : [ "offer", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}/offer/history" : {
+      "get" : {
+        "tags" : [ "offer", "unimplemented" ],
+        "summary" : "Fetch a user's complete GetUpside offer history",
+        "operationId" : "UserOfferHistory",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/OfferResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "5\\d{2}" : {
+              "statusCode" : "500"
+            },
+            "2\\d{2}" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      },
+      "options" : {
+        "tags" : [ "offer", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}/offer/refresh" : {
+      "post" : {
+        "tags" : [ "offer" ],
+        "summary" : "Request new, personalized offers be generated for a user at a list of specified GetUpside sites",
+        "operationId" : "UserOfferRefresh",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "OfferRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OfferRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "If successful, a 'wrapped' response containing an array of Offers in this response's 'payload' element with one Offer for each requested siteUuid provided in the input OfferRequest.",
+            "schema" : {
+              "$ref" : "#/definitions/OfferResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:337068080576:function:${stageVariables.stageName}-partner-api-offer/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
+        }
+      },
+      "options" : {
+        "tags" : [ "offer", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}/offer/{offerUuid}" : {
+      "get" : {
+        "tags" : [ "offer", "unimplemented" ],
+        "summary" : "Fetch the current state of an offer generated for a user",
+        "operationId" : "UserOfferGet",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "offerUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/OfferResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "5\\d{2}" : {
+              "statusCode" : "500"
+            },
+            "2\\d{2}" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      },
+      "delete" : {
+        "tags" : [ "offer", "unimplemented" ],
+        "summary" : "Unaccept a previously accepted offer.",
+        "operationId" : "UserOfferDecline",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "offerUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "schema" : {
+              "$ref" : "#/definitions/OfferResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "5\\d{2}" : {
+              "statusCode" : "500"
+            },
+            "2\\d{2}" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      },
+      "options" : {
+        "tags" : [ "offer", "ignore" ],
+        "summary" : "Ignore; needed for AWS API Gateway",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "offerUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "200 response",
+            "headers" : {
+              "Access-Control-Allow-Origin" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Methods" : {
+                "type" : "string"
+              },
+              "Access-Control-Allow-Headers" : {
+                "type" : "string"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Empty"
+            }
+          }
+        },
+        "x-amazon-apigateway-integration" : {
+          "responses" : {
+            "default" : {
+              "statusCode" : "200",
+              "responseParameters" : {
+                "method.response.header.Access-Control-Allow-Methods" : "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'",
+                "method.response.header.Access-Control-Allow-Headers" : "'Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token'",
+                "method.response.header.Access-Control-Allow-Origin" : "'*'"
+              }
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "requestTemplates" : {
+            "application/json" : "{\"statusCode\": 200}"
+          },
+          "type" : "mock"
+        }
+      }
+    },
+    "/user/{userUuid}/offer/{offerUuid}/accept" : {
+      "post" : {
+        "tags" : [ "offer" ],
+        "summary" : "Accept a personalized offer at a specific site for a user.",
+        "operationId" : "UserOfferAccept",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "offerUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "OfferAcceptRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OfferAcceptRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "If successful, a 'wrapped' response containing the current state of the accepted offer in this response's 'payload' attribute.",
+            "schema" : {
+              "$ref" : "#/definitions/OfferResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:337068080576:function:${stageVariables.stageName}-partner-api-offer/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
+        }
+      }
+    },
+    "/user/{userUuid}/offer/{offerUuid}/receipt" : {
+      "post" : {
+        "tags" : [ "offer" ],
+        "summary" : "Upload a receipt with proof-of-purchase data for the offer.",
+        "operationId" : "UserOfferUploadReceipt",
+        "consumes" : [ "image/png", "image/jpeg" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "offerUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userUuid",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "If the request was non-fatal, a 'WrappedResponse' containing an upsideCode with upload-status meaning.",
+            "schema" : {
+              "$ref" : "#/definitions/ReceiptResponse"
+            }
+          },
+          "500" : {
+            "description" : "500 response - returned when a fatal error has occurred on the server side",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        },
+        "security" : [ {
+          "sigv4" : [ ]
+        } ],
+        "x-amazon-apigateway-integration" : {
+          "uri" : "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:337068080576:function:${stageVariables.stageName}-partner-api-receipt/invocations",
+          "responses" : {
+            "default" : {
+              "statusCode" : "200"
+            }
+          },
+          "passthroughBehavior" : "when_no_match",
+          "httpMethod" : "POST",
+          "contentHandling" : "CONVERT_TO_TEXT",
+          "type" : "aws_proxy"
+        }
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "sigv4" : {
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header",
+      "x-amazon-apigateway-authtype" : "awsSigv4"
+    }
+  },
+  "definitions" : {
+    "OfferAcceptRequest" : {
+      "type" : "object",
+      "required" : [ "acceptedAt" ],
+      "properties" : {
+        "userLocation" : {
+          "$ref" : "#/definitions/LocationUser"
+        },
+        "acceptedAt" : {
+          "type" : "number",
+          "description" : "The UTC/epoch seconds when the offer was accepted."
+        }
+      },
+      "description" : "Defines the request data necessary for a user to accept an offer"
+    },
+    "LocationMapView" : {
+      "type" : "object",
+      "required" : [ "boundingBox" ],
+      "properties" : {
+        "boundingBox" : {
+          "$ref" : "#/definitions/LocationMapView_boundingBox"
+        }
+      },
+      "description" : "Models the area described by a map view on a UI"
+    },
+    "User" : {
+      "type" : "object",
+      "required" : [ "partner", "partnerUserId" ],
+      "properties" : {
+        "balance" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "email" : {
+          "type" : "string",
+          "description" : "The email of the user"
+        },
+        "groups" : {
+          "type" : "array",
+          "description" : "A set of Upside groups to which this user belongs. This determines the types of offers received, and/or access to merchant dashboard UIs",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "nameFirst" : {
+          "type" : "string",
+          "description" : "The user's first name"
+        },
+        "nameLast" : {
+          "type" : "string",
+          "description" : "The user's last name"
+        },
+        "partner" : {
+          "type" : "string",
+          "description" : "The name of the GetUpside partner who 'owns' the user account"
+        },
+        "partnerUserId" : {
+          "type" : "string",
+          "description" : "The unique user id in the partner's user management system"
+        },
+        "userGasType" : {
+          "type" : "string",
+          "description" : "The preferred fuel type the user buys",
+          "enum" : [ "REGULAR", "MIDGRADE", "PREMIUM", "DIESEL", "NONE" ]
+        },
+        "userUuid" : {
+          "type" : "string",
+          "description" : "The unique ID of this user in the GetUpside system"
+        }
+      }
+    },
+    "MonetaryAmount" : {
+      "type" : "object",
+      "required" : [ "amount", "currency" ],
+      "properties" : {
+        "currency" : {
+          "type" : "string"
+        },
+        "amount" : {
+          "type" : "number"
+        }
+      },
+      "description" : "An amount of money in a specific currency"
+    },
+    "EarningsBreakdown" : {
+      "type" : "object",
+      "required" : [ "breakdown" ],
+      "properties" : {
+        "breakdown" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EarningsBreakdown_breakdown"
+          }
+        }
+      }
+    },
+    "OfferResponse" : {
+      "type" : "object",
+      "required" : [ "errors", "httpStatusCode", "upsideCode" ],
+      "properties" : {
+        "httpStatusCode" : {
+          "type" : "integer"
+        },
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "upsideCode" : {
+          "type" : "integer"
+        },
+        "payload" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Offer"
+          }
+        }
+      },
+      "description" : "A wrapper around an Offer object that contains additional information from the server such as any errors that may have occurred and a unique 'upsideCode' that corresponds to a particular business state"
+    },
+    "CashOutResponse" : {
+      "type" : "object",
+      "properties" : {
+        "balance" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "withdrawnAmount" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        }
+      },
+      "title" : "CashOutResponse"
+    },
+    "Error" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Error Schema"
+    },
+    "UserResponse" : {
+      "type" : "object",
+      "required" : [ "errors", "httpStatusCode", "upsideCode" ],
+      "properties" : {
+        "httpStatusCode" : {
+          "type" : "integer"
+        },
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "upsideCode" : {
+          "type" : "integer"
+        },
+        "payload" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/User"
+          }
+        }
+      },
+      "description" : "A wrapper around a User object that contains additional information from the server such as any errors that may have occurred and a unique 'upsideCode' that corresponds to a particular business state"
+    },
+    "Empty" : {
+      "type" : "object",
+      "title" : "Empty Schema"
+    },
+    "LocationUser" : {
+      "type" : "object",
+      "required" : [ "latitude", "longitude", "recordedAtEpochSeconds" ],
+      "properties" : {
+        "latitude" : {
+          "type" : "number"
+        },
+        "recordedAtEpochSeconds" : {
+          "type" : "integer"
+        },
+        "longitude" : {
+          "type" : "number"
+        }
+      },
+      "description" : "Models the lat/lon and time of location recording of a user/device"
+    },
+    "OfferRequest" : {
+      "type" : "object",
+      "required" : [ "sites" ],
+      "properties" : {
+        "sites" : {
+          "type" : "array",
+          "description" : "A list of Upside siteUuids for those sites at which the caller wishes Upside to generate offers for the given user",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "userLocation" : {
+          "$ref" : "#/definitions/LocationUser"
+        },
+        "location" : {
+          "$ref" : "#/definitions/LocationMapView"
+        },
+        "userUuid" : {
+          "type" : "string",
+          "description" : "The unique Upside id of the user for whom offers should be generated.  If not provided, this information is assumed to come from the API path parameter of the resource this request is invoked on."
+        },
+        "groups" : {
+          "type" : "array",
+          "description" : "The group(s) the user belongs to.  This influences the types of offers the user sees.  If not specified, the user's groups will be fetched from the user-service before offer generation is requested.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "offerGenerationConfig" : {
+          "type" : "string",
+          "description" : "Additional free-form configuration options.  Unused and unsupported in the GasBuddy integration."
+        },
+        "personalizedOfferConfig" : {
+          "type" : "string",
+          "description" : "Additional free-form configuration options.  Unused and unsupported in the GasBuddy integration."
+        }
+      },
+      "description" : "A request to generate an offer for a user at a site(s)"
+    },
+    "CashOutRequest" : {
+      "type" : "object",
+      "required" : [ "amountToWithdraw" ],
+      "properties" : {
+        "giftCard" : {
+          "$ref" : "#/definitions/CashOutRequest_giftCard"
+        },
+        "mailingAddress" : {
+          "$ref" : "#/definitions/CashOutRequest_mailingAddress"
+        },
+        "paypalEmail" : {
+          "type" : "string"
+        },
+        "recipient" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "amountToWithdraw" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "fee" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        }
+      },
+      "description" : "Represents a request to cash out money from a user's Upside account to a destination such as a PayPal account, or a physical check to the user's address or via a gift card to the user's email"
+    },
+    "Offer" : {
+      "type" : "object",
+      "required" : [ "discounts", "durationToCompletePurchase", "siteLocation", "siteUuid", "text", "type", "userUuid", "uuid" ],
+      "properties" : {
+        "siteUuid" : {
+          "type" : "string",
+          "description" : "The Upside unique uuid of the site for which the offer was generated.  Offers are not transferrable across sites or between users."
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "The type of offer this is (i.e. for GAS or GROCERY or RESTAURANT)"
+        },
+        "durationToCompletePurchase" : {
+          "type" : "number",
+          "description" : "The number of milliseconds before or after the offer was accepted that the user has to actually purchase a qualifying item at the site."
+        },
+        "durationToUploadReceipt" : {
+          "type" : "number",
+          "description" : "The number of milliseconds after the offer was accepted that the user has to submit proof of their qualifying purchase."
+        },
+        "siteLocation" : {
+          "$ref" : "#/definitions/Location"
+        },
+        "discounts" : {
+          "type" : "array",
+          "description" : "The zero+ specific rebates off products sold at the site",
+          "items" : {
+            "$ref" : "#/definitions/Offer_discounts"
+          }
+        },
+        "offerState" : {
+          "$ref" : "#/definitions/Offer_offerState"
+        },
+        "gasPrice" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "text" : {
+          "type" : "string"
+        },
+        "userUuid" : {
+          "type" : "string",
+          "description" : "The user for whom the offer was generated"
+        },
+        "lowerRightCardText" : {
+          "type" : "string",
+          "description" : "UI information for the GetUpside app"
+        },
+        "lowerLeftCardText" : {
+          "type" : "string",
+          "description" : "UI information for the GetUpside app"
+        },
+        "canResubmit" : {
+          "type" : "boolean",
+          "description" : "Indicates whether or not the user may attempt to resubmit proof-of-purchase for this offer after the offer has been rejected for some reason (e.g. blurry photo, allow them to take another picture)"
+        },
+        "uuid" : {
+          "type" : "string",
+          "description" : "The unique id of *this* offer"
+        }
+      },
+      "description" : "Represents a GetUpside offer for a user at a site.  An offer consists of zero or more Discounts.  A discount is a fixed cents or percentage off of a retail priced item.  For example, 3 cents per gallon off Regular gasoline.  A single gas offer may contain multiple Discounts; one discount per grade of gasoline is typical."
+    },
+    "TransactionUploadPWGBRequest" : {
+      "type" : "object",
+      "required" : [ "amount", "cardType", "ccLastFour", "discount", "fuelQuantity", "fuelType", "fuelUnit", "siteUuid", "taxAmount", "timestamp", "userUuid" ],
+      "properties" : {
+        "siteUuid" : {
+          "type" : "string",
+          "description" : "The uuid of the GetUpside location at which the transaction occurred"
+        },
+        "userUuid" : {
+          "type" : "string",
+          "description" : "The uuid of the GetUpside user who completed the transaction"
+        },
+        "timestamp" : {
+          "type" : "string",
+          "description" : "UTC, ISO-8601 formatted timestamp when the transaction occured"
+        },
+        "cardType" : {
+          "type" : "string",
+          "description" : "The type of debit or credit card used to make the purchase"
+        },
+        "ccFirstSix" : {
+          "type" : "string",
+          "description" : "If known, the first 6 digits of the card"
+        },
+        "ccLastFour" : {
+          "type" : "string",
+          "description" : "The last 4 digits of the card.  Left pad with 'x' if not all 4 digits are known"
+        },
+        "amount" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "taxAmount" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "sourceTerminal" : {
+          "type" : "string",
+          "description" : "If known, an identifier at the site that differentiates between registers (e.g. 'outside_pump' vs 'inside_register')"
+        },
+        "offerUuids" : {
+          "type" : "array",
+          "description" : "If provided, an array of offer UUIDs that the caller believes may be reconciled by the data in this transaction.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "fuelUnit" : {
+          "type" : "string",
+          "description" : "The units of fuelQuantity",
+          "enum" : [ "GALLON", "LITER" ]
+        },
+        "fuelQuantity" : {
+          "type" : "string",
+          "description" : "How much fuel was bought"
+        },
+        "fuelPrice" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "fuelType" : {
+          "type" : "string",
+          "enum" : [ "REGULAR", "MIDGRADE", "PREMIUM", "DIESEL" ]
+        },
+        "discount" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        }
+      },
+      "description" : "An object that combines Upside's notion of a 'Transaction' (i.e. card swipe) and a 'Receipt'. GasBuddy's PWGB card provides bits of data that spans those 2 business entities, and this single request object is designed as a client-side convenience for GasBuddy to kill 2 birds with 1 stone"
+    },
+    "TransactionUploadResponse" : {
+      "type" : "object",
+      "required" : [ "errors", "httpStatusCode", "upsideCode" ],
+      "properties" : {
+        "httpStatusCode" : {
+          "type" : "integer"
+        },
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "upsideCode" : {
+          "type" : "integer",
+          "description" : "A unique code that identifies a specific error/success case"
+        },
+        "payload" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object",
+            "description" : "The type of object returned in this payload will be of the same type uploaded",
+            "properties" : { }
+          }
+        }
+      },
+      "description" : "A wrapper around a Transaction<T> object that contains additional information from the server such as any errors that may have occurred and a unique 'upsideCode' that corresponds to a particular business state"
+    },
+    "ComponentState" : {
+      "type" : "object",
+      "required" : [ "statusDetailCodes" ],
+      "properties" : {
+        "status" : {
+          "type" : "string"
+        },
+        "statusDetailCodes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Location" : {
+      "type" : "object",
+      "required" : [ "address1", "address2", "address3", "address4", "countryCode", "latitude", "latitude_1e6", "locality", "longitude", "longitude_1e6", "postCode", "region", "uuid" ],
+      "properties" : {
+        "longitude_1e6" : {
+          "type" : "integer"
+        },
+        "uuid" : {
+          "type" : "string"
+        },
+        "countryCode" : {
+          "type" : "string",
+          "description" : "2 letter international country code (e.g. US)"
+        },
+        "locality" : {
+          "type" : "string",
+          "description" : "In the US this is 'City'"
+        },
+        "address1" : {
+          "type" : "string"
+        },
+        "address2" : {
+          "type" : "string"
+        },
+        "address3" : {
+          "type" : "string"
+        },
+        "address4" : {
+          "type" : "string"
+        },
+        "longitude" : {
+          "type" : "number"
+        },
+        "postCode" : {
+          "type" : "string"
+        },
+        "latitude_1e6" : {
+          "type" : "integer"
+        },
+        "latitude" : {
+          "type" : "number"
+        },
+        "region" : {
+          "type" : "string",
+          "description" : "In the US this is 'State' (or 'D.C., Guam, etc)"
+        }
+      },
+      "description" : "A location, modelled after https://schema.org/PostalAddress"
+    },
+    "ReceiptResponse" : {
+      "type" : "object",
+      "required" : [ "errors", "httpStatusCode", "upsideCode" ],
+      "properties" : {
+        "httpStatusCode" : {
+          "type" : "integer"
+        },
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "upsideCode" : {
+          "type" : "integer"
+        }
+      },
+      "description" : "An object that contains information from the server such as any errors that may have occurred and a unique 'upsideCode' that corresponds to a particular business state"
+    },
+    "LocationMapView_boundingBox" : {
+      "required" : [ "northEastLat", "northEastLon", "southWestLat", "southWestLon" ],
+      "properties" : {
+        "southWestLat" : {
+          "type" : "number"
+        },
+        "northEastLon" : {
+          "type" : "number"
+        },
+        "northEastLat" : {
+          "type" : "number"
+        },
+        "southWestLon" : {
+          "type" : "number"
+        }
+      }
+    },
+    "EarningsBreakdown_breakdown" : {
+      "required" : [ "label", "text" ],
+      "properties" : {
+        "text" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "integer"
+        },
+        "label" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CashOutRequest_giftCard" : {
+      "properties" : {
+        "email" : {
+          "type" : "string"
+        },
+        "programId" : {
+          "type" : "string"
+        },
+        "giftCardId" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CashOutRequest_mailingAddress" : {
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "countryCode" : {
+          "type" : "string"
+        },
+        "locality" : {
+          "type" : "string"
+        },
+        "address1" : {
+          "type" : "string"
+        },
+        "address2" : {
+          "type" : "string"
+        },
+        "address3" : {
+          "type" : "string"
+        },
+        "address4" : {
+          "type" : "string"
+        },
+        "postCode" : {
+          "type" : "string"
+        },
+        "region" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Offer_discounts" : {
+      "properties" : {
+        "terms" : {
+          "type" : "string",
+          "description" : "Legalese"
+        },
+        "upsideCreditPerGallon" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "detailText" : {
+          "type" : "string",
+          "description" : "Details about the discount"
+        },
+        "finePrint" : {
+          "type" : "string",
+          "description" : "Fine print details about the discount"
+        },
+        "text" : {
+          "type" : "string",
+          "description" : "General description of the discount"
+        },
+        "discountPerGallon" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "The type of discount (e.g. gas_outside)"
+        },
+        "id" : {
+          "type" : "integer",
+          "description" : "A identifying integer between discounts within an Offer"
+        }
+      },
+      "description" : "A specific amount or percent off a product, e.g. 3cents-per-gallon off Regular gasoline"
+    },
+    "Offer_offerState_bonuses" : {
+      "required" : [ "flatCashBonus", "gallonsBought" ],
+      "properties" : {
+        "componentState" : {
+          "$ref" : "#/definitions/ComponentState"
+        },
+        "flatCashBonus" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "cashPerGallon" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "gallonsBought" : {
+          "type" : "number"
+        }
+      }
+    },
+    "Offer_offerState_earnings" : {
+      "properties" : {
+        "earningsBreakdown" : {
+          "$ref" : "#/definitions/EarningsBreakdown"
+        },
+        "discountId" : {
+          "type" : "integer"
+        },
+        "componentState" : {
+          "$ref" : "#/definitions/ComponentState"
+        },
+        "transactionUuid" : {
+          "type" : "string"
+        },
+        "amountEarned" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "amountSpent" : {
+          "$ref" : "#/definitions/MonetaryAmount"
+        },
+        "gallonsBought" : {
+          "type" : "number"
+        }
+      }
+    },
+    "Offer_offerState" : {
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "description" : "The status of the offer (CREATED to ACCEPTED to RECONCILED or ABANDONED)"
+        },
+        "expiredAt" : {
+          "type" : "integer",
+          "description" : "Only shown on ACCEPTED offers, Epoch milliseconds when the offer is no longer valid.  Typically, this is a 4 hour time after the offer is accepted."
+        },
+        "expiredAtISO8601" : {
+          "type" : "string",
+          "description" : "ISO-8601 representation of expiredAt"
+        },
+        "reconciledAt" : {
+          "type" : "integer",
+          "description" : "Only shown on RECONCILED offers, Epoch milliseconds when the offer was reconciled in GetUpside's back office and the user was paid (or not, if the offer was invalid)"
+        },
+        "reconciledAtISO8601" : {
+          "type" : "string",
+          "description" : "ISO-8601 representation of reconciledAt"
+        },
+        "earningType" : {
+          "type" : "string",
+          "description" : "What type of reward the user will get for completing this offer (e.g. 'CASH')"
+        },
+        "bonuses" : {
+          "type" : "array",
+          "description" : "Ignore for purposes of GasBuddy integration",
+          "items" : {
+            "$ref" : "#/definitions/Offer_offerState_bonuses"
+          }
+        },
+        "earnings" : {
+          "type" : "array",
+          "description" : "Only shown for RECONCILED offers, this structure shows the breakdown of the total amount of money earning by the user for the offer",
+          "items" : {
+            "$ref" : "#/definitions/Offer_offerState_earnings"
+          }
+        },
+        "acceptedAt" : {
+          "type" : "integer",
+          "description" : "Milliseconds epoch time when the user accepted the offer"
+        },
+        "acceptedAtISO8601" : {
+          "type" : "string",
+          "description" : "ISO-8601 representation of acceptedAt"
+        },
+        "offerEndsAt" : {
+          "type" : "integer",
+          "description" : "Ignore / Unused"
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "description" : "Milliseconds epoch time when the offer was created by GetUpside's offer service"
+        },
+        "createdAtISO8601" : {
+          "type" : "string",
+          "description" : "ISO-8601 representation of createdAt"
+        }
+      },
+      "description" : "Captures the state of an offer (as it goes from CREATED to ACCEPTED to RECONCILED or ABANDONED)"
+    }
+  }
+}
