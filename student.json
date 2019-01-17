@@ -1,0 +1,3276 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Transforming the Collection of Student Information (TCSI)",
+    "version" : "1.0.0",
+    "title" : "ITSP"
+  },
+  "host" : "virtserver.swaggerhub.com",
+  "basePath" : "/ITSP7/TCSI_Student_0.9.1/1.0.0",
+  "tags" : [ {
+    "name" : "Students",
+    "description" : "Access to the students API endpoint is limited to HEP and VET. (Access  to commonwealth_scholarships is only for HEP)"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/students/{uid}" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "operationId" : "getStudentById",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "Id of a specific resource",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/StudentWithChildrenModel"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Students" ],
+        "summary" : "Logically delete a specific record.",
+        "description" : "",
+        "operationId" : "deleteStudent",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "ID of a specific resource",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "patch a specific record",
+        "operationId" : "patchStudent",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "ID of a specific course of study that need to be updated (offered by the provider)",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Student"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/PatchModel"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    },
+    "/students" : {
+      "post" : {
+        "tags" : [ "Students" ],
+        "description" : "",
+        "operationId" : "postStudent",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/StudentPostInput"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful.",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted reques."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/StudentPostOutputModel"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    },
+    "/students/bulk" : {
+      "post" : {
+        "tags" : [ "Students" ],
+        "summary" : "Post more than one records.",
+        "description" : "",
+        "operationId" : "postStudentsBulk",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/body"
+            }
+          }
+        } ],
+        "responses" : {
+          "207" : {
+            "description" : "MultiStatus",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted reques."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/StudentWithChildrenBulkPostResult"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    },
+    "/students/{uid}/citizenships" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "",
+        "operationId" : "getCitizenshipsByStudentId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message_id" : {
+                "type" : "string",
+                "description" : "The message_id must be unique across all message submitted by the software for that organisation / education provider."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "uid" : {
+                    "type" : "integer",
+                    "format" : "int64"
+                  },
+                  "e358_citizen_resident_code" : {
+                    "type" : "string"
+                  },
+                  "links" : {
+                    "$ref" : "#/definitions/Links"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Students" ],
+        "description" : "",
+        "operationId" : "postCitizenshipByStudentId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CitizenshipPostInput"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful.",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted reques."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CitizenshipPostOutputModel"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    },
+    "/students/citizenships/{uid}" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "",
+        "operationId" : "getCitizenshipsById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message_id" : {
+                "type" : "string",
+                "description" : "The message_id must be unique across all message submitted by the software for that organisation / education provider."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/Citizenship"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Students" ],
+        "summary" : "Logically delete a specific record.",
+        "description" : "",
+        "operationId" : "deleteCitizenship",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "ID of a specific resource",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "patch a specific record.",
+        "operationId" : "patchCitizenship",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "Id of a specific record",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/CitizenshipPatchInputModel"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/CitizenshipPatchOutputModel"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    },
+    "/students/{uid}/cwlth-scholarships" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "",
+        "operationId" : "getScholarshipsByStudentId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message_id" : {
+                "type" : "string",
+                "description" : "The message_id must be unique across all message submitted by the software for that organisation / education provider."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "uid" : {
+                    "type" : "integer",
+                    "format" : "int64"
+                  },
+                  "uid12_commonwealth_scholarship_uid" : {
+                    "type" : "integer"
+                  },
+                  "e415_reporting_year" : {
+                    "type" : "integer"
+                  },
+                  "e526_commonwealth_scholarship_status_code" : {
+                    "type" : "string"
+                  },
+                  "links" : {
+                    "$ref" : "#/definitions/Links"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Students" ],
+        "description" : "",
+        "operationId" : "postScholarshipByStudentId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Scholarship"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful.",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted reques."
+              }
+            },
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "uid" : {
+                  "type" : "integer",
+                  "format" : "int64",
+                  "readOnly" : true
+                },
+                "links" : {
+                  "$ref" : "#/definitions/Links"
+                },
+                "messages" : {
+                  "type" : "array",
+                  "readOnly" : true,
+                  "items" : {
+                    "$ref" : "#/definitions/MessageModel"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    },
+    "/students/cwlth-scholarships/{uid}" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "",
+        "operationId" : "getScholarshipsById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message_id" : {
+                "type" : "string",
+                "description" : "The message_id must be unique across all message submitted by the software for that organisation / education provider."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/ScholarshipModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Students" ],
+        "summary" : "Logically delete a specific record.",
+        "description" : "",
+        "operationId" : "deleteScholarship",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "ID of a specific resource",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "patch a specific record.",
+        "operationId" : "patchScholarship",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "Id of a specific record",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ScholarshipModel"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "$ref" : "#/definitions/PatchModel"
+            }
+          }
+        }
+      }
+    },
+    "/students/{uid}/disabilities" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "",
+        "operationId" : "getDisabilitiesByStudentId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message_id" : {
+                "type" : "string",
+                "description" : "The message_id must be unique across all message submitted by the software for that organisation / education provider."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "uid" : {
+                    "type" : "integer",
+                    "format" : "int64"
+                  },
+                  "e615_disability_code" : {
+                    "type" : "string"
+                  },
+                  "e609_effective_from_date" : {
+                    "type" : "string",
+                    "format" : "date"
+                  },
+                  "e610_effective_to_date" : {
+                    "type" : "string",
+                    "format" : "date"
+                  },
+                  "links" : {
+                    "$ref" : "#/definitions/Links"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Students" ],
+        "description" : "",
+        "operationId" : "postDisabilityByStudentId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Disability"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful.",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted reques."
+              }
+            },
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "uid" : {
+                  "type" : "integer",
+                  "format" : "int64",
+                  "readOnly" : true
+                },
+                "e615_disability_code" : {
+                  "type" : "string"
+                },
+                "links" : {
+                  "$ref" : "#/definitions/Links"
+                },
+                "messages" : {
+                  "type" : "array",
+                  "readOnly" : true,
+                  "items" : {
+                    "$ref" : "#/definitions/MessageModel"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    },
+    "/students/disabilities/{uid}" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "",
+        "operationId" : "getDisabilitiesById",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message_id" : {
+                "type" : "string",
+                "description" : "The message_id must be unique across all message submitted by the software for that organisation / education provider."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/DisabilityModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Students" ],
+        "summary" : "Logically delete a specific record.",
+        "description" : "",
+        "operationId" : "deleteDisability",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "ID of a specific resource",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "patch a specific record.",
+        "operationId" : "patchDisability",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "Id of a specific record",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/DisabilityModel"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "uid" : {
+                  "type" : "integer",
+                  "format" : "int64",
+                  "readOnly" : true
+                },
+                "e615_disability_code" : {
+                  "type" : "string"
+                },
+                "links" : {
+                  "$ref" : "#/definitions/Links"
+                },
+                "messages" : {
+                  "type" : "array",
+                  "readOnly" : true,
+                  "items" : {
+                    "$ref" : "#/definitions/MessageModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/{uid}/first-reported-address" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "operationId" : "getFirstReportedAddressByStudentId",
+        "consumes" : [ ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "Id of a specific resource",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/FirstReportedAddressModel"
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Students" ],
+        "summary" : "Logically delete a specific record.",
+        "description" : "",
+        "operationId" : "deleteFirstReportedAddress",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "ID of a specific resource",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message-id" : {
+                "type" : "string",
+                "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad Request",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "patch a specific record.",
+        "operationId" : "patchFirstReportedAddress",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "uid",
+          "in" : "path",
+          "description" : "Id of a specific record",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "description" : "",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FirstReportedAddressModel"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "uid8_students_uid" : {
+                  "type" : "integer",
+                  "format" : "int64",
+                  "readOnly" : true
+                },
+                "links" : {
+                  "$ref" : "#/definitions/Links"
+                },
+                "messages" : {
+                  "type" : "array",
+                  "readOnly" : true,
+                  "items" : {
+                    "$ref" : "#/definitions/MessageModel"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/students/{uid}/student-numbers" : {
+      "get" : {
+        "tags" : [ "Students" ],
+        "summary" : "",
+        "description" : "",
+        "operationId" : "getStudentNumbersByStudentId",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "uid",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "provider-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "dhs-String-timestamp",
+          "in" : "header",
+          "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+          "required" : true,
+          "type" : "string",
+          "format" : "date"
+        }, {
+          "name" : "organisation-id",
+          "in" : "header",
+          "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "organisation-name",
+          "in" : "header",
+          "description" : "The name of the organisation as registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "provider-type",
+          "in" : "header",
+          "description" : "The provider type category for which the education provider is classified when registered with DET.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user-name",
+          "in" : "header",
+          "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "message-id",
+          "in" : "header",
+          "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "api-key",
+          "in" : "header",
+          "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "headers" : {
+              "String-timestamp" : {
+                "type" : "string",
+                "description" : "The String and timestamp when the response is generated"
+              },
+              "message_id" : {
+                "type" : "string",
+                "description" : "The message_id must be unique across all message submitted by the software for that organisation / education provider."
+              }
+            },
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "object",
+                "properties" : {
+                  "e313_student_identification_code" : {
+                    "type" : "string"
+                  },
+                  "links" : {
+                    "$ref" : "#/definitions/Links"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "404" : {
+            "description" : "Not Found"
+          },
+          "500" : {
+            "description" : "Server Error.",
+            "schema" : {
+              "$ref" : "#/definitions/MessageValuesModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "StudentPostInput" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/Student"
+      }, { } ]
+    },
+    "StudentWithChildrenModel" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/Student"
+      }, { } ]
+    },
+    "Student" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e313_student_identification_code" : {
+          "type" : "string"
+        },
+        "e314_date_of_birth" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "e315_gender_code" : {
+          "type" : "string"
+        },
+        "e316_atsi_code" : {
+          "type" : "string"
+        },
+        "e319_term_residence_postcode" : {
+          "type" : "string"
+        },
+        "e320_residential_address_postcode" : {
+          "type" : "string"
+        },
+        "e346_country_of_birth_code" : {
+          "type" : "string"
+        },
+        "e347_arrival_in_australia_year" : {
+          "type" : "integer"
+        },
+        "e348_language_spoken_at_home_code" : {
+          "type" : "string"
+        },
+        "e402_student_family_name" : {
+          "type" : "string"
+        },
+        "e403_student_given_name_first" : {
+          "type" : "string"
+        },
+        "e404_student_given_name_others" : {
+          "type" : "string"
+        },
+        "e410_residential_address" : {
+          "type" : "string"
+        },
+        "e416_student_tfn" : {
+          "type" : "string"
+        },
+        "e469_residential_address_suburb" : {
+          "type" : "string"
+        },
+        "e470_residential_address_state" : {
+          "type" : "string"
+        },
+        "e488_chessn" : {
+          "type" : "string"
+        },
+        "e572_year_left_school" : {
+          "type" : "integer"
+        },
+        "e573_highest_education_parent1" : {
+          "type" : "string"
+        },
+        "e574_highest_education_parent2" : {
+          "type" : "string"
+        },
+        "e584_usi" : {
+          "type" : "string"
+        },
+        "e612_level_left_school" : {
+          "type" : "string"
+        },
+        "e658_residential_address_country_code" : {
+          "type" : "string"
+        },
+        "e661_term_residence_country_code" : {
+          "type" : "string"
+        }
+      }
+    },
+    "CitizenshipPostInput" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/Citizenship"
+      }, { } ]
+    },
+    "CitizenshipPatchInputModel" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/Citizenship"
+      }, { } ]
+    },
+    "CitizenshipPatchOutputModel" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "Citizenship" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e358_citizen_resident_code" : {
+          "type" : "string"
+        },
+        "e609_effective_from_date" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "e610_effective_to_date" : {
+          "type" : "string",
+          "format" : "date"
+        }
+      }
+    },
+    "CitizenshipPostOutputModel" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e358_citizen_resident_code" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "Disability" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/DisabilityModel"
+      }, { } ]
+    },
+    "DisabilityModel" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e615_disability_code" : {
+          "type" : "string"
+        },
+        "e609_effective_from_date" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "e610_effective_to_date" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "Scholarship" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/ScholarshipModel"
+      }, { } ]
+    },
+    "ScholarshipModel" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e666_reporting_period" : {
+          "type" : "integer"
+        },
+        "e415_reporting_year" : {
+          "type" : "integer"
+        },
+        "e526_commonwealth_scholarship_status_code" : {
+          "type" : "string"
+        },
+        "e538_commonwealth_scholarship_termination_reason_code" : {
+          "type" : "string"
+        },
+        "e545_commonwealth_scholarship_type" : {
+          "type" : "string"
+        },
+        "e598_commonwealth_scholarship_amount" : {
+          "type" : "string",
+          "format" : "double"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "FirstReportedAddressModel" : {
+      "type" : "object",
+      "properties" : {
+        "e659_first_residential_address_country_code" : {
+          "type" : "string"
+        },
+        "e787_first_residential_address" : {
+          "type" : "string"
+        },
+        "e789_first_residential_address_suburb" : {
+          "type" : "string"
+        },
+        "e790_first_residential_address_postcode" : {
+          "type" : "string"
+        },
+        "e791_first_residential_address_state" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "StudentPostOutputModel" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e313_student_identification_code" : {
+          "type" : "string"
+        },
+        "e402_student_family_name" : {
+          "type" : "string"
+        },
+        "citizenship" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudentPostOutputModel_citizenship"
+          }
+        },
+        "disabilities" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudentPostOutputModel_disabilities"
+          }
+        },
+        "scholarships" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/StudentPostOutputModel_scholarships"
+          }
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "StudentWithChildrenBulkPostResult" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/StudentWithChildrenBulkPostResult_inner"
+      }
+    },
+    "MessageValuesModel" : {
+      "type" : "object",
+      "properties" : {
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "MessageModel" : {
+      "type" : "object",
+      "properties" : {
+        "message_id" : {
+          "type" : "string"
+        },
+        "severity" : {
+          "type" : "string",
+          "description" : "Type e.g. Error, Info"
+        },
+        "description" : {
+          "type" : "string",
+          "description" : "some message e.g. Id must be an integer and larger than 0"
+        }
+      }
+    },
+    "Links" : {
+      "type" : "array",
+      "items" : {
+        "$ref" : "#/definitions/Link"
+      }
+    },
+    "Link" : {
+      "type" : "object",
+      "properties" : {
+        "rel" : {
+          "type" : "string",
+          "description" : "Resource Name"
+        },
+        "href" : {
+          "type" : "string",
+          "description" : "'https://<prd_url>/<version#>/ResourceName/38201"
+        }
+      }
+    },
+    "PatchModel" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "PostModel" : {
+      "type" : "object",
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "body" : {
+      "properties" : {
+        "correlation_id" : {
+          "type" : "string"
+        },
+        "data" : {
+          "type" : "object",
+          "allOf" : [ {
+            "$ref" : "#/definitions/StudentPostInput"
+          } ]
+        }
+      }
+    },
+    "inline_response_200" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "e358_citizen_resident_code" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        }
+      }
+    },
+    "inline_response_200_1" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "uid12_commonwealth_scholarship_uid" : {
+          "type" : "integer"
+        },
+        "e415_reporting_year" : {
+          "type" : "integer"
+        },
+        "e526_commonwealth_scholarship_status_code" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        }
+      }
+    },
+    "inline_response_200_2" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "inline_response_200_3" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "e615_disability_code" : {
+          "type" : "string"
+        },
+        "e609_effective_from_date" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "e610_effective_to_date" : {
+          "type" : "string",
+          "format" : "date"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        }
+      }
+    },
+    "inline_response_200_4" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e615_disability_code" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "inline_response_200_5" : {
+      "properties" : {
+        "uid8_students_uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        },
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "inline_response_200_6" : {
+      "properties" : {
+        "e313_student_identification_code" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        }
+      }
+    },
+    "StudentPostOutputModel_citizenship" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e358_citizen_resident_code" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        }
+      }
+    },
+    "StudentPostOutputModel_disabilities" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e615_disability_code" : {
+          "type" : "string"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        }
+      }
+    },
+    "StudentPostOutputModel_scholarships" : {
+      "properties" : {
+        "uid" : {
+          "type" : "integer",
+          "format" : "int64",
+          "readOnly" : true
+        },
+        "e415_reporting_year" : {
+          "type" : "integer"
+        },
+        "e666_reporting_period" : {
+          "type" : "integer"
+        },
+        "links" : {
+          "$ref" : "#/definitions/Links"
+        }
+      }
+    },
+    "StudentWithChildrenBulkPostResult_inner_data" : {
+      "properties" : {
+        "messages" : {
+          "type" : "array",
+          "readOnly" : true,
+          "items" : {
+            "$ref" : "#/definitions/MessageModel"
+          }
+        }
+      }
+    },
+    "StudentWithChildrenBulkPostResult_inner" : {
+      "properties" : {
+        "correlation_id" : {
+          "type" : "string"
+        },
+        "status_code" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "data" : {
+          "$ref" : "#/definitions/StudentWithChildrenBulkPostResult_inner_data"
+        }
+      }
+    }
+  },
+  "parameters" : {
+    "provider-String-timestampParam" : {
+      "name" : "provider-String-timestamp",
+      "in" : "header",
+      "description" : "The String and timestamp when provider submits the request to DHS. (in UTC format with time zone in the ‘Z’ notation)",
+      "required" : true,
+      "type" : "string",
+      "format" : "date"
+    },
+    "dhs-String-timestampParam" : {
+      "name" : "dhs-String-timestamp",
+      "in" : "header",
+      "description" : "The String and timestamp when DHS sends the request to DET. (in UTC format with time zone in the ‘Z’ notation)",
+      "required" : true,
+      "type" : "string",
+      "format" : "date"
+    },
+    "organisation-idParam" : {
+      "name" : "organisation-id",
+      "in" : "header",
+      "description" : "The unique code of the education provider as supplied by DET when the organisation was registered as a provider",
+      "required" : true,
+      "type" : "string"
+    },
+    "organisation-namepParam" : {
+      "name" : "organisation-name",
+      "in" : "header",
+      "description" : "The name of the organisation as registered with DET.",
+      "required" : true,
+      "type" : "string"
+    },
+    "provider-typeParam" : {
+      "name" : "provider-type",
+      "in" : "header",
+      "description" : "The provider type category for which the education provider is classified when registered with DET.",
+      "required" : true,
+      "type" : "string"
+    },
+    "user-nameParam" : {
+      "name" : "user-name",
+      "in" : "header",
+      "description" : "The login name of user who initiated the request using the Student Management System (SMS).",
+      "required" : true,
+      "type" : "string"
+    },
+    "message_idParam" : {
+      "name" : "message-id",
+      "in" : "header",
+      "description" : "The unique identified that has been allocated by DHS for each of the request. (The message_id must be unique across all message submitted by the software for that organisation / education provider.)",
+      "required" : true,
+      "type" : "string"
+    },
+    "api-keyParam" : {
+      "name" : "api-key",
+      "in" : "header",
+      "description" : "The API Access Key obtained from DET confirming the consumer’s identity and authorisation to call the API endpoint. (This key will be exchanged manually. Keys will expire every 2 years.)",
+      "required" : true,
+      "type" : "string"
+    },
+    "uidParam" : {
+      "name" : "uid",
+      "in" : "path",
+      "description" : "uid of the provider making the API call",
+      "required" : true,
+      "type" : "integer",
+      "format" : "int64"
+    },
+    "String-timestampParamForResponse" : {
+      "name" : "String-timestamp",
+      "in" : "header",
+      "description" : "The String and timestamp when the response is generated.(String timestamp in UTC format with time zone in the ‘Z’ notation.)",
+      "required" : true,
+      "type" : "string",
+      "format" : "date"
+    }
+  },
+  "responses" : {
+    "PostedSuccessfully" : {
+      "description" : "successful operation.",
+      "headers" : {
+        "String-timestamp" : {
+          "type" : "string",
+          "description" : "The String and timestamp when the response is generated"
+        },
+        "message-id" : {
+          "type" : "string",
+          "description" : "The unique identifier that has been allocated by DHS to the submitted reques."
+        }
+      },
+      "schema" : {
+        "$ref" : "#/definitions/PostModel"
+      }
+    },
+    "NotFound" : {
+      "description" : "Not Found"
+    },
+    "Unauthorized" : {
+      "description" : "Unauthorized"
+    },
+    "BadRequest" : {
+      "description" : "Bad Request",
+      "schema" : {
+        "$ref" : "#/definitions/MessageValuesModel"
+      }
+    },
+    "UnexpectedError" : {
+      "description" : "Server Error.",
+      "schema" : {
+        "$ref" : "#/definitions/MessageValuesModel"
+      }
+    },
+    "Forbidden" : {
+      "description" : "Forbidden:  The authenticated entity used for the request has been locked, expired, or it is not setup to access the requested API.",
+      "schema" : {
+        "$ref" : "#/definitions/MessageValuesModel"
+      }
+    },
+    "DeletedSuccessfully" : {
+      "description" : "Success",
+      "headers" : {
+        "String-timestamp" : {
+          "type" : "string",
+          "description" : "The String and timestamp when the response is generated"
+        },
+        "message-id" : {
+          "type" : "string",
+          "description" : "The unique identifier that has been allocated by DHS to the submitted request."
+        }
+      }
+    }
+  }
+}
