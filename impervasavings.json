@@ -1,0 +1,4150 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Imperva Savings Bank and Trust API",
+    "description" : "This is the public API for consuming Imperva Savings Bank and Trust services by any application.\n\n## Authentication\nIn order to perform authenticated requests to the API, your API key and secret should be joined with a colon (:) character and then Base64 encoded and passed via the custom HTTP `X-ISBT-API-Key` header.\n\n### Example\nAPI key: `L1W7KXY5OB6W8CTW`\n\nSecret key: `5V#GqWV2d6j@RCRKz$gQF0Ve%Mwh%9xp`\n\nYou need to Base64 encode `L1W7KXY5OB6W8CTW:5V#GqWV2d6j@RCRKz$gQF0Ve%Mwh%9xp` and then send the following header:\n\n`X-ISBT-API-Key: TDFXN0tYWTVPQjZXOENUVzo1ViNHcVdWMmQ2akBSQ1JLeiRnUUYwVmUlTXdoJTl4cA==`\n\n## HTTP Response Codes\nThe API will always return an HTTP 200 response code if the request was received and processed by the API server, regardless of the outcome of the request.  If there is a genuine HTTP transport error, like an unauthenticated API request, unexpected server error, gateway timeout, etc. then an appropriate HTTP status code will be returned instead.  If an API call is processed by the server but is unsuccessful, a code will be returned as part of the **status** that is sent back in the response body.\n\n## API and Object Versioning\nVersioning is performed by using both `Content-Type` and `Accept` headers in request calls to the API.  \n\nIf your application is sending data in the body of a request, it can use `Content-Type` to specify a supported version of the object being sent or use a more generic type such as `application/json` or `multipart/form-data` in which case the API will assume that you are sending the latest supported version of the object.\n\nIf your application is expecting a specific response, it can use `Accept` to specify a supported version of the object being returned by the API or use a more generic type such as `application/json` in which case the latest supported version of the object will be returned by the API.\n\nA final note on `Accept` - you can also specify multiple Accept types in which case the most-preferred version of the object.  You can also use quality factors to specifically weight your preferences.  \n\nSee <https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Accept> for more details on the `Accept` header.\n\n### Example\nIf you specify `Accept: application/vnd.isbt.transactions.v1+json, application/json;q=0.8` then the **v1** version of a **transactions** object will be returned if it is still supported by the API.  If it is no longer supported, the latest version will be returned instead.\n\n## Additional Info\n",
+    "contact" : {
+      "name" : "Imperva Global Sales Architect Team",
+      "email" : "gsa-team@imperva.com"
+    },
+    "license" : {
+      "name" : "Licensed under the Apache 2.0 License",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "0.9"
+  },
+  "servers" : [ {
+    "url" : "https://{environment}.isbt.impervademo.com/",
+    "description" : "Development server",
+    "variables" : {
+      "environment" : {
+        "description" : "API server environment to use",
+        "default" : "api",
+        "enum" : [ "api", "api-dev" ]
+      }
+    }
+  } ],
+  "paths" : {
+    "/auth/providers" : {
+      "get" : {
+        "tags" : [ "auth service" ],
+        "summary" : "retrieves a list of all authentication providers",
+        "description" : "retrieves information on the available list of providers that can be used to authenticate users\n",
+        "parameters" : [ {
+          "name" : "providerNames",
+          "in" : "query",
+          "description" : "filter providers to only the given named providers; separate multiple user IDs with a comma\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true,
+            "default" : "(empty string)"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProviderListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/auth/sessions" : {
+      "get" : {
+        "tags" : [ "auth service" ],
+        "summary" : "retrieves a list of all sessions on the system or for one or more users",
+        "description" : "retrieves basic information about sessions stored in the system; if one or more user IDs are specified, only sessions owned by the given user IDs will be returned\n",
+        "parameters" : [ {
+          "name" : "expired",
+          "in" : "query",
+          "description" : "filter sessions to either those that are expired (\"true\") or only those that are NOT expired (\"false\")\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true,
+            "default" : "(empty string)"
+          }
+        }, {
+          "name" : "userIds",
+          "in" : "query",
+          "description" : "filter sessions to only those owned by any of the given user IDs; separate multiple user IDs with a comma\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true,
+            "default" : "(empty string)"
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "auth service" ],
+        "summary" : "creates a new session",
+        "description" : "creates a new session by authenticating the given user credentials and then tying the session to that user \n",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/ProviderSessionCreateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProviderSessionCreateResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/auth/sessions/{sessionId}" : {
+      "get" : {
+        "tags" : [ "auth service" ],
+        "summary" : "retrieves details about a session",
+        "description" : "retrieves full details about the given session ID including its data\n",
+        "parameters" : [ {
+          "name" : "sessionId",
+          "in" : "path",
+          "description" : "the ID of the session to retrieve",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/SessionResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "auth service" ],
+        "summary" : "replaces the entire record for an active session",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n",
+        "parameters" : [ {
+          "name" : "sessionId",
+          "in" : "path",
+          "description" : "session ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/SessionUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "auth service" ],
+        "summary" : "destroys an active session",
+        "description" : "deletes the active session for the user, effectively logging them out\n",
+        "parameters" : [ {
+          "name" : "sessionId",
+          "in" : "path",
+          "description" : "session ID to destroy",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "auth service" ],
+        "summary" : "updates specific fields in an active session's record",
+        "description" : "updates specified fields in the record; to update the entire record, use the **PUT** method instead\n",
+        "parameters" : [ {
+          "name" : "sessionId",
+          "in" : "path",
+          "description" : "session ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/SessionUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/auth/users" : {
+      "get" : {
+        "tags" : [ "auth service" ],
+        "summary" : "retrieves a list of all users on the system or users filtered by username and/or provider",
+        "description" : "retrieves basic information about users stored in the system\n\n- If one or more providerUserIds are specified, only the given records with a matching providerUserId will be returned.\n- If one or more providerNames are specified, only the given records with a matching providerName will be returned.\n- If both are specified, only objects that overlap both lists will be returned.\n- If neither is specified, all objects will be returned.\n",
+        "parameters" : [ {
+          "name" : "providerNames",
+          "in" : "query",
+          "description" : "filter records to only those belonging to the given providers; separate multiple providers with a comma\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "providerUserIds",
+          "in" : "query",
+          "description" : "filter records to only those having the given usernames; separate multiple usernames with a comma\n\n- For **sql** backends, the user identifier corresponds to the _username_ column in the database table schema\n- For **cloudentity** backends, the user identifier is the _uid_ field returned by the `GET /users/{identifier}` User Service API\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "auth service" ],
+        "summary" : "creates a new user on the system",
+        "description" : "creates a new user on the system\n\n- For **sql** backends:\n  - **Request**: The _providerAttributes_ field may include _password_ field that is set to a password for the user.  If it is not specified, a random password is assigned.\n  \n    **Example:**\n    ```\n    {\n      \"providerName\": \"localdb\",\n      \"providerUserId\": \"john.doe\",\n      \"providerAttributes\": {\n        \"password\": \"some_password\",\n      }\n      \"emailAddresses\": [ ],\n      ...\n    }\n    ```\n  - **Response**: The _providerAttributes_ field will include the _password_ field.\n  \n- For **cloudentity** backends:\n  - **Request**: The _providerAttributes_ field in the request should follow the requirements for the _body_ parameter outlined in the `POST /users` User Service API call.\n    \n    **Example:**\n    ```\n    {\n      \"providerName\": \"cloudentity\",\n      \"providerUserId\": \"username@domain.com\",\n      \"providerAttributes\": {\n        \"uid\": \"username@domain.com\",\n        \"password\": \"some_password\",\n        \"organization\": \"isbt\",\n        \"...\"\n      }\n      \"emailAddresses\": [ ],\n      ...\n    }\n    ```\n  - **Response**: The _providerAttributes_ field will include the response from the `POST /users` User Service API call.\n",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/UserCreateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProviderUserCreateResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/auth/users/{providerName}/{providerUserId}" : {
+      "get" : {
+        "tags" : [ "auth service" ],
+        "summary" : "retrieves details about a user",
+        "description" : "retrieves full details about the given user\n\n- For **sql** backends:\n  - **Response**: The _providerAttributes_ field will not include any fields.\n  \n- For **cloudentity** backends:\n  - **Response**: The _providerAttributes_ field will include the response from the `GET /users/{identifier}` User Service API call.\n",
+        "parameters" : [ {
+          "name" : "providerName",
+          "in" : "path",
+          "description" : "the name of the provider where the user credentials are stored",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "localdb"
+        }, {
+          "name" : "providerUserId",
+          "in" : "path",
+          "description" : "the ID of the user with the given provider\n\n- For **sql** backends, the user identifier corresponds to the _username_ column in the database table schema\n- For **cloudentity** backends, the user identifier is the _uid_ field returned by the `GET /users/{identifier}` User Service API\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "auth service" ],
+        "summary" : "replaces a user's details",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n\n- For **sql** backends:\n  - **Request**: The _providerAttributes_ field is not required or used.\n\n- For **cloudentity** backends:\n  - **Request**: The _providerAttributes_ field in the request should follow the requirements outlined by the call to the `PUT /users/{identifer}` User Service API call using the parameters as keys in the object.  \n    \n    **Example:**\n    ```\n    {\n      \"providerName\": \"cloudentity\",\n      \"providerUserId\": \"username@domain.com\",\n      \"providerAttributes\": {\n        \"customer\": \"isbt\",\n        \"body\": {\n          \"uid\": \"username@domain.com\",\n          \"password\": \"some_password\",\n          \"...\"\n        }\n      }\n      \"emailAddresses\": [ ],\n      ...\n    }\n    ```\n",
+        "parameters" : [ {
+          "name" : "providerName",
+          "in" : "path",
+          "description" : "the name of the provider where the user credentials are stored",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "localdb"
+        }, {
+          "name" : "providerUserId",
+          "in" : "path",
+          "description" : "the ID of the user with the given provider\n\n- For **sql** backends, the user identifier corresponds to the _username_ column in the database table schema\n- For **cloudentity** backends, the user identifier is the _uid_ field returned by the `GET /users/{identifier}` User Service API\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/UserUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "auth service" ],
+        "summary" : "deletes a user from the system",
+        "description" : "deletes a user from the system along with all account information including transactions, transfers, bill payments, etc. associated with their account\n",
+        "parameters" : [ {
+          "name" : "providerName",
+          "in" : "path",
+          "description" : "the name of the provider where the user credentials are stored",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "localdb"
+        }, {
+          "name" : "providerUserId",
+          "in" : "path",
+          "description" : "the ID of the user with the given provider\n\n- For **sql** backends, the user identifier corresponds to the _username_ column in the database table schema\n- For **cloudentity** backends, the user identifier is the _uid_ field returned by the `GET /users/{identifier}` User Service API\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "auth service" ],
+        "summary" : "updates specific user details",
+        "description" : "updates specified fields in the record; to update the entire record, use the **PUT** method instead\n\n- For **sql** backends:\n  - **Request**: The _providerAttributes_ field is not required or used.\n\n- For **cloudentity** backends:\n  - **Request**: The _providerAttributes_ field is not required or used as the provider has no **PATCH** method to use.\n",
+        "parameters" : [ {
+          "name" : "providerName",
+          "in" : "path",
+          "description" : "the name of the provider where the user credentials are stored",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "localdb"
+        }, {
+          "name" : "providerUserId",
+          "in" : "path",
+          "description" : "the ID of the user with the given provider\n\n- For **sql** backends, the user identifier corresponds to the _username_ column in the database table schema\n- For **cloudentity** backends, the user identifier is the _uid_ field returned by the `GET /users/{identifier}` User Service API\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/UserUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/auth/users/{providerName}/{providerUserId}/password" : {
+      "put" : {
+        "tags" : [ "auth service" ],
+        "summary" : "changes a user's password",
+        "description" : "changes the password for a user by using their old password\n",
+        "parameters" : [ {
+          "name" : "providerName",
+          "in" : "path",
+          "description" : "the name of the provider where the user credentials are stored",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "localdb"
+        }, {
+          "name" : "providerUserId",
+          "in" : "path",
+          "description" : "the ID of the user with the given provider\n\n- For **sql** backends, the user identifier corresponds to the _username_ column in the database table schema\n- For **cloudentity** backends, the user identifier is the _uid_ field returned by the `GET /users/{identifier}` User Service API\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/UserPasswordUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "auth service" ],
+        "summary" : "resets a user's password",
+        "description" : "performs a complete reset of a user's password without needing knowledge of the old password\n\n- For **sql** backends:\n  - **Response**: The _providerAttributes_ field will include the new password in the _password_ field.\n  \n- For **cloudentity** backends:\n  - **Response**: The _providerAttributes_ field will include the response from the `POST /users/{identifier}/password/reset` User Service API call.\n",
+        "parameters" : [ {
+          "name" : "providerName",
+          "in" : "path",
+          "description" : "the name of the provider where the user credentials are stored",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "localdb"
+        }, {
+          "name" : "providerUserId",
+          "in" : "path",
+          "description" : "the ID of the user with the given provider\n\n- For **sql** backends, the user identifier corresponds to the _username_ column in the database table schema\n- For **cloudentity** backends, the user identifier is the _uid_ field returned by the `GET /users/{identifier}` User Service API\n",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserPasswordResetResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/banking/accounts" : {
+      "get" : {
+        "tags" : [ "banking service" ],
+        "summary" : "retrieves basic information for all accounts on the system or for one or more users",
+        "description" : "retrieves information for all accounts on the system or for one or more users if the list is filtered\n",
+        "parameters" : [ {
+          "name" : "userIds",
+          "in" : "query",
+          "description" : "filter accounts to those only owned by the given user IDs; separate multiple user IDs with a comma",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "banking service" ],
+        "summary" : "creates a new account",
+        "description" : "creates a new account\n",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/AccountCreateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountCreateResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/banking/accounts/{accountId}" : {
+      "get" : {
+        "tags" : [ "banking service" ],
+        "summary" : "retrieves details about a specific account",
+        "description" : "retrieves full details about the given account\n",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "the associated account ID to retrieve",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "banking service" ],
+        "summary" : "replaces an existing account",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "the associated account ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/AccountUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "banking service" ],
+        "summary" : "deletes an existing account",
+        "description" : "deletes an existing account\n",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "the associated account ID to delete",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "banking service" ],
+        "summary" : "updates an existing account",
+        "description" : "updates specified fields in the record; to update the entire record, use the **PUT** method instead\n",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "the associated account ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/AccountUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/banking/balanceTransfers" : {
+      "get" : {
+        "tags" : [ "banking service" ],
+        "summary" : "retrieves a list of all balance transfers on the system or for one or more accounts",
+        "description" : "retrieves detailed information about balance transfers stored in the system; if one or more account IDs are specified, only transfers where any of the given accounts is either sending or receiving the transfer will be returned\n",
+        "parameters" : [ {
+          "name" : "accountIds",
+          "in" : "query",
+          "description" : "filter transfers to only those where any of the given account IDs is either receiving or initiating the transfer; separate multiple account IDs with a comma\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "includePastTransfers",
+          "in" : "query",
+          "description" : "whether or not to include balance transfers that happened in the past",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean",
+            "default" : false
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BalanceTransferListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "banking service" ],
+        "summary" : "creates a new balance transfer",
+        "description" : "creates a new balance transfer request between the source and target accounts\n",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/BalanceTransferCreateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BalanceTransferCreateResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/banking/balanceTransfers/{transferId}" : {
+      "get" : {
+        "tags" : [ "banking service" ],
+        "summary" : "retrieves details about a specific transfer",
+        "description" : "retrieves full details about the given balance transfer\n",
+        "parameters" : [ {
+          "name" : "transferId",
+          "in" : "path",
+          "description" : "the associated balance transfer ID to retrieve",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/BalanceTransferResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "banking service" ],
+        "summary" : "replaces an existing scheduled balance transfer",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n",
+        "parameters" : [ {
+          "name" : "transferId",
+          "in" : "path",
+          "description" : "the associated balance transfer ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/BalanceTransferUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "banking service" ],
+        "summary" : "deletes an existing balance transfer",
+        "description" : "deletes an existing balance transfer\n",
+        "parameters" : [ {
+          "name" : "transferId",
+          "in" : "path",
+          "description" : "the associated balance transfer ID to delete",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "banking service" ],
+        "summary" : "updates an existing scheduled balance transfer",
+        "description" : "updates specified fields in the record; to update the entire record, use the **PUT** method instead\n",
+        "parameters" : [ {
+          "name" : "transferId",
+          "in" : "path",
+          "description" : "the associated balance transfer ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/BalanceTransferUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/banking/transactions" : {
+      "get" : {
+        "tags" : [ "banking service" ],
+        "summary" : "retrieves a list of all transactions on the system or for one or more accounts",
+        "description" : "retrieves detailed information about transactions stored in the system; if one or more account IDs are specified, only transactions tied to the specific account IDs will be returned\n",
+        "parameters" : [ {
+          "name" : "accountIds",
+          "in" : "query",
+          "description" : "filter transactions to only those associated with the given account IDs; separate multiple account IDs with a comma\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "banking service" ],
+        "summary" : "creates a new transaction",
+        "description" : "creates a new transaction\n",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/TransactionCreateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionCreateResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/banking/transactions/{transactionId}" : {
+      "get" : {
+        "tags" : [ "banking service" ],
+        "summary" : "retrieves details about a specific transaction",
+        "description" : "retrieves full details about the given transaction\n",
+        "parameters" : [ {
+          "name" : "transactionId",
+          "in" : "path",
+          "description" : "the associated transaction ID to retrieve",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TransactionResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "banking service" ],
+        "summary" : "replaces an existing transaction",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n",
+        "parameters" : [ {
+          "name" : "transactionId",
+          "in" : "path",
+          "description" : "the associated transaction ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/TransactionUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "banking service" ],
+        "summary" : "deletes an existing transaction",
+        "description" : "deletes an existing transaction\n",
+        "parameters" : [ {
+          "name" : "transactionId",
+          "in" : "path",
+          "description" : "the associated transaction ID to delete",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "banking service" ],
+        "summary" : "updates an existing transaction",
+        "description" : "updates specified fields in the record; to update the entire record, use the **PUT** method instead\n",
+        "parameters" : [ {
+          "name" : "transactionId",
+          "in" : "path",
+          "description" : "the associated transaction ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/TransactionUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/billPay/payments" : {
+      "get" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "retrieves a list of all bill payments on the system or for one or more accounts",
+        "description" : "retrieves detailed information about bill payments stored in the system; if one or more account IDs are specified, only payments associated with the given accounts will be returned\n",
+        "parameters" : [ {
+          "name" : "accountIds",
+          "in" : "query",
+          "description" : "filter payments to only those belonging to the given account IDs; separate multiple account IDs with a comma",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "includePastPayments",
+          "in" : "query",
+          "description" : "whether or not to include bill payments that happened in the past",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean",
+            "default" : false
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "creates a new bill payment",
+        "description" : "creates a new bill payment request from the given account\n",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/PaymentCreateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentCreateResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/billPay/payments/{paymentId}" : {
+      "get" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "retrieves details about a specific bill payment",
+        "description" : "retrieves full details about the given bill payment\n",
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "description" : "the associated bill payment ID to retrieve",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PaymentResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "replaces an existing bill payment",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n",
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "description" : "the associated payment ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/PaymentUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "deletes an existing bill payment",
+        "description" : "deletes an existing bill payment\n",
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "description" : "the associated bill payment ID to delete",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "updates an existing bill payment",
+        "description" : "updates specified fields in the record; to update the entire record, use the **PUT** method instead\n",
+        "parameters" : [ {
+          "name" : "paymentId",
+          "in" : "path",
+          "description" : "the associated payment ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/PaymentUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/billPay/payees" : {
+      "get" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "retrieves a list of all bill payees on the system or those created by one or more users",
+        "description" : "retrieves detailed information about bill payees stored in the system; if one or more user IDs are specified, only payees created by the given users will be returned\n",
+        "parameters" : [ {
+          "name" : "userIds",
+          "in" : "query",
+          "description" : "filter payees to only those created by the given user IDs; separate multiple user IDs with a comma",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "nullable" : true
+          }
+        }, {
+          "name" : "pageSize",
+          "in" : "query",
+          "description" : "number of items to retrieve at a time",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 100
+          }
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "index of requested page of items; applications should start with 1 and use totalPages from the response to loop through the pages of items using the same pageSize for each request; note that the final page may not be a full pageSize\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 1
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PayeeListResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "post" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "creates a new bill payee on the system for a given user",
+        "description" : "creates a new bill payee for the given user\n",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/PayeeCreateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PayeeCreateResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    },
+    "/billPay/payees/{payeeId}" : {
+      "get" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "retrieves details about a specific bill payee",
+        "description" : "retrieves full details about the given bill payee\n",
+        "parameters" : [ {
+          "name" : "payeeId",
+          "in" : "path",
+          "description" : "the associated bill payee ID to retrieve",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/PayeeResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "put" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "replaces an existing bill payee",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n",
+        "parameters" : [ {
+          "name" : "payeeId",
+          "in" : "path",
+          "description" : "the associated payee ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/PayeeUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "delete" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "deletes an existing bill payee",
+        "description" : "deletes an existing bill payee\n",
+        "parameters" : [ {
+          "name" : "payeeId",
+          "in" : "path",
+          "description" : "the associated bill payee ID to delete",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      },
+      "patch" : {
+        "tags" : [ "bill pay service" ],
+        "summary" : "updates an existing bill payee",
+        "description" : "updates the entire record replacing all values with those given; to update one or more specific fields, use the **PATCH** method instead\n",
+        "parameters" : [ {
+          "name" : "payeeId",
+          "in" : "path",
+          "description" : "the associated payee ID to update",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/PayeeUpdateRequestBody.v1"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Server processed the request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardResponse.v1"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "no authorization information was passed or the authorization key has expired",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StandardNon200Response.v1"
+                }
+              }
+            }
+          }
+        },
+        "security" : [ {
+          "ApiKeyAuth" : [ ]
+        } ]
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Account.v1" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of account",
+            "example" : "Checking",
+            "enum" : [ "Checking", "Savings", "Credit Card" ]
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "current account status; if an account has been hacked, it can be marked as ClosedCompromised to signal it was not closed by the user's request\n",
+            "example" : "Open",
+            "enum" : [ "Open", "Closed", "ClosedCompromised" ]
+          },
+          "number" : {
+            "type" : "integer",
+            "description" : "the full account number",
+            "format" : "int32",
+            "example" : 127768421
+          },
+          "userId" : {
+            "type" : "integer",
+            "description" : "the ID of the user who owns the account",
+            "format" : "int32",
+            "example" : 12647
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of the account",
+            "example" : "Performance Checking Account"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for account balance",
+            "example" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "balance" : {
+            "type" : "number",
+            "description" : "account balance; for checking and savings accounts this includes posted but not necessarily cleared transactions; for credit card accounts this is the current balance of all cleared transactions posted to the credit card\n",
+            "format" : "float",
+            "example" : 12438.54
+          },
+          "availableBalance" : {
+            "type" : "number",
+            "description" : "account balance currently avaiable; for checking and savings accounts this is the amount available for the customer to withdraw, transfer, pay bills, etc.; for credit card accounts this is the remaining free balance on the account\n",
+            "format" : "float",
+            "example" : 12438.54
+          },
+          "priorBalance" : {
+            "type" : "number",
+            "description" : "prior statement balance (only present for Credit Card accounts)",
+            "format" : "float",
+            "example" : 0
+          },
+          "paymentDueDate" : {
+            "type" : "string",
+            "description" : "date when next payment is due (only present for Credit Card accounts)",
+            "format" : "date"
+          }
+        }
+      },
+      "AccountBasic.v1" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of account",
+            "example" : "Checking",
+            "enum" : [ "Checking", "Savings", "Credit Card" ]
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "current account status; if an account has been hacked, it can be marked as ClosedCompromised to signal it was not closed by the user's request\n",
+            "example" : "Open",
+            "enum" : [ "Open", "Closed", "ClosedCompromised" ]
+          },
+          "number" : {
+            "type" : "integer",
+            "description" : "the full account number",
+            "format" : "int32",
+            "example" : 127768421
+          },
+          "userId" : {
+            "type" : "integer",
+            "description" : "the ID of the user who owns the account",
+            "format" : "int32",
+            "example" : 12647
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of the account",
+            "example" : "Performance Checking Account"
+          },
+          "balance" : {
+            "type" : "number",
+            "description" : "account balance; for checking and savings accounts this includes posted but not necessarily cleared transactions; for credit card accounts this is the current balance of all cleared transactions posted to the credit card\n",
+            "format" : "float",
+            "example" : 12438.54
+          }
+        }
+      },
+      "AccountCreateRequestBody.v1" : {
+        "required" : [ "name", "openingBalance", "type", "userId" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of account",
+            "example" : "Checking",
+            "enum" : [ "Checking", "Savings", "Credit Card" ]
+          },
+          "userId" : {
+            "type" : "integer",
+            "description" : "the ID of the user who owns the account",
+            "format" : "int32",
+            "example" : 12647
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of the account",
+            "example" : "Performance Checking Account"
+          },
+          "openingBalance" : {
+            "type" : "number",
+            "description" : "starting account balance; for checking and savings accounts this is the initial deposit; for credit card accounts this should be 0 unless a balance was carried over from a previously compromised account\n",
+            "format" : "float",
+            "example" : 12438.54
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for account balance",
+            "example" : "USD",
+            "default" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "paymentDueDate" : {
+            "type" : "string",
+            "description" : "date when next payment is due (only present for Credit Card accounts)",
+            "format" : "date",
+            "nullable" : true
+          }
+        }
+      },
+      "AccountCreateResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "number" : {
+            "type" : "integer",
+            "description" : "the newly created account number",
+            "format" : "int32",
+            "example" : 18437825
+          }
+        }
+      },
+      "AccountList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of items",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of items per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of items of the requested page size; note that the last page may not be a full pageSize",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AccountBasic.v1"
+            }
+          }
+        }
+      },
+      "AccountListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "accounts" : {
+            "$ref" : "#/components/schemas/AccountList.v1"
+          }
+        }
+      },
+      "AccountResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "account" : {
+            "$ref" : "#/components/schemas/Account.v1"
+          }
+        }
+      },
+      "AccountUpdateRequestBody.v1" : {
+        "required" : [ "availableBalance", "balance", "name", "status", "type" ],
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "type" : "string",
+            "description" : "current account status; if an account has been hacked, it can be marked as ClosedCompromised to signal it was not closed by the user's request\n",
+            "example" : "Open",
+            "enum" : [ "Open", "Closed", "ClosedCompromised" ]
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of the account",
+            "example" : "Performance Checking Account"
+          },
+          "balance" : {
+            "type" : "number",
+            "description" : "account balance; for checking and savings accounts this includes posted but not necessarily cleared transactions; for credit card accounts this is the current balance of all cleared transactions posted to the credit card\n",
+            "format" : "float",
+            "example" : 12438.54
+          },
+          "availableBalance" : {
+            "type" : "number",
+            "description" : "account balance currently avaiable; for checking and savings accounts this is the amount available for the customer to withdraw, transfer, pay bills, etc.; for credit card accounts this is the remaining free balance on the account\n",
+            "format" : "float",
+            "example" : 12438.54
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for account balance",
+            "example" : "USD",
+            "default" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "paymentDueDate" : {
+            "type" : "string",
+            "description" : "date when next payment is due (only present for Credit Card accounts)",
+            "format" : "date",
+            "nullable" : true
+          }
+        }
+      },
+      "BalanceTransfer.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "the unique ID for the transfer",
+            "example" : "BXP184-M4J7F"
+          },
+          "sourceAccount" : {
+            "type" : "integer",
+            "description" : "account ID to create the balance transfer for",
+            "format" : "int32",
+            "example" : 127768421
+          },
+          "targetAccount" : {
+            "type" : "integer",
+            "description" : "the target account to receive money from or transfer money to",
+            "format" : "int32",
+            "example" : 127768420
+          },
+          "direction" : {
+            "type" : "string",
+            "description" : "is the source account receiving money from or transferring money to the target account",
+            "example" : "TransferTo",
+            "default" : "TransferTo",
+            "enum" : [ "ReceiveFrom", "TransferTo" ]
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date the balance transfer is taking place or took place",
+            "format" : "date"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for transfer amount",
+            "example" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount of the transfer",
+            "format" : "float",
+            "example" : 2000
+          }
+        }
+      },
+      "BalanceTransferCreateRequestBody.v1" : {
+        "required" : [ "amount", "targetAccount" ],
+        "type" : "object",
+        "properties" : {
+          "sourceAccount" : {
+            "type" : "integer",
+            "description" : "account ID to create the balance transfer for",
+            "format" : "int32",
+            "example" : 127768420
+          },
+          "targetAccount" : {
+            "type" : "integer",
+            "description" : "the target account to receive money from or transfer money to",
+            "format" : "int32",
+            "example" : 127768421
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount to transfer",
+            "format" : "float",
+            "example" : 1200
+          },
+          "direction" : {
+            "type" : "string",
+            "description" : "is the account receiving money from or transferring money to the target account",
+            "example" : "TransferTo",
+            "default" : "TransferTo",
+            "enum" : [ "ReceiveFrom", "TransferTo" ]
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date on which the transfer should occur or null to perform the transfer immediately",
+            "format" : "date",
+            "nullable" : true
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "the currency the amount is in",
+            "example" : "USD",
+            "default" : "USD",
+            "enum" : [ "USD" ]
+          }
+        }
+      },
+      "BalanceTransferCreateResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "the ID of the newly created balance transfer request",
+            "example" : "BXP184-M4J7F"
+          }
+        }
+      },
+      "BalanceTransferList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of items",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of items per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of items of the requested page size; note that the last page may not be a full pageSize",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/BalanceTransfer.v1"
+            }
+          }
+        }
+      },
+      "BalanceTransferListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "transfers" : {
+            "$ref" : "#/components/schemas/BalanceTransferList.v1"
+          }
+        }
+      },
+      "BalanceTransferResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "transfer" : {
+            "$ref" : "#/components/schemas/BalanceTransfer.v1"
+          }
+        }
+      },
+      "BalanceTransferUpdateRequestBody.v1" : {
+        "$ref" : "#/components/schemas/BalanceTransferCreateRequestBody.v1"
+      },
+      "Payee.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "the unique ID for the payee",
+            "format" : "int32",
+            "example" : 73621
+          },
+          "userId" : {
+            "type" : "integer",
+            "description" : "the user ID to which the payee belongs",
+            "format" : "int32",
+            "example" : 12676
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of the payee",
+            "example" : "Amazon Web Services"
+          },
+          "addresses" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PayeeAddress.v1"
+            }
+          },
+          "phones" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PayeePhone.v1"
+            }
+          },
+          "accountNumber" : {
+            "type" : "string",
+            "description" : "user's account number in the payee's system",
+            "example" : "4789101015"
+          },
+          "comments" : {
+            "type" : "string",
+            "description" : "additional description or comments about the payee",
+            "example" : "AWS account for Imperva lab"
+          }
+        }
+      },
+      "PayeeAddress.v1" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of address",
+            "example" : "mailing"
+          },
+          "street" : {
+            "type" : "string",
+            "description" : "house number and street",
+            "example" : "1 Amazon Way"
+          },
+          "city" : {
+            "type" : "string",
+            "description" : "city or locality",
+            "example" : "Seattle"
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "state (if in the US)",
+            "example" : "WA"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "country",
+            "example" : "USA"
+          },
+          "zip" : {
+            "type" : "string",
+            "description" : "zip or postal code",
+            "example" : "98121"
+          }
+        },
+        "description" : "the mailing address for the payee"
+      },
+      "PayeeBasic.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "the unique ID for the payee",
+            "format" : "int32",
+            "example" : 73621
+          },
+          "userId" : {
+            "type" : "integer",
+            "description" : "the user ID to which the payee belongs",
+            "format" : "int32",
+            "example" : 12676
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of the payee",
+            "example" : "Amazon Web Services"
+          },
+          "accountNumber" : {
+            "type" : "string",
+            "description" : "user's account number in the payee's system",
+            "example" : "4789101015"
+          },
+          "comments" : {
+            "type" : "string",
+            "description" : "additional description or comments about the payee",
+            "example" : "AWS account for Imperva lab"
+          }
+        }
+      },
+      "PayeeCreateRequestBody.v1" : {
+        "required" : [ "addresses", "name" ],
+        "type" : "object",
+        "properties" : {
+          "userId" : {
+            "type" : "integer",
+            "description" : "the user ID to which the payee belongs",
+            "format" : "int32",
+            "example" : 12676
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "name of the payee",
+            "example" : "Amazon Web Services"
+          },
+          "addresses" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PayeeAddress.v1"
+            }
+          },
+          "phones" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PayeePhone.v1"
+            }
+          },
+          "accountNumber" : {
+            "type" : "string",
+            "description" : "user's account number in the payee's system",
+            "nullable" : true,
+            "example" : "4789101015"
+          },
+          "comments" : {
+            "type" : "string",
+            "description" : "additional description or comments about the payee",
+            "nullable" : true,
+            "example" : "AWS account for Imperva lab"
+          }
+        }
+      },
+      "PayeeCreateResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "id" : {
+            "type" : "integer",
+            "description" : "the ID of the newly created payee",
+            "format" : "int32",
+            "example" : 60181
+          }
+        }
+      },
+      "PayeeList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of items",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of items per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of items of the requested page size; note that the last page may not be a full pageSize",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/PayeeBasic.v1"
+            }
+          }
+        }
+      },
+      "PayeeListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "payees" : {
+            "$ref" : "#/components/schemas/PayeeList.v1"
+          }
+        }
+      },
+      "PayeePhone.v1" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of phone number (eg: home, work, mobile, fax, etc.)",
+            "example" : "home"
+          },
+          "number" : {
+            "type" : "string",
+            "description" : "the actual phone number",
+            "example" : "(718) 479-0909"
+          }
+        },
+        "description" : "user contact phone"
+      },
+      "PayeeResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "payee" : {
+            "$ref" : "#/components/schemas/Payee.v1"
+          }
+        }
+      },
+      "PayeeUpdateRequestBody.v1" : {
+        "$ref" : "#/components/schemas/PayeeCreateRequestBody.v1"
+      },
+      "Payment.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "the unique ID for the payment",
+            "example" : "PMT897-FTL8Q"
+          },
+          "accountId" : {
+            "type" : "integer",
+            "description" : "the ID of the account the payment is originating from",
+            "format" : "int32",
+            "example" : 127768421
+          },
+          "payeeId" : {
+            "type" : "integer",
+            "description" : "the ID of the payee that the payment is going to",
+            "format" : "int32",
+            "example" : 89767
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date the payment is taking place or took place",
+            "format" : "date"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for payment amount",
+            "example" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount of the payment",
+            "format" : "float",
+            "example" : 2000
+          },
+          "comments" : {
+            "type" : "string",
+            "description" : "comments to send along to payee with the payment",
+            "example" : "Membership for John Doe for BMW car club"
+          }
+        }
+      },
+      "PaymentCreateRequestBody.v1" : {
+        "required" : [ "amount", "date", "payeeId" ],
+        "type" : "object",
+        "properties" : {
+          "accountId" : {
+            "type" : "integer",
+            "description" : "the ID of the account the payment is originating from",
+            "format" : "int32",
+            "example" : 127768421
+          },
+          "payeeId" : {
+            "type" : "integer",
+            "description" : "the ID of the payee that the payment is going to",
+            "format" : "int32",
+            "example" : 89767
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount of the payment",
+            "format" : "float",
+            "example" : 2000
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date the payment is scheduled to take place",
+            "format" : "date"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for payment amount",
+            "example" : "USD",
+            "default" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "comments" : {
+            "type" : "string",
+            "description" : "comments to send along to payee with the payment",
+            "nullable" : true,
+            "example" : "Membership for John Doe for BMW car club"
+          }
+        }
+      },
+      "PaymentCreateResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "the ID of the newly created bill payment request",
+            "example" : "SPMT84-MJZ49"
+          }
+        }
+      },
+      "PaymentList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of items",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of items per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of items of the requested page size; note that the last page may not be a full pageSize",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Payment.v1"
+            }
+          }
+        }
+      },
+      "PaymentListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "payments" : {
+            "$ref" : "#/components/schemas/PaymentList.v1"
+          }
+        }
+      },
+      "PaymentResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "payment" : {
+            "$ref" : "#/components/schemas/Payment.v1"
+          }
+        }
+      },
+      "PaymentUpdateRequestBody.v1" : {
+        "$ref" : "#/components/schemas/PaymentCreateRequestBody.v1"
+      },
+      "Provider.v1" : {
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "the unique (internal) name of the provider; use this value when specifying a provider in your API calls",
+            "example" : "localdb"
+          },
+          "displayName" : {
+            "type" : "string",
+            "description" : "the display name to show to end users in your application",
+            "example" : "ISBT Account"
+          },
+          "attributes" : {
+            "type" : "object",
+            "additionalProperties" : true,
+            "description" : "provider-specific attributes\n\n- For **sql** providers there are no additional attributes.\n- For **cloudentity** providers, attributes will include _organizationName_ and _organizationUrl_\n"
+          }
+        }
+      },
+      "ProviderList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of providers",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of providers per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of providers of the requested page size",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Provider.v1"
+            }
+          }
+        }
+      },
+      "ProviderListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "providers" : {
+            "$ref" : "#/components/schemas/ProviderList.v1"
+          }
+        }
+      },
+      "ProviderSessionCreateRequestBody.v1" : {
+        "required" : [ "password", "providerName", "providerUserId" ],
+        "type" : "object",
+        "properties" : {
+          "providerName" : {
+            "type" : "string",
+            "description" : "name of the authentication provider to use when validating credentials",
+            "example" : "localdb"
+          },
+          "providerUserId" : {
+            "type" : "string",
+            "description" : "username of the account to authenticate",
+            "example" : "john.doe@imperva.com"
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "password of the account to authenticate",
+            "example" : "Some_Really_Strong_Password"
+          }
+        }
+      },
+      "ProviderSessionCreateResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/UserBasicWithAttributes.v1"
+          },
+          "session" : {
+            "$ref" : "#/components/schemas/SessionBasic.v1"
+          }
+        }
+      },
+      "ProviderUserCreateResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "providerName" : {
+            "type" : "string",
+            "description" : "the name of the provider where the user credentials are stored",
+            "example" : "localdb"
+          },
+          "providerUserId" : {
+            "type" : "string",
+            "description" : "the ID of the user with the given provider",
+            "example" : "john.doe"
+          },
+          "providerAttributes" : {
+            "type" : "object",
+            "additionalProperties" : true,
+            "description" : "provider-specific attributes about the user; these are provider dependent so review the documentation for each API call for additional details\n"
+          }
+        }
+      },
+      "Session.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "the unique ID for the session",
+            "example" : "a464f532-27e3-42d8-a1fd-36f038846d1d"
+          },
+          "userId" : {
+            "type" : "integer",
+            "description" : "the ID of the user who owns the session",
+            "format" : "int32",
+            "example" : 18745
+          },
+          "expires" : {
+            "type" : "string",
+            "description" : "the date and time that the session expires",
+            "format" : "date-time"
+          },
+          "data" : {
+            "type" : "string",
+            "description" : "application-specific data associated with the session",
+            "example" : "{\n  \"permissions\": [ \"admin\", \"userCreation\" ],\n  \"lastLogin\": \"2018-04-01\",\n  \"messageCount\": 8\n}\n"
+          }
+        }
+      },
+      "SessionBasic.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "the unique ID for the session",
+            "example" : "a464f532-27e3-42d8-a1fd-36f038846d1d"
+          },
+          "userId" : {
+            "type" : "integer",
+            "description" : "the ID of the user who owns the session",
+            "format" : "int32",
+            "example" : 18745
+          },
+          "expires" : {
+            "type" : "string",
+            "description" : "the date and time that the session expires",
+            "format" : "date-time"
+          }
+        }
+      },
+      "SessionList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of items",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of items per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of items of the requested page size; note that the last page may not be a full pageSize",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/SessionBasic.v1"
+            }
+          }
+        }
+      },
+      "SessionListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "sessions" : {
+            "$ref" : "#/components/schemas/SessionList.v1"
+          }
+        }
+      },
+      "SessionResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "session" : {
+            "$ref" : "#/components/schemas/Session.v1"
+          }
+        }
+      },
+      "SessionUpdateRequestBody.v1" : {
+        "required" : [ "data", "expires" ],
+        "type" : "object",
+        "properties" : {
+          "expires" : {
+            "type" : "string",
+            "description" : "the date and time that the session expires",
+            "format" : "date-time"
+          },
+          "data" : {
+            "type" : "string",
+            "description" : "application-specific data to associate with the session",
+            "example" : "{\n  \"permissions\": [ \"admin\", \"userCreation\" ],\n  \"lastLogin\": \"2018-04-01\",\n  \"messageCount\": 8\n}\n"
+          }
+        }
+      },
+      "StandardResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          }
+        }
+      },
+      "StandardNon200Response.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusNon200Response.v1"
+          }
+        }
+      },
+      "StatusResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "success" : {
+            "type" : "boolean",
+            "description" : "true indicates the request was successful while false indicates one or more errors occurred processing the request\n"
+          },
+          "code" : {
+            "type" : "integer",
+            "description" : "set to a standard HTTP status code to indicate the type of error that occurred; for example, a 401 return code indicates that authentication failed while a 500 code indicates an unexpected error; set to 200 for success\n",
+            "format" : "int32",
+            "example" : 200
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "detailed message containing additional information about the status of the request such as any error messages returned by other services when making the request\n",
+            "example" : "The request completed successfully."
+          }
+        }
+      },
+      "StatusNon200Response.v1" : {
+        "type" : "object",
+        "properties" : {
+          "success" : {
+            "type" : "boolean",
+            "description" : "true indicates the request was successful while false indicates one or more errors occurred processing the request\n"
+          },
+          "code" : {
+            "type" : "integer",
+            "description" : "only present on failure and is set to a standard HTTP error code to indicate the type of error that occurred; for example, a 401 return code indicates that authentication failed while a 500 code indicates an unexpected error\n",
+            "format" : "int32",
+            "example" : 401
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "only present on failure and describes the error that occurred in greater detail\n",
+            "example" : "You must provide a valid API key to access this resource.\n"
+          }
+        }
+      },
+      "Transaction.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "the unique ID for the transaction",
+            "example" : "QBR184-M4J7F"
+          },
+          "accountId" : {
+            "type" : "integer",
+            "description" : "the account ID that the transaction is tied to",
+            "format" : "int32",
+            "example" : 12747842
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "type of transaction that occurred; Deposit,  Withdrawal and Transfer will show for Checking and Savings accounts while Credit and Charge show for Credit Card accounts\n",
+            "example" : "Charge",
+            "enum" : [ "Deposit", "Withdrawal", "Transfer", "Credit", "Charge" ]
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date the transaction took place",
+            "format" : "date"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "a description of the transaction",
+            "example" : "Renaissance Hotels"
+          },
+          "additionalDetails" : {
+            "type" : "string",
+            "description" : "a longer description and/or additional merchant information about the transaction",
+            "example" : "Renaissance New York Midtown Hotel\n218 W. 35th Street\nMew York, NY 10001\nUSA\nCheck in: July 3, 2018\nCheck out: July 5, 2018\n"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for transaction amount",
+            "example" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount of the transaction",
+            "format" : "float",
+            "example" : 476.24
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "current status of the transaction",
+            "example" : "InDispute",
+            "enum" : [ "Pending", "Posted", "InDispute" ]
+          },
+          "disputeReason" : {
+            "type" : "string",
+            "description" : "if the transaction is InDispute, the reason provided by the user on why they are disputing the charge; otherwise None\n",
+            "example" : "Fraudlent",
+            "enum" : [ "Fraudulent", "ServiceNotProvided", "GoodsNotReceived", "Other", "None" ]
+          },
+          "disputeDetails" : {
+            "type" : "string",
+            "description" : "Detailed notes or information from the user on why the transaction is being disputed",
+            "example" : "I have never been to New York City so this appears to be fraudulent."
+          }
+        }
+      },
+      "TransactionBasic.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "the unique ID for the transaction",
+            "example" : "QBR184-M4J7F"
+          },
+          "accountId" : {
+            "type" : "string",
+            "description" : "the account ID that the transaction is tied to",
+            "example" : "12747842"
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "type of transaction that occurred; Deposit,  Withdrawal and Transfer will show for Checking and Savings accounts while Credit and Charge show for Credit Card accounts\n",
+            "example" : "Charge",
+            "enum" : [ "Deposit", "Withdrawal", "Transfer", "Credit", "Charge" ]
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date the transaction took place",
+            "format" : "date"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "a description of the transaction",
+            "example" : "Renaissance Hotels"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for transaction amount",
+            "example" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount of the transaction",
+            "format" : "float",
+            "example" : 476.24
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "current status of the transaction",
+            "example" : "InDispute",
+            "enum" : [ "Pending", "Posted", "InDispute" ]
+          }
+        }
+      },
+      "TransactionCreateRequestBody.v1" : {
+        "required" : [ "amount", "date", "description", "type" ],
+        "type" : "object",
+        "properties" : {
+          "accountId" : {
+            "type" : "integer",
+            "description" : "the account ID that the transaction is tied to",
+            "format" : "int32",
+            "example" : 12747842
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "type of transaction that occurred; Deposit,  Withdrawal and Transfer will show for Checking and Savings accounts while Credit and Charge show for Credit Card accounts\n",
+            "example" : "Charge",
+            "enum" : [ "Deposit", "Withdrawal", "Transfer", "Credit", "Charge" ]
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date the transaction took place",
+            "format" : "date"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "a description of the transaction",
+            "example" : "Renaissance Hotels"
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount of the transaction",
+            "format" : "float",
+            "example" : 476.24
+          },
+          "additionalDetails" : {
+            "type" : "string",
+            "description" : "a longer description and/or additional merchant information about the transaction",
+            "nullable" : true,
+            "example" : "Renaissance New York Midtown Hotel\n218 W. 35th Street\nMew York, NY 10001\nUSA\nCheck in: July 3, 2018\nCheck out: July 5, 2018\n"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for transaction amount",
+            "example" : "USD",
+            "default" : "USD",
+            "enum" : [ "USD" ]
+          }
+        }
+      },
+      "TransactionCreateResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "id" : {
+            "type" : "string",
+            "description" : "the ID of the newly created transaction",
+            "example" : "TXN84-MJZ49"
+          }
+        }
+      },
+      "TransactionList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of transactions",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of transactions per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of transactions of the requested page size",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/TransactionBasic.v1"
+            }
+          }
+        }
+      },
+      "TransactionListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "transactions" : {
+            "$ref" : "#/components/schemas/TransactionList.v1"
+          }
+        }
+      },
+      "TransactionResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "transaction" : {
+            "$ref" : "#/components/schemas/Transaction.v1"
+          }
+        }
+      },
+      "TransactionUpdateRequestBody.v1" : {
+        "required" : [ "amount", "date", "description", "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of transaction that occurred; Deposit,  Withdrawal and Transfer will show for Checking and Savings accounts while Credit and Charge show for Credit Card accounts\n",
+            "example" : "Charge",
+            "enum" : [ "Deposit", "Withdrawal", "Transfer", "Credit", "Charge" ]
+          },
+          "date" : {
+            "type" : "string",
+            "description" : "the date the transaction took place",
+            "format" : "date"
+          },
+          "amount" : {
+            "type" : "number",
+            "description" : "the amount of the transaction",
+            "format" : "float",
+            "example" : 476.24
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "a description of the transaction",
+            "example" : "Renaissance Hotels"
+          },
+          "additionalDetails" : {
+            "type" : "string",
+            "description" : "a longer description and/or additional merchant information about the transaction",
+            "nullable" : true,
+            "example" : "Renaissance New York Midtown Hotel\n218 W. 35th Street\nMew York, NY 10001\nUSA\nCheck in: July 3, 2018\nCheck out: July 5, 2018\n"
+          },
+          "currency" : {
+            "type" : "string",
+            "description" : "currency for transaction amount",
+            "example" : "USD",
+            "default" : "USD",
+            "enum" : [ "USD" ]
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "current status of the transaction",
+            "example" : "InDispute",
+            "default" : "Pending",
+            "enum" : [ "Pending", "Posted", "InDispute" ]
+          },
+          "disputeReason" : {
+            "type" : "string",
+            "description" : "if the transaction is InDispute, the reason provided by the user on why they are disputing the charge; otherwise None\n",
+            "example" : "Fraudlent",
+            "default" : "None",
+            "enum" : [ "Fraudulent", "ServiceNotProvided", "GoodsNotReceived", "Other", "None" ]
+          },
+          "disputeDetails" : {
+            "type" : "string",
+            "description" : "Detailed notes or information from the user on why the transaction is being disputed",
+            "nullable" : true,
+            "example" : "I have never been to New York City so this appears to be fraudulent."
+          }
+        }
+      },
+      "User.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "the unique ID for the user",
+            "format" : "int32",
+            "example" : 18745
+          },
+          "providerName" : {
+            "type" : "string",
+            "description" : "the name of the provider where the user credentials are stored",
+            "example" : "localdb"
+          },
+          "providerUserId" : {
+            "type" : "string",
+            "description" : "the ID of the user with the given provider",
+            "example" : "john.doe"
+          },
+          "providerAttributes" : {
+            "type" : "object",
+            "additionalProperties" : true,
+            "description" : "provider-specific attributes about the user; these are provider dependent so review the documentation for each API call for additional details\n"
+          },
+          "firstName" : {
+            "type" : "string",
+            "description" : "user's first name",
+            "example" : "John"
+          },
+          "lastName" : {
+            "type" : "string",
+            "description" : "user's last name",
+            "example" : "Doe"
+          },
+          "suffixName" : {
+            "type" : "string",
+            "description" : "any suffix for the user's name (eg: Jr, III, etc.)",
+            "example" : "Jr."
+          },
+          "lastLogin" : {
+            "type" : "string",
+            "description" : "date and time of the user's last login",
+            "format" : "datetime",
+            "example" : "2018-07-21T23:59:59Z"
+          },
+          "photo" : {
+            "type" : "string",
+            "description" : "binary octet representation of the user's photo",
+            "format" : "binary"
+          },
+          "emailAddresses" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UserEmailAddress.v1"
+            }
+          },
+          "addresses" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UserAddress.v1"
+            }
+          },
+          "phones" : {
+            "type" : "array",
+            "description" : "user contact phones",
+            "items" : {
+              "$ref" : "#/components/schemas/UserPhone.v1"
+            }
+          },
+          "mobileBankingEnabled" : {
+            "type" : "boolean",
+            "description" : "whether or not mobile banking features are enabled for the user"
+          }
+        }
+      },
+      "UserAddress.v1" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of address",
+            "example" : "home"
+          },
+          "street" : {
+            "type" : "string",
+            "description" : "house number and street",
+            "example" : "1 Amazon Way"
+          },
+          "city" : {
+            "type" : "string",
+            "description" : "city or locality",
+            "example" : "Seattle"
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "state (if in the US)",
+            "example" : "WA"
+          },
+          "country" : {
+            "type" : "string",
+            "description" : "country",
+            "example" : "USA"
+          },
+          "zip" : {
+            "type" : "string",
+            "description" : "zip or postal code",
+            "example" : "98121"
+          }
+        },
+        "description" : "the user's contact address"
+      },
+      "UserBasic.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "the unique ID for the user",
+            "format" : "int32",
+            "example" : 18745
+          },
+          "providerName" : {
+            "type" : "string",
+            "description" : "the name of the provider where the user credentials are stored",
+            "example" : "localdb"
+          },
+          "providerUserId" : {
+            "type" : "string",
+            "description" : "the ID of the user with the given provider",
+            "example" : "john.doe"
+          },
+          "lastLogin" : {
+            "type" : "string",
+            "description" : "date and time of the user's last login",
+            "format" : "datetime",
+            "example" : "2018-07-21T23:59:59Z"
+          }
+        }
+      },
+      "UserBasicWithAttributes.v1" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "the unique ID for the user",
+            "format" : "int32",
+            "example" : 18745
+          },
+          "providerName" : {
+            "type" : "string",
+            "description" : "the name of the provider where the user credentials are stored",
+            "example" : "localdb"
+          },
+          "providerUserId" : {
+            "type" : "string",
+            "description" : "the ID of the user with the given provider",
+            "example" : "john.doe"
+          },
+          "providerAttributes" : {
+            "type" : "object",
+            "additionalProperties" : true,
+            "description" : "provider-specific attributes about the user; these are provider dependent so review the documentation for each API call for additional details\n"
+          },
+          "lastLogin" : {
+            "type" : "string",
+            "description" : "date and time of the user's last login",
+            "format" : "datetime",
+            "example" : "2018-07-21T23:59:59Z"
+          }
+        }
+      },
+      "UserCreateRequestBody.v1" : {
+        "required" : [ "emailAddress", "username" ],
+        "type" : "object",
+        "properties" : {
+          "providerName" : {
+            "type" : "string",
+            "description" : "the name of the provider where the user credentials are stored",
+            "example" : "localdb"
+          },
+          "providerUserId" : {
+            "type" : "string",
+            "description" : "the ID of the user with the given provider",
+            "example" : "john.doe"
+          },
+          "providerAttributes" : {
+            "type" : "object",
+            "additionalProperties" : true,
+            "description" : "provider-specific attributes about the user; these are provider dependent so review the documentation for each API call for additional details\n"
+          },
+          "emailAddresses" : {
+            "type" : "array",
+            "description" : "the user's email addresses",
+            "items" : {
+              "$ref" : "#/components/schemas/UserEmailAddress.v1"
+            }
+          },
+          "firstName" : {
+            "type" : "string",
+            "description" : "user's first name",
+            "nullable" : true,
+            "example" : "John"
+          },
+          "lastName" : {
+            "type" : "string",
+            "description" : "user's last name",
+            "nullable" : true,
+            "example" : "Doe"
+          },
+          "suffixName" : {
+            "type" : "string",
+            "description" : "any suffix for the user's name (eg: Jr, III, etc.)",
+            "nullable" : true,
+            "example" : "Jr."
+          },
+          "photo" : {
+            "type" : "string",
+            "description" : "binary octet representation of the user's photo",
+            "format" : "binary",
+            "nullable" : true
+          },
+          "addresses" : {
+            "type" : "array",
+            "description" : "user contact addresses",
+            "nullable" : true,
+            "items" : {
+              "$ref" : "#/components/schemas/UserAddress.v1"
+            }
+          },
+          "phones" : {
+            "type" : "array",
+            "description" : "user contact phones",
+            "nullable" : true,
+            "items" : {
+              "$ref" : "#/components/schemas/UserPhone.v1"
+            }
+          },
+          "mobileBankingEnabled" : {
+            "type" : "boolean",
+            "description" : "whether or not mobile banking features are enabled for the user",
+            "default" : true
+          }
+        }
+      },
+      "UserEmailAddress.v1" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of email address (eg: business, personal, etc.)",
+            "example" : "personal"
+          },
+          "address" : {
+            "type" : "string",
+            "description" : "the email address itself",
+            "example" : "john.doe@gmail.com"
+          }
+        },
+        "description" : "user email address"
+      },
+      "UserList.v1" : {
+        "type" : "object",
+        "properties" : {
+          "page" : {
+            "type" : "integer",
+            "description" : "the current page index of items",
+            "format" : "int32",
+            "example" : 1
+          },
+          "requestedPageSize" : {
+            "type" : "integer",
+            "description" : "the number of items per page that was originally requested",
+            "format" : "int32",
+            "example" : 100
+          },
+          "totalPages" : {
+            "type" : "integer",
+            "description" : "the total number of pages of items of the requested page size; note that the last page may not be a full pageSize",
+            "format" : "int32",
+            "example" : 3
+          },
+          "totalItems" : {
+            "type" : "integer",
+            "description" : "the total number of items in all pages combined",
+            "format" : "int32",
+            "example" : 128
+          },
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UserBasic.v1"
+            }
+          }
+        }
+      },
+      "UserListResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "users" : {
+            "$ref" : "#/components/schemas/UserList.v1"
+          }
+        }
+      },
+      "UserPasswordResetResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "providerAttributes" : {
+            "type" : "object",
+            "additionalProperties" : true,
+            "description" : "provider-specific attributes about the user; these are provider dependent so review the documentation for each API call for additional details\n"
+          }
+        }
+      },
+      "UserPasswordUpdateRequestBody.v1" : {
+        "required" : [ "newPassword", "oldPassword" ],
+        "type" : "object",
+        "properties" : {
+          "oldPassword" : {
+            "type" : "string",
+            "description" : "the user's old password",
+            "format" : "password",
+            "example" : "abracadabra"
+          },
+          "newPassword" : {
+            "type" : "string",
+            "description" : "the user's new password",
+            "example" : "gonnaReachOutAndGrabYa"
+          }
+        }
+      },
+      "UserPhone.v1" : {
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "type of phone number (eg: home, work, mobile, fax, etc.)",
+            "example" : "home"
+          },
+          "number" : {
+            "type" : "string",
+            "description" : "the actual phone number",
+            "example" : "(718) 479-0909"
+          }
+        },
+        "description" : "user contact phone"
+      },
+      "UserResponse.v1" : {
+        "type" : "object",
+        "properties" : {
+          "status" : {
+            "$ref" : "#/components/schemas/StatusResponse.v1"
+          },
+          "user" : {
+            "$ref" : "#/components/schemas/User.v1"
+          }
+        }
+      },
+      "UserUpdateRequestBody.v1" : {
+        "$ref" : "#/components/schemas/UserCreateRequestBody.v1"
+      }
+    },
+    "requestBodies" : {
+      "AccountCreateRequestBody.v1" : {
+        "description" : "required information when creating a new account",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/AccountCreateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "AccountUpdateRequestBody.v1" : {
+        "description" : "required information when updating an existing account",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/AccountUpdateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "BalanceTransferCreateRequestBody.v1" : {
+        "description" : "required information when creating or updating a balance transfer",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/BalanceTransferCreateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "BalanceTransferUpdateRequestBody.v1" : {
+        "description" : "required information when creating or updating a balance transfer",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/BalanceTransferUpdateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "PayeeCreateRequestBody.v1" : {
+        "description" : "required information when creating a bill payee",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/PayeeCreateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "PayeeUpdateRequestBody.v1" : {
+        "description" : "required information when updating a bill payee",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/PayeeUpdateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "PaymentCreateRequestBody.v1" : {
+        "description" : "required information when creating a bill payment",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/PaymentCreateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "PaymentUpdateRequestBody.v1" : {
+        "description" : "required information when updating a bill payment",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/PaymentUpdateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "ProviderSessionCreateRequestBody.v1" : {
+        "description" : "required information when authenticating a user's credentials",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ProviderSessionCreateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "SessionUpdateRequestBody.v1" : {
+        "description" : "required information when updating an existing session",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/SessionUpdateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "TransactionCreateRequestBody.v1" : {
+        "description" : "required information when creating a transaction",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/TransactionCreateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "TransactionUpdateRequestBody.v1" : {
+        "description" : "required information when updating a transaction",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/TransactionUpdateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "UserCreateRequestBody.v1" : {
+        "description" : "required information when creating a new user",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/UserCreateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "UserUpdateRequestBody.v1" : {
+        "description" : "required information when updating an existing user",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/UserUpdateRequestBody.v1"
+            }
+          }
+        }
+      },
+      "UserPasswordUpdateRequestBody.v1" : {
+        "description" : "required information when updating an existing user's password",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/UserPasswordUpdateRequestBody.v1"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes" : {
+      "ApiKeyAuth" : {
+        "type" : "http",
+        "description" : "API key and secret separated by a colon (:) character and base64 encoded",
+        "scheme" : "bearer",
+        "bearerFormat" : "isbt"
+      }
+    }
+  }
+}
