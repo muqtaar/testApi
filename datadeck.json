@@ -1,0 +1,1113 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "Datadeck Datasource Service",
+    "description" : "Datadeck Datasource Service Contract",
+    "contact" : {
+      "email" : "yiming.cao@ptmind.com"
+    },
+    "version" : "1.0.1"
+  },
+  "servers" : [ {
+    "url" : "https://virtserver.swaggerhub.com/P3524/Datadeck-Datasource/1.0.0"
+  } ],
+  "tags" : [ {
+    "name" : "config",
+    "description" : "Configuration"
+  }, {
+    "name" : "auth",
+    "description" : "Authorization"
+  }, {
+    "name" : "data",
+    "description" : "Getting profiles, reports, fields and data"
+  } ],
+  "paths" : {
+    "/config" : {
+      "get" : {
+        "tags" : [ "config" ],
+        "summary" : "gets datasource configuration",
+        "operationId" : "config",
+        "responses" : {
+          "200" : {
+            "description" : "datasource configuration",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ConfigInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authInfo" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "gets information for initiating an authorization",
+        "description" : "Get authorization related information, like redirectUrl, etc.\n",
+        "operationId" : "authInfo",
+        "responses" : {
+          "200" : {
+            "description" : "authorization information",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/OAuthInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/authCallback" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "handles authorization callback from 3rd party app",
+        "description" : "Handles authorization callback from 3rd party app. Often involves exchanging authorization code for an access token. The request includes all original parameters provided the 3rd party app during redirect, which usually includes 'code' and 'state'.\n",
+        "operationId" : "authCallback",
+        "responses" : {
+          "200" : {
+            "description" : "authorization succeeded",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TokenInfo"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Error response for unauthorized request.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles" : {
+      "post" : {
+        "tags" : [ "data" ],
+        "summary" : "gets profile list",
+        "description" : "Gets a list of profiles contained in the current account.\n",
+        "operationId" : "profiles",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/BaseRequestBody"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "profile list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ProfileReportInfo"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Error response for failing to fetch data.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Error response for unauthorized request.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Error response for exceeding API rate limit.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/reports" : {
+      "post" : {
+        "tags" : [ "data" ],
+        "summary" : "gets report list",
+        "description" : "Gets a list of reports contained in the current account or profile.\n",
+        "operationId" : "reports",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/BaseRequestBody"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "report list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/ProfileReportInfo"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Error response for failing to fetch data.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Error response for unauthorized request.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Error response for exceeding API rate limit.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/fields" : {
+      "post" : {
+        "tags" : [ "data" ],
+        "summary" : "gets field list",
+        "description" : "Gets a list of fields supported by the datasource.\n",
+        "operationId" : "fields",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/BaseRequestBody"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "field list",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/FieldInfo"
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Error response for failing to fetch data.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Error response for unauthorized request.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          },
+          "429" : {
+            "description" : "Error response for exceeding API rate limit.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/data" : {
+      "post" : {
+        "tags" : [ "data" ],
+        "summary" : "gets data for the given settings",
+        "description" : "Gets data for the given combination of fields, filter, sorting and aggregation.\n",
+        "operationId" : "data",
+        "requestBody" : {
+          "$ref" : "#/components/requestBodies/DataRequestBody"
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Response for datasource data.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/DataResponsePayload"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Error response for failing to fetch data.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Error response for unauthorized request.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ErrorResponsePayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "ConfigInfo" : {
+        "required" : [ "auth", "general" ],
+        "type" : "object",
+        "properties" : {
+          "general" : {
+            "$ref" : "#/components/schemas/GeneralConfig"
+          },
+          "auth" : {
+            "$ref" : "#/components/schemas/AuthConfig"
+          },
+          "hierarchy" : {
+            "$ref" : "#/components/schemas/HierarchyConfig"
+          },
+          "data" : {
+            "$ref" : "#/components/schemas/DataConfig"
+          }
+        },
+        "description" : "Datasource configuration.\n"
+      },
+      "GeneralConfig" : {
+        "required" : [ "code", "displayName", "id", "schemaVersion", "version" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "integer",
+            "description" : "A unique numeric code for the datasource.",
+            "format" : "int32",
+            "example" : 987
+          },
+          "code" : {
+            "type" : "string",
+            "description" : "A unique textual code for the datasource, which must match the service name when deployed.",
+            "example" : "myapp"
+          },
+          "displayName" : {
+            "type" : "string",
+            "description" : "Datasource's display name.",
+            "example" : "My App"
+          },
+          "version" : {
+            "type" : "string",
+            "description" : "Datasource's version.",
+            "example" : "1.0.0"
+          },
+          "schemaVersion" : {
+            "type" : "string",
+            "description" : "Datasource schema's version. Latest version is 1.0.0.",
+            "example" : "1.0.0"
+          },
+          "author" : {
+            "type" : "string",
+            "description" : "Datasource's author name or email.",
+            "example" : "tom@jerry.com"
+          }
+        },
+        "description" : "General configuration of a datasource."
+      },
+      "AuthConfig" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "Authorization type. When set to 'oauth', the service must implement /authInfo and /authCallback endpoint. If set to 'form', the config must include 'formItems' property.",
+            "enum" : [ "oauth", "form" ]
+          },
+          "formItems" : {
+            "type" : "array",
+            "description" : "List of information needed for 'form' authorization. Only valid when 'type' is 'form'.",
+            "items" : {
+              "$ref" : "#/components/schemas/AuthFormItem"
+            }
+          }
+        },
+        "description" : "Authorization related configuration of datasource.\n"
+      },
+      "AuthFormItem" : {
+        "required" : [ "key", "label" ],
+        "type" : "object",
+        "properties" : {
+          "key" : {
+            "type" : "string",
+            "description" : "A unique name for the item. Will be used as map key when form items are passed to datasource service during authorization.",
+            "example" : "name"
+          },
+          "input" : {
+            "$ref" : "#/components/schemas/AuthFormItemInput"
+          },
+          "label" : {
+            "type" : "string",
+            "description" : "Human readable to be displayed for the item.",
+            "example" : "Connection Name"
+          },
+          "placeholder" : {
+            "type" : "string",
+            "description" : "Placeholder value to be used when no value has been input for the item yet.",
+            "example" : "Input connection name"
+          },
+          "regex" : {
+            "type" : "string",
+            "description" : "Regular expression used for validating the input value. Only valid when 'input.type' is 'text'.",
+            "example" : "^[0-9a-zA-Z]{6,12}$"
+          },
+          "errorHint" : {
+            "type" : "string",
+            "description" : "Error message shown when the input is invalid.",
+            "example" : "Requires 6-12 number or alphabets"
+          }
+        },
+        "description" : "One piece of information for form-type authorization.\n"
+      },
+      "AuthFormItemInput" : {
+        "required" : [ "type" ],
+        "type" : "object",
+        "properties" : {
+          "type" : {
+            "type" : "string",
+            "description" : "Type of input, 'text' for free-form text, 'single_opt' for single option choice, 'multi_opt' for multiple option choices.",
+            "example" : "text",
+            "enum" : [ "text", "single_opt", "multi_opt" ]
+          },
+          "options" : {
+            "type" : "array",
+            "description" : "Options for choices. Only valid when 'type' is 'single_opt' or 'multi_opt'.",
+            "example" : [ "red", "blue", "green" ],
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "optionLabels" : {
+            "type" : "array",
+            "description" : "Option labels for choices. Only valid when 'type' is 'single_opt' or 'multi_opt'. Length of array much match that of 'options'.",
+            "example" : [ "Red", "Blue", "Green" ],
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "description" : "Information about input type for a AuthFormItem.\n"
+      },
+      "HierarchyConfig" : {
+        "type" : "object",
+        "properties" : {
+          "profile" : {
+            "$ref" : "#/components/schemas/ProfileReportConfig"
+          },
+          "report" : {
+            "$ref" : "#/components/schemas/ProfileReportConfig"
+          }
+        },
+        "description" : "Data hierarchy configuration of datasource, providing information of lower level of scopes of data under an account. Right now 'profile' and 'report' level hierarchies are supported.\n"
+      },
+      "ProfileReportConfig" : {
+        "required" : [ "displayName" ],
+        "type" : "object",
+        "properties" : {
+          "displayName" : {
+            "type" : "string",
+            "description" : "Display name of the profile/report.",
+            "example" : "Profile"
+          },
+          "placeholder" : {
+            "type" : "string",
+            "description" : "Placeholder text displayed before a selection is made.",
+            "example" : "Choose a profile"
+          }
+        },
+        "description" : "Information about a lower level data scope.\n"
+      },
+      "DataConfig" : {
+        "required" : [ "provideRawData" ],
+        "type" : "object",
+        "properties" : {
+          "provideRawData" : {
+            "type" : "boolean",
+            "description" : "Indicates if the datasource provides raw data without any aggregation or sorting. If set to true, the framework handles sorting and aggregation; otherwise it's datasource service's responsibility to return already sorted and aggregated data. Whether a datasource service sets this property to true or false depends on the nature of 3rd party API; e.g., for Google Analytics, the API doesn't provide a way to fetch raw data, so a datasource implementation would have to handle sorting and aggregation by itself.",
+            "default" : true
+          },
+          "supportPaging" : {
+            "type" : "boolean",
+            "description" : "Indicates if the datasource supports paging. If set to true, caller can specify page size and cursor when making data request. See PagingInfo model for details.",
+            "default" : false
+          },
+          "aggregation" : {
+            "$ref" : "#/components/schemas/AggregationConfig"
+          },
+          "supportDateFieldGranularity" : {
+            "type" : "boolean",
+            "description" : "Indicates if the user can choose granularity for date field when it's used for grouping. Granularities include - year, quarter, month, week, day, hour, minute and second.",
+            "default" : true
+          },
+          "filter" : {
+            "$ref" : "#/components/schemas/FilterConfig"
+          },
+          "dateRange" : {
+            "$ref" : "#/components/schemas/DateRangeConfig"
+          }
+        },
+        "description" : "Data related configuration of datasource.\n"
+      },
+      "AggregationConfig" : {
+        "required" : [ "enabled" ],
+        "type" : "object",
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean",
+            "description" : "Indicates if aggreation operators are allowed.",
+            "default" : false
+          },
+          "operators" : {
+            "type" : "array",
+            "description" : "Aggregation operators allowed.",
+            "items" : {
+              "$ref" : "#/components/schemas/AggregationOperators"
+            }
+          }
+        },
+        "description" : "Datasource level configuration for aggregation.\n"
+      },
+      "FilterConfig" : {
+        "required" : [ "enabled" ],
+        "type" : "object",
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean",
+            "description" : "Indicates if filter is allowed.",
+            "default" : true
+          },
+          "stringOps" : {
+            "type" : "array",
+            "description" : "List of filter operators allowed for string type fields.",
+            "example" : [ "in_list", "not_in_list" ],
+            "items" : {
+              "$ref" : "#/components/schemas/FilterOperators"
+            }
+          },
+          "numberOps" : {
+            "type" : "array",
+            "description" : "List of filter operators allowed for string number fields.",
+            "example" : [ "equal", "not_equal", "gt", "ge", "lt", "le" ],
+            "items" : {
+              "$ref" : "#/components/schemas/FilterOperators"
+            }
+          },
+          "dateOps" : {
+            "type" : "array",
+            "description" : "List of filter operators allowed for date type fields.",
+            "example" : [ "equal", "not_equal", "gt", "ge", "lt", "le", "is_null", "is_not_null" ],
+            "items" : {
+              "$ref" : "#/components/schemas/FilterOperators"
+            }
+          }
+        },
+        "description" : "Datasource level configuration for filter.\n"
+      },
+      "DateRangeConfig" : {
+        "required" : [ "enabled" ],
+        "type" : "object",
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean",
+            "description" : "Indicates if date range selection is allowed.",
+            "default" : false
+          },
+          "default" : {
+            "type" : "string",
+            "description" : "Default date range.",
+            "default" : "past_7days",
+            "enum" : [ "all_time", "past_7days", "past_30days" ]
+          },
+          "supportDateRangeFieldSelection" : {
+            "type" : "boolean",
+            "description" : "Indicates if user can choose which field to use for date range. If set to true, by default all DATE type field can be chosen for date range, unless disabled at field level configuration.",
+            "default" : true
+          },
+          "supportFuture" : {
+            "type" : "boolean",
+            "description" : "Indicates if selecting future dates is allowed.",
+            "default" : false
+          }
+        },
+        "description" : "Date range related configuration.\n"
+      },
+      "AggregationOperators" : {
+        "type" : "string",
+        "enum" : [ "sum", "average", "min", "max", "stdev", "var", "counta", "dcount" ]
+      },
+      "FilterOperators" : {
+        "type" : "string",
+        "enum" : [ "in_list", "not_in_list", "str_contain", "str_not_contain", "is_null", "is_not_null", "equal", "not_equal", "gt", "ge", "lt", "le" ]
+      },
+      "OAuthInfo" : {
+        "required" : [ "redirectUri", "state" ],
+        "type" : "object",
+        "properties" : {
+          "redirectUri" : {
+            "type" : "string",
+            "description" : "Url to which the user's browser should redirect.",
+            "example" : "https://www.myapp.com/authorize?state=b57e7cc2-b325-4315-a935-cff5449a8486&client_id=my_client"
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "A randomly generated state for correlating OAuth initiation and callback.",
+            "example" : "b57e7cc2-b325-4315-a935-cff5449a8486"
+          }
+        },
+        "description" : "Information needed for initiating an OAuth authorization.\n"
+      },
+      "TokenInfo" : {
+        "required" : [ "displayName", "id", "state", "token" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "A representation that uniquely identifies an authorized account.",
+            "example" : "tom@jerry.com"
+          },
+          "displayName" : {
+            "type" : "string",
+            "description" : "Human readable representation of the connected account.",
+            "example" : "Tom and Jerry"
+          },
+          "token" : {
+            "type" : "object",
+            "description" : "Token retrieved after a successful authorization flow and used for future data fetching. Usually this contains OAuth access token and refresh token. The framework doesn't interpret content of the token and will include it in all data request.",
+            "example" : {
+              "access_token" : "xxx-yyy-zzz",
+              "refresh_token" : "zzz-yyy-xxx"
+            }
+          },
+          "state" : {
+            "type" : "string",
+            "description" : "State which matches the one created during OAuth initiation.",
+            "example" : "b57e7cc2-b325-4315-a935-cff5449a8486"
+          }
+        },
+        "description" : "Token information returned as part of a successful OAuth flow.\n"
+      },
+      "BaseRequestPayload" : {
+        "required" : [ "token" ],
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "type" : "object",
+            "description" : "Token retrieved after a successful authorization flow and used for future data fetching. Usually this contains OAuth access token and refresh token.",
+            "example" : {
+              "access_token" : "xxx-yyy-zzz",
+              "refresh_token" : "zzz-yyy-xxx"
+            }
+          },
+          "profileId" : {
+            "type" : "string",
+            "description" : "The profile for which data is to be fetched. Only provided when datasource is configured to have profile level. See 'HierarchyConfig'.",
+            "example" : "profile1"
+          },
+          "reportId" : {
+            "type" : "string",
+            "description" : "The report for which data is to be fetched. Only provided when datasource is configured to have report level. See 'HierarchyConfig'.",
+            "example" : "report1"
+          },
+          "locale" : {
+            "type" : "string",
+            "description" : "The user's locale setting.",
+            "example" : "en_US",
+            "enum" : [ "zh_CN", "en_US", "ja_JP" ]
+          }
+        },
+        "description" : "Request body sent for a basic data request.\n"
+      },
+      "ProfileReportInfo" : {
+        "required" : [ "id", "name" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique id of a profile/report/folder.",
+            "example" : "folder1"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Human readable name of a profile/report/folder.",
+            "example" : "Folder"
+          },
+          "description" : {
+            "description" : "Description of a profile/report.",
+            "example" : "This is a sample report."
+          },
+          "children" : {
+            "type" : "array",
+            "description" : "Children items (recursively defined).",
+            "example" : [ {
+              "id" : "profile1",
+              "name" : "Profile"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/ProfileReportInfo"
+            }
+          }
+        },
+        "description" : "Tree-style information about profile/report.\n"
+      },
+      "FieldInfo" : {
+        "required" : [ "id", "name", "type" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Unique id of the field/folder.",
+            "example" : "field1"
+          },
+          "name" : {
+            "type" : "string",
+            "description" : "Human readable name for the field/folder.",
+            "example" : "First Field"
+          },
+          "type" : {
+            "type" : "string",
+            "description" : "Type of the field.",
+            "example" : "STRING",
+            "enum" : [ "STRING", "NUMBER", "DATE" ]
+          },
+          "allowFilter" : {
+            "type" : "boolean",
+            "description" : "Indicates if the field can be used for filtering.",
+            "default" : true
+          },
+          "filterOps" : {
+            "type" : "array",
+            "description" : "Operators allowed for filtering. Only valid when 'allowFilter' is set to true. If not provided, datasource level filter operator configuration is inherited.",
+            "items" : {
+              "$ref" : "#/components/schemas/FilterOperators"
+            },
+            "default" : "For STRING field, [in_list, not_in_list, str_contain, str_not_contain, is_null, is_not_null]. For NUMBER field, [is_null, is_not_null, gt, ge, lt, le, equal, not_equal]. For DATE field, [is_null, is_not_null, ge, le]."
+          },
+          "allowGroupby" : {
+            "type" : "boolean",
+            "description" : "Indicates if the field can be used for grouping.",
+            "default" : false
+          },
+          "allowAggregation" : {
+            "type" : "boolean",
+            "description" : "Indicates if the field can be used for aggregation.",
+            "default" : false
+          },
+          "aggOps" : {
+            "type" : "array",
+            "description" : "List of aggregation operators supported. Only valid when allowAggregation is true. A datasource can choose to not allow any aggregation operator, in this case, the field can be still used as an aggregation field and its aggregation meaning is implicitly determined by the datasource implementation.",
+            "example" : [ "sum", "average", "min", "max" ],
+            "items" : {
+              "$ref" : "#/components/schemas/AggregationOperators"
+            }
+          },
+          "granularities" : {
+            "type" : "array",
+            "description" : "Granularity for aggregation. Only valid when 'allowGroupby' is set to true. Only valid when 'type' is DATE.",
+            "items" : {
+              "type" : "string",
+              "enum" : [ "hour", "day", "week", "month", "quarter", "year" ]
+            },
+            "default" : "For DATE field [hour, day, week, month, quarter, year], otherwise empty."
+          },
+          "children" : {
+            "type" : "array",
+            "description" : "Children items in a folder (recursively defined).",
+            "example" : [ {
+              "id" : "f1",
+              "name" : "Field",
+              "type" : "STRING"
+            }, {
+              "id" : "f2",
+              "name" : "Field",
+              "type" : "NUMBER"
+            } ],
+            "items" : {
+              "$ref" : "#/components/schemas/FieldInfo"
+            }
+          }
+        },
+        "description" : "Information about a datasource field.\n",
+        "example" : {
+          "id" : "folder1",
+          "name" : "First Folder",
+          "children" : [ {
+            "id" : "field1",
+            "name" : "First Field",
+            "type" : "STRING",
+            "allowFilter" : true,
+            "filterOps" : [ "in_list", "not_in_list", "str_contain", "str_not_contain" ]
+          }, {
+            "id" : "field2",
+            "name" : "Second Field",
+            "type" : "NUMBER",
+            "allowAggregation" : true,
+            "aggOps" : [ "min", "max", "sum", "average" ]
+          } ]
+        }
+      },
+      "DataRequestPayload" : {
+        "description" : "Request body for fetching data.\n",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/BaseRequestPayload"
+        }, {
+          "required" : [ "fields" ],
+          "type" : "object",
+          "properties" : {
+            "paging" : {
+              "$ref" : "#/components/schemas/RequestPagingInfo"
+            },
+            "fields" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RequestFieldInfo"
+              }
+            },
+            "filters" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/RequestFilterInfo"
+              }
+            },
+            "sort" : {
+              "$ref" : "#/components/schemas/RequestSortInfo"
+            },
+            "dateRange" : {
+              "$ref" : "#/components/schemas/RequestDateRangeInfo"
+            },
+            "timezoneOffset" : {
+              "type" : "integer",
+              "description" : "Requester's timezone offset in seconds comparing to UTC. This offset is used for calculating the correct date when processing filter on date fields or date range settings.",
+              "format" : "int32",
+              "default" : 0
+            }
+          }
+        } ]
+      },
+      "RequestPagingInfo" : {
+        "required" : [ "cursor", "size" ],
+        "type" : "object",
+        "properties" : {
+          "cursor" : {
+            "type" : "string",
+            "description" : "Cursor for the page to fetch. When the first page is fetched, cursor should not be provided, and datasource service should respond with a nextPageCursor value if there're more pages to fetch."
+          },
+          "size" : {
+            "type" : "integer",
+            "description" : "Size of elements to fetch for the page.",
+            "format" : "int32"
+          }
+        },
+        "description" : "Paging information related to a data query.\n",
+        "example" : {
+          "cursor" : "zskd-231-zy",
+          "size" : 100
+        }
+      },
+      "RequestFieldInfo" : {
+        "required" : [ "id" ],
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "Field id which matches the id returned by '/fields' endpoint.",
+            "example" : "field1"
+          },
+          "groupBy" : {
+            "type" : "boolean",
+            "description" : "Indicates if the field is used for grouping. This flag is only used in request sent to datasource which has configuration 'provideRawData' set to false.",
+            "default" : false
+          },
+          "agg" : {
+            "$ref" : "#/components/schemas/AggregationOperators"
+          },
+          "granularity" : {
+            "type" : "string",
+            "description" : "Granularity for DATE type field grouping. Only valid when 'groupBy' is 'true' and field type is DATE.",
+            "default" : "day",
+            "enum" : [ "hour", "day", "week", "month", "quarter", "year" ]
+          }
+        },
+        "description" : "Field information related to a data query.\n",
+        "example" : {
+          "id" : "field1",
+          "groupBy" : false,
+          "agg" : "sum"
+        }
+      },
+      "RequestFilterInfo" : {
+        "required" : [ "fieldId", "operator" ],
+        "type" : "object",
+        "properties" : {
+          "fieldId" : {
+            "type" : "string",
+            "description" : "Field used for filtering.",
+            "example" : "field1"
+          },
+          "operator" : {
+            "type" : "string",
+            "description" : "Operation used for filtering, which can be unary or binary.",
+            "enum" : [ "in", "not_in", "contain", "not_contain", "is_null", "is_not_null", "equal", "not_equal", "gt", "ge", "lt", "le" ]
+          },
+          "values" : {
+            "type" : "array",
+            "description" : "Values used for applying 'operator' over 'fieldId' as predicate for filtering. Number of values depends on the arity of the 'operator'.",
+            "items" : {
+              "oneOf" : [ {
+                "type" : "string"
+              }, {
+                "type" : "number"
+              } ]
+            }
+          }
+        },
+        "description" : "Filter information related to a data query.\n",
+        "example" : {
+          "fieldId" : "field1",
+          "operator" : "in_list",
+          "values" : [ "hello", "world" ]
+        }
+      },
+      "RequestSortInfo" : {
+        "required" : [ "fieldId" ],
+        "type" : "object",
+        "properties" : {
+          "fieldIndex" : {
+            "type" : "integer",
+            "description" : "Index of the field (against all fields used for the query) to be used for sorting.",
+            "format" : "int32",
+            "example" : 1
+          },
+          "order" : {
+            "type" : "string",
+            "description" : "Sort order, ascending or descending.",
+            "default" : "asc",
+            "enum" : [ "asc", "desc" ]
+          }
+        },
+        "description" : "Sort information related to a data query.\n",
+        "example" : {
+          "fieldId" : "field1",
+          "order" : "desc"
+        }
+      },
+      "RequestDateRangeInfo" : {
+        "type" : "object",
+        "properties" : {
+          "fieldId" : {
+            "type" : "string",
+            "description" : "Field used for determining time of data. Only 'supportDateRangeFieldSelection' is set to 'true' in datasource config."
+          },
+          "start" : {
+            "type" : "integer",
+            "description" : "Start time in UTC timestamp in milliseconds.",
+            "format" : "int64"
+          },
+          "end" : {
+            "type" : "integer",
+            "description" : "End time in UTC timestamp in milliseconds.",
+            "format" : "int64"
+          }
+        },
+        "description" : "Date range information related to a data query.\n",
+        "example" : {
+          "field" : "field1",
+          "start" : 1540368203000,
+          "end" : 1540378203000
+        }
+      },
+      "BaseResponsePayload" : {
+        "type" : "object",
+        "properties" : {
+          "tokenUpdate" : {
+            "type" : "object",
+            "description" : "OAuth2 based API often issues a short-lived access token with a long-lived refresh token. Datasource service is responsible to handle access token expiration, request new access token and return it back to Datadeck. Datadeck doesn't interpret the content of this field; it only saves it as an opaque value, and sends it together with data request in token field.",
+            "example" : {
+              "access_token" : "yyy-zzz-xxx",
+              "refresh_token" : "xxx-zzz-yyy"
+            }
+          }
+        },
+        "description" : "Base payload for a data related query.\n"
+      },
+      "DataResponsePayload" : {
+        "description" : "Response payload for a successful data query.\n",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/BaseResponsePayload"
+        }, {
+          "required" : [ "data" ],
+          "type" : "object",
+          "properties" : {
+            "data" : {
+              "type" : "array",
+              "description" : "Two-dimensional array for result data. Each row should contain field values ordered according to field query order. Rows should be ordered based on sort settings (if provided). For DATE type of field, returned value should be UTC timestamp (in milliseconds).",
+              "example" : [ [ 1538323200000, "Seattle", 20 ], [ 1541001600000, "Boston", 25 ] ],
+              "items" : {
+                "type" : "array",
+                "items" : {
+                  "oneOf" : [ {
+                    "type" : "string"
+                  }, {
+                    "type" : "number"
+                  } ]
+                }
+              }
+            },
+            "nextPageCursor" : {
+              "type" : "string",
+              "description" : "If datasource supports pagination, request specified page size and response has more data than a page, this field provides cursor for querying next page in a subsequent call.",
+              "example" : "zskd-231-zy"
+            },
+            "summaryValues" : {
+              "type" : "array",
+              "description" : "For each non-groupBy field, a summary value which aggregates all groups should be returned. E.g., if field1 is aggregated with 'average' into 3 groups, its total value should be the average value of all elements spanning across all 3 groups. Note that only datasource which claims to support aggregation needs to return summaryValues.",
+              "example" : [ 1024, 12.5 ],
+              "items" : {
+                "type" : "number"
+              }
+            }
+          }
+        } ]
+      },
+      "ErrorResponsePayload" : {
+        "required" : [ "code", "message" ],
+        "type" : "object",
+        "properties" : {
+          "code" : {
+            "type" : "string",
+            "description" : "Error code.",
+            "example" : "INVALID_CLIENT_ID"
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "Human readable error message.",
+            "example" : "the provided client id is invalid"
+          }
+        },
+        "description" : "Response payload for an unsuccessful data query.\n"
+      }
+    },
+    "responses" : {
+      "DataResponse" : {
+        "description" : "Response for datasource data.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/DataResponsePayload"
+            }
+          }
+        }
+      },
+      "ErrorNoAuthResponse" : {
+        "description" : "Error response for unauthorized request.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorResponsePayload"
+            }
+          }
+        }
+      },
+      "ErrorRateLimitResponse" : {
+        "description" : "Error response for exceeding API rate limit.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorResponsePayload"
+            }
+          }
+        }
+      },
+      "ErrorFetchFailedResponse" : {
+        "description" : "Error response for failing to fetch data.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/ErrorResponsePayload"
+            }
+          }
+        }
+      }
+    },
+    "requestBodies" : {
+      "BaseRequestBody" : {
+        "description" : "Request body for fetching profiles/reports/fields.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/BaseRequestPayload"
+            }
+          }
+        },
+        "required" : true
+      },
+      "DataRequestBody" : {
+        "description" : "Request body for fetching data.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/DataRequestPayload"
+            }
+          }
+        },
+        "required" : true
+      }
+    }
+  }
+}
