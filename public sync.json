@@ -1,0 +1,3266 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Public Solutions Sync API",
+    "version" : "1.3.2",
+    "title" : "Public Solutions Sync API",
+    "contact" : {
+      "email" : "s.petersen@publicsolutions.de"
+    }
+  },
+  "host" : "bisoffice.com",
+  "tags" : [ {
+    "name" : "admins",
+    "description" : "Secured Admin-only calls (Gets maped once live)"
+  }, {
+    "name" : "Rsa/Aes",
+    "description" : "Rsa/Aes Operations"
+  }, {
+    "name" : "schluessel2",
+    "description" : "Handles operations on table schluessel2"
+  }, {
+    "name" : "gps",
+    "description" : "Handles operations on table gps"
+  }, {
+    "name" : "maz",
+    "description" : "Handles operations on table maz"
+  }, {
+    "name" : "pausen",
+    "description" : "Handles operations on table pausen"
+  }, {
+    "name" : "ps_tasks",
+    "description" : "Handles operations on table ps_tasks"
+  }, {
+    "name" : "ps_toDo",
+    "description" : "Handles operations on table ps_toDo"
+  }, {
+    "name" : "ps_targets",
+    "description" : "Handles operations on table ps_targets"
+  }, {
+    "name" : "m_work",
+    "description" : "Handles operations on table m_work"
+  }, {
+    "name" : "delivery",
+    "description" : "Handles operations on table delivery"
+  }, {
+    "name" : "attachments",
+    "description" : "Handles up and download of task attachments"
+  }, {
+    "name" : "task_completion",
+    "description" : "Handles finishing of tasks"
+  }, {
+    "name" : "on_call_service",
+    "description" : "Handles operations on table on_call_service"
+  } ],
+  "schemes" : [ "https" ],
+  "paths" : {
+    "/data/schluessel2" : {
+      "get" : {
+        "tags" : [ "schluessel2" ],
+        "summary" : "fetches schluessel2 data",
+        "description" : "Fetches schluessel2 data from the database\n",
+        "operationId" : "fetchDataSchluessel2",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sync_date",
+          "in" : "query",
+          "description" : "Returns rows with update_date > sync_date",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Schluessel"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "schluessel2" ],
+        "summary" : "inserts schluessel2 data",
+        "description" : "Inserts schluessel2 data in the database\n",
+        "operationId" : "insertDataSchluessel2",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Schluessel"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "schluessel2" ],
+        "summary" : "upserts schluessel2 data",
+        "description" : "Upserts (update or insert) schluessel2 data in the database\n",
+        "operationId" : "upsertDataSchluessel2",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Schluessel"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "schluessel2" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/gps" : {
+      "get" : {
+        "tags" : [ "gps" ],
+        "summary" : "fetches gps data",
+        "description" : "Fetches schluessel2 data from the database\n",
+        "operationId" : "fetchDataGps",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sync_date",
+          "in" : "query",
+          "description" : "Returns rows with update_date > sync_date",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/GPS"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "gps" ],
+        "summary" : "inserts gps data",
+        "description" : "Inserts gps data in the database\n",
+        "operationId" : "insertDataGps",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/GPS"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "gps" ],
+        "summary" : "upserts gps data",
+        "description" : "Upserts (update or insert) gps data in the database\n",
+        "operationId" : "upsertDataGps",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/GPS"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "gps" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/maz" : {
+      "get" : {
+        "tags" : [ "maz" ],
+        "summary" : "fetches maz data",
+        "description" : "Fetches maz data from the database\n",
+        "operationId" : "fetchDataMaz",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sync_date",
+          "in" : "query",
+          "description" : "Returns rows with update_date > sync_date",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Maz"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "maz" ],
+        "summary" : "inserts maz data",
+        "description" : "Inserts maz data in the database\n",
+        "operationId" : "insertDataMaz",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Maz"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "maz" ],
+        "summary" : "upserts maz data",
+        "description" : "Upserts (update or insert) maz data in the database\n",
+        "operationId" : "upsertDataMaz",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Maz"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "maz" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/pausen" : {
+      "get" : {
+        "tags" : [ "pausen" ],
+        "summary" : "fetches pausen data",
+        "description" : "Fetches pausen data from the database\n",
+        "operationId" : "fetchDataPausen",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sync_date",
+          "in" : "query",
+          "description" : "Returns rows with update_date > sync_date",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Pause"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "pausen" ],
+        "summary" : "inserts pausen data",
+        "description" : "Inserts pausen data in the database\n",
+        "operationId" : "insertDataPausen",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Pause"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "pausen" ],
+        "summary" : "upserts pausen data",
+        "description" : "Upserts (update or insert) pausen data in the database\n",
+        "operationId" : "upsertDataPausen",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Pause"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "pausen" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/ps_tasks" : {
+      "get" : {
+        "tags" : [ "ps_tasks" ],
+        "summary" : "fetches ps_tasks data",
+        "description" : "Fetches ps_tasks data from the database\n",
+        "operationId" : "fetchDataPs_tasks",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sync_date",
+          "in" : "query",
+          "description" : "Returns rows with update_date > sync_date",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Task"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "ps_tasks" ],
+        "summary" : "inserts ps_tasks data",
+        "description" : "Inserts ps_tasks data in the database\n",
+        "operationId" : "insertDataPs_tasks",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Task"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "ps_tasks" ],
+        "summary" : "upserts ps_tasks data",
+        "description" : "Upserts (update or insert) ps_tasks data in the database\n",
+        "operationId" : "upsertDataPs_tasks",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Task"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "ps_tasks" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/ps_toDo" : {
+      "get" : {
+        "tags" : [ "ps_toDo" ],
+        "summary" : "fetches ps_toDo data",
+        "description" : "Fetches ps_toDo data from the database\n",
+        "operationId" : "fetchDataPs_toDo",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sync_date",
+          "in" : "query",
+          "description" : "Returns rows with update_date > sync_date",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Todo"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "ps_toDo" ],
+        "summary" : "inserts ps_toDo data",
+        "description" : "Inserts ps_toDo data in the database\n",
+        "operationId" : "insertDataPs_toDo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Todo"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "ps_toDo" ],
+        "summary" : "upserts ps_toDo data",
+        "description" : "Upserts (update or insert) ps_toDo data in the database\n",
+        "operationId" : "upsertDataPs_toDo",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Todo"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "ps_toDo" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/ps_targets" : {
+      "get" : {
+        "tags" : [ "ps_targets" ],
+        "summary" : "fetches ps_targets data",
+        "description" : "Fetches ps_targets data from the database\n",
+        "operationId" : "fetchDataPs_targets",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sync_date",
+          "in" : "query",
+          "description" : "Returns rows with update_date > sync_date",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Target"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "ps_targets" ],
+        "summary" : "inserts ps_targets data",
+        "description" : "Inserts ps_targets data in the database\n",
+        "operationId" : "insertDataPs_targets",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Target"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "ps_targets" ],
+        "summary" : "upserts ps_targets data",
+        "description" : "Upserts (update or insert) ps_targets data in the database\n",
+        "operationId" : "upsertDataPs_targets",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Target"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "ps_targets" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/m_work" : {
+      "get" : {
+        "tags" : [ "m_work" ],
+        "summary" : "fetches m_work data",
+        "description" : "Fetches m_work data from the database\n",
+        "operationId" : "fetchDataM_work",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "the date in formate YYYY-MM-DD",
+          "required" : true,
+          "type" : "string",
+          "format" : "YYYY-MM-DD"
+        }, {
+          "name" : "tan",
+          "in" : "query",
+          "description" : "the tan of the device",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Work"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "m_work" ],
+        "summary" : "inserts m_work data",
+        "description" : "Inserts m_work data in the database\n",
+        "operationId" : "insertDataM_work",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Work"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "m_work" ],
+        "summary" : "upserts m_work data",
+        "description" : "Upserts (update or insert) m_work data in the database\n",
+        "operationId" : "upsertDataM_work",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Work"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "m_work" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/task_completion" : {
+      "get" : {
+        "tags" : [ "task_completion" ],
+        "summary" : "fetches task_compeletion data",
+        "description" : "Fetches task_compeletion data from the database\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/TaskCompletion"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "task_completion" ],
+        "summary" : "inserts task_completion data",
+        "description" : "Inserts task_completion data in the database\n",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/TaskCompletion"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "task_completion" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id/tid = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/on_call_service" : {
+      "get" : {
+        "tags" : [ "on_call_service" ],
+        "summary" : "fetches on_call_service data",
+        "description" : "Fetches on_call_service data from the database\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "the date in formate yyyy-mm-dd",
+          "required" : true,
+          "type" : "string",
+          "format" : "yyyy-mm-dd"
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "description" : "the status of the entities",
+          "required" : false,
+          "type" : "integer"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/OnCallService"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "on_call_service" ],
+        "summary" : "inserts on_call_service data",
+        "description" : "Inserts on_call_service data in the database\n",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to add",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/OnCallService"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "insert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "on_call_service" ],
+        "summary" : "upserts on_call_service data",
+        "description" : "Upserts (update or insert) on_call_service data in the database\n",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "data",
+          "description" : "Data to update",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/OnCallService"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "upsert ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "on_call_service" ],
+        "summary" : "Handles delete operations on a table",
+        "description" : "Either deletes the table comletely, deletes entries by id or deletes entries by field = value\nRequires\n  - no param -> TRUNCATE TABLE\n  - id -> DELETE WHERE id = {id}\n  - field, value -> DELETE WHERE {field} = {value} \n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "query",
+          "description" : "Id of a specific entry you want to delete",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "field",
+          "in" : "query",
+          "description" : "The name of the Field you want to match",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "value",
+          "in" : "query",
+          "description" : "The value which should match the field",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "delete ok"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/data/delivery" : {
+      "get" : {
+        "tags" : [ "delivery" ],
+        "summary" : "fetches delivery data",
+        "description" : "Fetches delivery data from the database\n",
+        "operationId" : "fetchDataDelivery",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "date",
+          "in" : "query",
+          "description" : "the start date in formate YYYY-MM-DD",
+          "required" : true,
+          "type" : "string",
+          "format" : "YYYY-MM-DD"
+        }, {
+          "name" : "tan",
+          "in" : "query",
+          "description" : "the tan of the device",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "description" : "The Delivery items starting from date ordered asc",
+              "items" : {
+                "$ref" : "#/definitions/Delivery"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/api" : {
+      "get" : {
+        "tags" : [ "admins" ],
+        "summary" : "Fetches api tokens",
+        "description" : "Displays api tokens -> \"token\":\"name\"\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/api/{customer}" : {
+      "post" : {
+        "tags" : [ "admins" ],
+        "summary" : "Creates a new api token",
+        "description" : "Creates a new api token for the given customer number, inits all the required databases and creates a qr code\nrepresenting to api token\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "customer",
+          "in" : "path",
+          "description" : "the customer number",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiKey"
+            }
+          },
+          "400" : {
+            "description" : "customernot present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/api/qr/{token}" : {
+      "get" : {
+        "tags" : [ "admins" ],
+        "summary" : "Fetches the api key as qr code",
+        "description" : "Shows the token in qr code representation\n",
+        "produces" : [ "image/png" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "path",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "file"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/secure/mobileHandshake" : {
+      "post" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Uploads the rsa public key",
+        "description" : "Uploads the RSA public key of the mobile client to the server\nand generates a unique tan in the current customer context\n",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Public Key",
+          "description" : "the public key of the mobile client",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/PublicKey"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Tan"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/secure/desktopHandshake/{tan}" : {
+      "post" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Uploads the encrypted data for a specific client",
+        "description" : "Uploads the encrypted data for a specific client, containing AES encrypted Data and RSA encrypted Aes secret and IV\n",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "tan",
+          "in" : "path",
+          "description" : "the tan of the mobile client who should retrive the data",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "Aes Data",
+          "description" : "The Aes data of the desktop client",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/AesData"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/secure/import/{tan}" : {
+      "get" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Fetches the Aes data",
+        "description" : "Fetches the Aes data for the mobile client and a specific tan\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "tan",
+          "in" : "path",
+          "description" : "the tan of the mobile client who should retrive the data",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AesData"
+            }
+          },
+          "204" : {
+            "description" : "no data available",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/secure/devices" : {
+      "get" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Discover mobile devices (with public key)",
+        "description" : "Fetches all tans and public keys of mobile devices who have registered for a handshake / data transfer\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK, returns array of mobile tans and public keys",
+            "schema" : {
+              "type" : "array",
+              "description" : "array of tan and public keys",
+              "items" : {
+                "$ref" : "#/definitions/RsaData"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/secure/devices/tan" : {
+      "get" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Discover mobile devices",
+        "description" : "Fetches all tans of mobile devices who have registered for a handshake / data transfer\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK, returns array of mobile tans",
+            "schema" : {
+              "type" : "array",
+              "description" : "array of mobile tans",
+              "items" : {
+                "type" : "string",
+                "example" : "68743214"
+              }
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/secure/public_key/{tan}" : {
+      "get" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Get rsa data of specific mobile client",
+        "description" : "Fetches tan and public key of a specific mobile device who has registered for a handshake / data transfer\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "tan",
+          "in" : "path",
+          "description" : "the tan of the mobile client from whom we want to fetch the tan/public_key",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK, returns the rsa data of the mobile client",
+            "schema" : {
+              "$ref" : "#/definitions/RsaData"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/secure/black_list/{tan}" : {
+      "get" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Gets the blacklisted tans and updates the last used / last user of a device",
+        "description" : "Gets the blacklisted tans and updates the last used / last user of a device\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "tan",
+          "in" : "path",
+          "description" : "the tan of the mobile client",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "user",
+          "in" : "query",
+          "description" : "The current user of this device",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK, returns the blacklist",
+            "schema" : {
+              "$ref" : "#/definitions/blacklist"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "Rsa/Aes" ],
+        "summary" : "Blacklists a device by its tan",
+        "description" : "Blacklists a device by its tan\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "tan",
+          "in" : "path",
+          "description" : "the tan of the mobile client",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/upload/appendix/{taskID}" : {
+      "get" : {
+        "tags" : [ "attachments" ],
+        "summary" : "Fetches an appendix file for a given task",
+        "description" : "Fetches an appendi file for a given task",
+        "produces" : [ "file" ],
+        "parameters" : [ {
+          "name" : "taskID",
+          "in" : "path",
+          "description" : "the id of the task we want to fetch the appendix from",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "filename",
+          "in" : "query",
+          "description" : "The file to fetch.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "file"
+            }
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "404" : {
+            "description" : "file does not exist",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "attachments" ],
+        "summary" : "Uploads appendix file for a given task",
+        "description" : "Uploads appendix file for a given task",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "taskID",
+          "in" : "path",
+          "description" : "the id of the task we want to add the appendix to",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "appendix",
+          "in" : "formData",
+          "description" : "The file to upload.",
+          "required" : true,
+          "type" : "file"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/upload/check/{taskID}" : {
+      "get" : {
+        "tags" : [ "attachments" ],
+        "summary" : "Checks if an appendix file exists for a given task",
+        "description" : "Checks if an appendix file exists for a given task",
+        "parameters" : [ {
+          "name" : "taskID",
+          "in" : "path",
+          "description" : "the id of the task we want to fetch the appendix from",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "token",
+          "in" : "query",
+          "description" : "the api token",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "filename",
+          "in" : "query",
+          "description" : "The file to fetch.",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "File exists",
+            "schema" : {
+              "$ref" : "#/definitions/filesize"
+            }
+          },
+          "204" : {
+            "description" : "file does not exist"
+          },
+          "400" : {
+            "description" : "bad input parameters",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "403" : {
+            "description" : "token invalid or not present",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          },
+          "500" : {
+            "description" : "internal server error",
+            "schema" : {
+              "$ref" : "#/definitions/error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Schluessel" : {
+      "type" : "object",
+      "required" : [ "id", "schluessel", "stempel", "typ", "update_date", "wert" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "lear000221"
+        },
+        "typ" : {
+          "type" : "string",
+          "example" : "lear"
+        },
+        "schluessel" : {
+          "type" : "string",
+          "example" : "Abbau Netz und Flaggen"
+        },
+        "wert" : {
+          "type" : "string",
+          "example" : "000221"
+        },
+        "stempel" : {
+          "type" : "string",
+          "example" : "20170321162707"
+        },
+        "cd1" : {
+          "type" : "string",
+          "example" : "Allgemeine Tätigkeiten"
+        },
+        "cd2" : {
+          "type" : "string",
+          "example" : "something else"
+        },
+        "update_date" : {
+          "type" : "string",
+          "example" : "201812039089"
+        }
+      }
+    },
+    "Pause" : {
+      "type" : "object",
+      "required" : [ "bis", "di", "do", "fr", "id", "mi", "mo", "name", "sa", "so", "update_date", "von" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 783675839
+        },
+        "name" : {
+          "type" : "string",
+          "example" : "Mittag"
+        },
+        "von" : {
+          "type" : "string",
+          "example" : "1200"
+        },
+        "bis" : {
+          "type" : "string",
+          "example" : "1230"
+        },
+        "mita" : {
+          "type" : "string",
+          "example" : "",
+          "description" : "can be empty, null or filled"
+        },
+        "mitakey" : {
+          "type" : "integer",
+          "example" : 0
+        },
+        "mo" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "di" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "mi" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "do" : {
+          "type" : "boolean",
+          "example" : true
+        },
+        "fr" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "sa" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "so" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "update_date" : {
+          "type" : "string",
+          "example" : "201812039089"
+        }
+      }
+    },
+    "Maz" : {
+      "type" : "object",
+      "required" : [ "datum", "id", "mita", "pause1", "pause2", "pay", "rb", "soll", "sollzeit", "update_date" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 1
+        },
+        "datum" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2006-04-17T21:22:48.2698750Z"
+        },
+        "mita" : {
+          "type" : "string",
+          "example" : "GHHJ6785"
+        },
+        "soll" : {
+          "type" : "number",
+          "example" : 8.5
+        },
+        "sollzeit" : {
+          "type" : "string",
+          "example" : "07-16"
+        },
+        "pause1" : {
+          "type" : "string",
+          "example" : "2"
+        },
+        "pause2" : {
+          "type" : "string",
+          "example" : "0"
+        },
+        "rb" : {
+          "type" : "string"
+        },
+        "pay" : {
+          "type" : "string"
+        },
+        "update_date" : {
+          "type" : "string",
+          "example" : "201812039089"
+        }
+      }
+    },
+    "GPS" : {
+      "type" : "object",
+      "required" : [ "augr", "id", "lat", "lon", "objekt", "seq", "update_date" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "someid"
+        },
+        "objekt" : {
+          "type" : "string",
+          "example" : "OBJE-000041"
+        },
+        "lat" : {
+          "type" : "number",
+          "format" : "coodinate",
+          "example" : 54.7661491197836
+        },
+        "lon" : {
+          "type" : "number",
+          "format" : "coordinate",
+          "example" : 9.57507312297821
+        },
+        "seq" : {
+          "type" : "integer",
+          "example" : 1
+        },
+        "augr" : {
+          "type" : "string",
+          "example" : "0008"
+        },
+        "update_date" : {
+          "type" : "string",
+          "example" : "201812039089"
+        }
+      }
+    },
+    "Task" : {
+      "type" : "object",
+      "required" : [ "att", "complete", "completed", "dueD", "grp", "handled", "job", "massnahme", "mita", "msg", "ort", "res", "sender", "status", "subject", "tid", "typ", "update_date", "xlat", "xlon" ],
+      "properties" : {
+        "tid" : {
+          "type" : "integer"
+        },
+        "subject" : {
+          "type" : "string"
+        },
+        "msg" : {
+          "type" : "string"
+        },
+        "sender" : {
+          "type" : "string"
+        },
+        "job" : {
+          "type" : "string"
+        },
+        "typ" : {
+          "type" : "string"
+        },
+        "grp" : {
+          "type" : "string"
+        },
+        "xlat" : {
+          "type" : "number",
+          "format" : "coordinate"
+        },
+        "xlon" : {
+          "type" : "number",
+          "format" : "coordinate"
+        },
+        "status" : {
+          "type" : "integer"
+        },
+        "dueD" : {
+          "type" : "string"
+        },
+        "res" : {
+          "type" : "string"
+        },
+        "att" : {
+          "type" : "string",
+          "example" : "test.jpg|anhang.doc",
+          "description" : "Array string bestehend aus dateinamen getrennt durch \"|\""
+        },
+        "ort" : {
+          "type" : "string"
+        },
+        "massnahme" : {
+          "type" : "string"
+        },
+        "complete" : {
+          "type" : "integer"
+        },
+        "completed" : {
+          "type" : "string"
+        },
+        "handled" : {
+          "type" : "string"
+        },
+        "mita" : {
+          "type" : "string"
+        },
+        "createD" : {
+          "type" : "string"
+        },
+        "startd" : {
+          "type" : "string"
+        },
+        "psm" : {
+          "type" : "string"
+        },
+        "priority" : {
+          "type" : "string"
+        },
+        "ab" : {
+          "type" : "string"
+        },
+        "task" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "aid" : {
+          "type" : "string"
+        },
+        "update_date" : {
+          "type" : "string",
+          "example" : "201812039089"
+        }
+      }
+    },
+    "Todo" : {
+      "required" : [ "complete", "dev", "grp", "id", "msg", "parted", "pid", "targetD", "tid", "update_date" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer"
+        },
+        "tid" : {
+          "type" : "integer"
+        },
+        "dev" : {
+          "type" : "string"
+        },
+        "grp" : {
+          "type" : "string"
+        },
+        "targetD" : {
+          "type" : "string"
+        },
+        "complete" : {
+          "type" : "integer"
+        },
+        "msg" : {
+          "type" : "string"
+        },
+        "parted" : {
+          "type" : "string"
+        },
+        "pid" : {
+          "type" : "string"
+        },
+        "update_date" : {
+          "type" : "string",
+          "example" : "201812039089"
+        }
+      }
+    },
+    "Target" : {
+      "required" : [ "dev", "id", "typ", "update_date" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer"
+        },
+        "dev" : {
+          "type" : "string"
+        },
+        "typ" : {
+          "type" : "string"
+        },
+        "update_date" : {
+          "type" : "string",
+          "example" : "201812039089"
+        }
+      }
+    },
+    "Work" : {
+      "required" : [ "aufisn", "bis", "created", "dataID", "datum", "dep", "deployed", "grp", "id", "lear", "legr", "objekt", "posnr", "std", "typ", "von" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "example" : "_r-qppxaTPyzkHd1vBH_ow"
+        },
+        "datum" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2006-04-17T21:22:48.2698750Z"
+        },
+        "legr" : {
+          "type" : "string",
+          "example" : "0030"
+        },
+        "objekt" : {
+          "type" : "string",
+          "example" : "89"
+        },
+        "von" : {
+          "type" : "string",
+          "example" : "07:00"
+        },
+        "bis" : {
+          "type" : "string",
+          "example" : "10:00"
+        },
+        "std" : {
+          "type" : "string",
+          "example" : "03:00"
+        },
+        "menge" : {
+          "type" : "number",
+          "example" : 0.0
+        },
+        "aufisn" : {
+          "type" : "string",
+          "example" : "000012"
+        },
+        "posnr" : {
+          "type" : "string",
+          "example" : "0030"
+        },
+        "lear" : {
+          "type" : "string",
+          "example" : "000112"
+        },
+        "creator" : {
+          "type" : "string",
+          "example" : ""
+        },
+        "created" : {
+          "type" : "string",
+          "example" : "20180523154200272591"
+        },
+        "grp" : {
+          "type" : "string",
+          "example" : "Grün"
+        },
+        "dep" : {
+          "type" : "string",
+          "example" : "_r-qppxaTPyzkHd1vBH_ow"
+        },
+        "typ" : {
+          "type" : "string",
+          "example" : "ARBL"
+        },
+        "deployed" : {
+          "type" : "string",
+          "example" : "20180523154200272591"
+        },
+        "dataID" : {
+          "type" : "integer",
+          "example" : 16235
+        },
+        "matID" : {
+          "type" : "string",
+          "example" : ""
+        },
+        "deleted" : {
+          "type" : "string",
+          "example" : ""
+        },
+        "hinweis" : {
+          "type" : "string",
+          "example" : ""
+        }
+      }
+    },
+    "error" : {
+      "type" : "object",
+      "required" : [ "error" ],
+      "properties" : {
+        "error" : {
+          "type" : "string",
+          "example" : "Something went wrong"
+        }
+      }
+    },
+    "ApiKey" : {
+      "type" : "object",
+      "required" : [ "api_key" ],
+      "properties" : {
+        "api_key" : {
+          "type" : "string",
+          "example" : "0z6sUPWsL6ck0689w3UtsedUuENxWMvG",
+          "description" : "Needed for every api call, verifies the client (something like a licence key)\n",
+          "minLength" : 32,
+          "maxLength" : 32
+        }
+      }
+    },
+    "PublicKey" : {
+      "type" : "object",
+      "required" : [ "public_key" ],
+      "properties" : {
+        "public_key" : {
+          "type" : "string",
+          "example" : "gakzsgdszakfzkJHFJF5675HGHJ76",
+          "description" : "The public key of the mobile client\n"
+        }
+      }
+    },
+    "Tan" : {
+      "type" : "object",
+      "required" : [ "tan" ],
+      "properties" : {
+        "tan" : {
+          "type" : "string",
+          "example" : "68743214",
+          "description" : "A unique tan for each device\n",
+          "minLength" : 8,
+          "maxLength" : 8
+        }
+      }
+    },
+    "AesData" : {
+      "type" : "object",
+      "required" : [ "encrypted", "secret" ],
+      "properties" : {
+        "secret" : {
+          "type" : "string",
+          "example" : "lweiiuzgfl74gaufhleszgfluzawegfulwaezfgelwuazgae7g73fg4fuzgdsazjfgk",
+          "description" : "Rsa encrypted json containing {\"iv\":\"\", \"secret\":\"\"}\n"
+        },
+        "encrypted" : {
+          "type" : "string",
+          "example" : "wqlgdz3o78wglfzuuiih4aelugf7awg7fgzugKUZEGFKUZge7wagfzgakuzagkreaughuahgiurghgeluwzagfl734fafgweifl7ugawelirufgwleigqw7ef8743qhfuirslgfq3a47qg",
+          "description" : "Aes encrypted Person Mapping (formate to be discussed)\n"
+        }
+      }
+    },
+    "RsaData" : {
+      "type" : "object",
+      "required" : [ "public_key", "tan" ],
+      "properties" : {
+        "tan" : {
+          "type" : "string",
+          "example" : "68743214",
+          "description" : "A unique tan for each device\n",
+          "minLength" : 8,
+          "maxLength" : 8
+        },
+        "public_key" : {
+          "type" : "string",
+          "example" : "gakzsgdszakfzkJHFJF5675HGHJ76",
+          "description" : "The public key of the mobile client\n"
+        }
+      }
+    },
+    "filesize" : {
+      "type" : "object",
+      "required" : [ "filesize" ],
+      "properties" : {
+        "filesize" : {
+          "type" : "integer",
+          "example" : 93348,
+          "description" : "filesize in bytes"
+        }
+      }
+    },
+    "blacklist" : {
+      "type" : "object",
+      "required" : [ "black_list" ],
+      "properties" : {
+        "black_list" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "example" : "someTan"
+          }
+        }
+      }
+    },
+    "Delivery" : {
+      "type" : "object",
+      "required" : [ "date", "number", "tan" ],
+      "properties" : {
+        "tan" : {
+          "type" : "string",
+          "example" : "90896756"
+        },
+        "date" : {
+          "type" : "string",
+          "example" : "2018-09-23"
+        },
+        "number" : {
+          "type" : "integer",
+          "example" : 8,
+          "description" : "The number of records for tan and day"
+        }
+      }
+    },
+    "TaskCompletion" : {
+      "type" : "object",
+      "required" : [ "completed", "id", "task_complete", "tid", "todo_complete", "todo_id" ],
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "example" : 0,
+          "description" : "database id"
+        },
+        "tid" : {
+          "type" : "integer",
+          "example" : 1,
+          "description" : "tid of task"
+        },
+        "task_complete" : {
+          "type" : "integer",
+          "example" : -2,
+          "description" : "complete value of task"
+        },
+        "todo_id" : {
+          "type" : "integer",
+          "example" : 1,
+          "description" : "id of toDo"
+        },
+        "todo_complete" : {
+          "type" : "integer",
+          "example" : -2,
+          "description" : "complete value of toDo"
+        },
+        "completed" : {
+          "type" : "string",
+          "format" : "dd.mm.yyyy",
+          "example" : "27.11.2018",
+          "description" : "completed of task"
+        }
+      }
+    },
+    "OnCallService" : {
+      "type" : "object",
+      "required" : [ "date", "employee_key", "end_time", "id", "name", "service_group", "start_time" ],
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "description" : "Database id"
+        },
+        "employee_key" : {
+          "type" : "string",
+          "description" : "Key of the employee"
+        },
+        "name" : {
+          "type" : "string",
+          "description" : "Name of the employee"
+        },
+        "phone_number" : {
+          "type" : "string",
+          "description" : "PhoneNumber of the employee"
+        },
+        "service_group" : {
+          "type" : "string",
+          "description" : "Service group -> Rufbereitschaftsgruppe"
+        },
+        "date" : {
+          "type" : "string",
+          "format" : "yyyy-mm-dd",
+          "description" : "execution date"
+        },
+        "start_time" : {
+          "type" : "string",
+          "format" : "hh:mm"
+        },
+        "end_time" : {
+          "type" : "string",
+          "format" : "hh:mm"
+        },
+        "status" : {
+          "type" : "integer",
+          "description" : "0 -> noch nicht angerufen (default)\n1 -> bestätigt (kommt)\n2 -> kommt nicht\n3 -> abgehoben aber nicht bestätigt\n4 -> nicht erreicht\n5 -> nicht abgehoben\n"
+        },
+        "status_reason" : {
+          "type" : "string",
+          "description" : "Reason why a specific status was set (eg \"Employee ill\")"
+        }
+      }
+    }
+  }
+}
