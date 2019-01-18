@@ -1,0 +1,1233 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "RADAR App Server Api Documentation",
+    "version" : "0.0.1-SNAPSHOT",
+    "title" : "App Server",
+    "termsOfService" : "urn:tos",
+    "contact" : { },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/",
+  "tags" : [ {
+    "name" : "basic-error-controller",
+    "description" : "Basic Error Controller"
+  }, {
+    "name" : "fcm-notification-controller",
+    "description" : "Fcm Notification Controller"
+  }, {
+    "name" : "radar-project-controller",
+    "description" : "Radar Project Controller"
+  }, {
+    "name" : "radar-user-controller",
+    "description" : "Radar User Controller"
+  } ],
+  "paths" : {
+    "/error" : {
+      "get" : {
+        "tags" : [ "basic-error-controller" ],
+        "summary" : "errorHtml",
+        "operationId" : "errorHtmlUsingGET",
+        "produces" : [ "text/html" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ModelAndView"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "head" : {
+        "tags" : [ "basic-error-controller" ],
+        "summary" : "errorHtml",
+        "operationId" : "errorHtmlUsingHEAD",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/html" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ModelAndView"
+            }
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "basic-error-controller" ],
+        "summary" : "errorHtml",
+        "operationId" : "errorHtmlUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/html" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ModelAndView"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "put" : {
+        "tags" : [ "basic-error-controller" ],
+        "summary" : "errorHtml",
+        "operationId" : "errorHtmlUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/html" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ModelAndView"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "delete" : {
+        "tags" : [ "basic-error-controller" ],
+        "summary" : "errorHtml",
+        "operationId" : "errorHtmlUsingDELETE",
+        "produces" : [ "text/html" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ModelAndView"
+            }
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "deprecated" : false
+      },
+      "options" : {
+        "tags" : [ "basic-error-controller" ],
+        "summary" : "errorHtml",
+        "operationId" : "errorHtmlUsingOPTIONS",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/html" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ModelAndView"
+            }
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "deprecated" : false
+      },
+      "patch" : {
+        "tags" : [ "basic-error-controller" ],
+        "summary" : "errorHtml",
+        "operationId" : "errorHtmlUsingPATCH",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "text/html" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ModelAndView"
+            }
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/notifications" : {
+      "get" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "getAllNotifications",
+        "operationId" : "getAllNotificationsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotifications"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/notifications/filtered" : {
+      "get" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "getFilteredNotifications",
+        "operationId" : "getFilteredNotificationsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "delivered",
+          "in" : "query",
+          "description" : "delivered",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "endTime",
+          "in" : "query",
+          "description" : "endTime",
+          "required" : false,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "startTime",
+          "in" : "query",
+          "description" : "startTime",
+          "required" : false,
+          "type" : "string",
+          "format" : "date-time"
+        }, {
+          "name" : "ttlSeconds",
+          "in" : "query",
+          "description" : "ttlSeconds",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "name" : "type",
+          "in" : "query",
+          "description" : "type",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotifications"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/notifications/{id}" : {
+      "get" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "getNotificationUsingId",
+        "operationId" : "getNotificationUsingIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotificationDto"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects" : {
+      "get" : {
+        "tags" : [ "radar-project-controller" ],
+        "summary" : "getAllProjects",
+        "operationId" : "getAllProjectsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/RadarProjects"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "radar-project-controller" ],
+        "summary" : "addProject",
+        "operationId" : "addProjectUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "projectDto",
+          "description" : "projectDto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RadarProjectDto"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/RadarProjectDto"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "put" : {
+        "tags" : [ "radar-project-controller" ],
+        "summary" : "updateProject",
+        "operationId" : "updateProjectUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "projectDto",
+          "description" : "projectDto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/RadarProjectDto"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/RadarProjectDto"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/project" : {
+      "get" : {
+        "tags" : [ "radar-project-controller" ],
+        "summary" : "getProjectsUsingId",
+        "operationId" : "getProjectsUsingIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "id",
+          "description" : "id",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/RadarProjectDto"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/{projectId}" : {
+      "get" : {
+        "tags" : [ "radar-project-controller" ],
+        "summary" : "getProjectsUsingProjectId",
+        "operationId" : "getProjectsUsingProjectIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/RadarProjectDto"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/{projectId}/ users/{subjectId}/notifications" : {
+      "get" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "getUsersUsingProjectIdAndSubjectId",
+        "operationId" : "getUsersUsingProjectIdAndSubjectIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "subjectId",
+          "in" : "path",
+          "description" : "subjectId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotifications"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/{projectId}/notifications" : {
+      "get" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "getNotificationsUsingProjectId",
+        "operationId" : "getNotificationsUsingProjectIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotifications"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/{projectId}/users" : {
+      "get" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "getUsersUsingProjectId",
+        "operationId" : "getUsersUsingProjectIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmUsers"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "addUserToProject",
+        "operationId" : "addUserToProjectUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "userDto",
+          "description" : "userDto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FcmUserDto"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ResponseEntity"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "put" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "updateUserInProject",
+        "operationId" : "updateUserInProjectUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "userDto",
+          "description" : "userDto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FcmUserDto"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ResponseEntity"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/{projectId}/users/{subjectId}/notifications" : {
+      "post" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "scheduleSingleNotification",
+        "operationId" : "scheduleSingleNotificationUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "notification",
+          "description" : "notification",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FcmNotificationDto"
+          }
+        }, {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "subjectId",
+          "in" : "path",
+          "description" : "subjectId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotificationDto"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/{projectId}/users/{userId}/notifications" : {
+      "delete" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "deleteNotificationsForUser",
+        "operationId" : "deleteNotificationsForUserUsingDELETE",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ResponseEntity"
+            }
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/projects/{projectId}/users/{userId}/notifications/now" : {
+      "post" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "scheduleNotificationNow",
+        "operationId" : "scheduleNotificationNowUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "notification",
+          "description" : "notification",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FcmNotificationDto"
+          }
+        }, {
+          "name" : "projectId",
+          "in" : "path",
+          "description" : "projectId",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "userId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotificationDto"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users" : {
+      "get" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "getAllRadarUsers",
+        "operationId" : "getAllRadarUsersUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmUsers"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "post" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "addUser",
+        "operationId" : "addUserUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "userDto",
+          "description" : "userDto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FcmUserDto"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ResponseEntity"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      },
+      "put" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "updateUser",
+        "operationId" : "updateUserUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "userDto",
+          "description" : "userDto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/FcmUserDto"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ResponseEntity"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/user" : {
+      "get" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "getRadarUserUsingId",
+        "operationId" : "getRadarUserUsingIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "id",
+          "description" : "id",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmUserDto"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{subjectId}" : {
+      "get" : {
+        "tags" : [ "radar-user-controller" ],
+        "summary" : "getRadarUserUsingSubjectId",
+        "operationId" : "getRadarUserUsingSubjectIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "subjectId",
+          "in" : "path",
+          "description" : "subjectId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmUserDto"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/users/{subjectId}/notifications" : {
+      "get" : {
+        "tags" : [ "fcm-notification-controller" ],
+        "summary" : "getRadarNotificationsUsingSubjectId",
+        "operationId" : "getRadarNotificationsUsingSubjectIdUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "subjectId",
+          "in" : "path",
+          "description" : "subjectId",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/FcmNotifications"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    }
+  },
+  "definitions" : {
+    "FcmNotificationDto" : {
+      "type" : "object",
+      "properties" : {
+        "appPackage" : {
+          "type" : "string"
+        },
+        "body" : {
+          "type" : "string"
+        },
+        "delivered" : {
+          "type" : "boolean"
+        },
+        "fcmMessageId" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "scheduledTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "sourceId" : {
+          "type" : "string"
+        },
+        "sourceType" : {
+          "type" : "string"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "ttlSeconds" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "type" : {
+          "type" : "string"
+        }
+      },
+      "title" : "FcmNotificationDto"
+    },
+    "FcmNotifications" : {
+      "type" : "object",
+      "properties" : {
+        "notifications" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FcmNotificationDto"
+          }
+        }
+      },
+      "title" : "FcmNotifications"
+    },
+    "FcmUserDto" : {
+      "type" : "object",
+      "properties" : {
+        "enrolmentDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "fcmToken" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lastDelivered" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "lastOpened" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "projectId" : {
+          "type" : "string"
+        },
+        "subjectId" : {
+          "type" : "string"
+        },
+        "timezone" : {
+          "type" : "number",
+          "format" : "double"
+        }
+      },
+      "title" : "FcmUserDto"
+    },
+    "FcmUsers" : {
+      "type" : "object",
+      "properties" : {
+        "users" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FcmUserDto"
+          }
+        }
+      },
+      "title" : "FcmUsers"
+    },
+    "ModelAndView" : {
+      "type" : "object",
+      "properties" : {
+        "empty" : {
+          "type" : "boolean"
+        },
+        "model" : {
+          "type" : "object",
+          "properties" : { }
+        },
+        "modelMap" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object",
+            "properties" : { }
+          }
+        },
+        "reference" : {
+          "type" : "boolean"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "100 CONTINUE", "101 SWITCHING_PROTOCOLS", "102 PROCESSING", "103 CHECKPOINT", "200 OK", "201 CREATED", "202 ACCEPTED", "203 NON_AUTHORITATIVE_INFORMATION", "204 NO_CONTENT", "205 RESET_CONTENT", "206 PARTIAL_CONTENT", "207 MULTI_STATUS", "208 ALREADY_REPORTED", "226 IM_USED", "300 MULTIPLE_CHOICES", "301 MOVED_PERMANENTLY", "302 FOUND", "302 MOVED_TEMPORARILY", "303 SEE_OTHER", "304 NOT_MODIFIED", "305 USE_PROXY", "307 TEMPORARY_REDIRECT", "308 PERMANENT_REDIRECT", "400 BAD_REQUEST", "401 UNAUTHORIZED", "402 PAYMENT_REQUIRED", "403 FORBIDDEN", "404 NOT_FOUND", "405 METHOD_NOT_ALLOWED", "406 NOT_ACCEPTABLE", "407 PROXY_AUTHENTICATION_REQUIRED", "408 REQUEST_TIMEOUT", "409 CONFLICT", "410 GONE", "411 LENGTH_REQUIRED", "412 PRECONDITION_FAILED", "413 PAYLOAD_TOO_LARGE", "413 REQUEST_ENTITY_TOO_LARGE", "414 URI_TOO_LONG", "414 REQUEST_URI_TOO_LONG", "415 UNSUPPORTED_MEDIA_TYPE", "416 REQUESTED_RANGE_NOT_SATISFIABLE", "417 EXPECTATION_FAILED", "418 I_AM_A_TEAPOT", "419 INSUFFICIENT_SPACE_ON_RESOURCE", "420 METHOD_FAILURE", "421 DESTINATION_LOCKED", "422 UNPROCESSABLE_ENTITY", "423 LOCKED", "424 FAILED_DEPENDENCY", "426 UPGRADE_REQUIRED", "428 PRECONDITION_REQUIRED", "429 TOO_MANY_REQUESTS", "431 REQUEST_HEADER_FIELDS_TOO_LARGE", "451 UNAVAILABLE_FOR_LEGAL_REASONS", "500 INTERNAL_SERVER_ERROR", "501 NOT_IMPLEMENTED", "502 BAD_GATEWAY", "503 SERVICE_UNAVAILABLE", "504 GATEWAY_TIMEOUT", "505 HTTP_VERSION_NOT_SUPPORTED", "506 VARIANT_ALSO_NEGOTIATES", "507 INSUFFICIENT_STORAGE", "508 LOOP_DETECTED", "509 BANDWIDTH_LIMIT_EXCEEDED", "510 NOT_EXTENDED", "511 NETWORK_AUTHENTICATION_REQUIRED" ]
+        },
+        "view" : {
+          "$ref" : "#/definitions/View"
+        },
+        "viewName" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ModelAndView"
+    },
+    "RadarProjectDto" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "projectId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "RadarProjectDto"
+    },
+    "RadarProjects" : {
+      "type" : "object",
+      "properties" : {
+        "projects" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/RadarProjectDto"
+          }
+        }
+      },
+      "title" : "RadarProjects"
+    },
+    "ResponseEntity" : {
+      "type" : "object",
+      "properties" : {
+        "body" : {
+          "type" : "object",
+          "properties" : { }
+        },
+        "statusCode" : {
+          "type" : "string",
+          "enum" : [ "100 CONTINUE", "101 SWITCHING_PROTOCOLS", "102 PROCESSING", "103 CHECKPOINT", "200 OK", "201 CREATED", "202 ACCEPTED", "203 NON_AUTHORITATIVE_INFORMATION", "204 NO_CONTENT", "205 RESET_CONTENT", "206 PARTIAL_CONTENT", "207 MULTI_STATUS", "208 ALREADY_REPORTED", "226 IM_USED", "300 MULTIPLE_CHOICES", "301 MOVED_PERMANENTLY", "302 FOUND", "302 MOVED_TEMPORARILY", "303 SEE_OTHER", "304 NOT_MODIFIED", "305 USE_PROXY", "307 TEMPORARY_REDIRECT", "308 PERMANENT_REDIRECT", "400 BAD_REQUEST", "401 UNAUTHORIZED", "402 PAYMENT_REQUIRED", "403 FORBIDDEN", "404 NOT_FOUND", "405 METHOD_NOT_ALLOWED", "406 NOT_ACCEPTABLE", "407 PROXY_AUTHENTICATION_REQUIRED", "408 REQUEST_TIMEOUT", "409 CONFLICT", "410 GONE", "411 LENGTH_REQUIRED", "412 PRECONDITION_FAILED", "413 PAYLOAD_TOO_LARGE", "413 REQUEST_ENTITY_TOO_LARGE", "414 URI_TOO_LONG", "414 REQUEST_URI_TOO_LONG", "415 UNSUPPORTED_MEDIA_TYPE", "416 REQUESTED_RANGE_NOT_SATISFIABLE", "417 EXPECTATION_FAILED", "418 I_AM_A_TEAPOT", "419 INSUFFICIENT_SPACE_ON_RESOURCE", "420 METHOD_FAILURE", "421 DESTINATION_LOCKED", "422 UNPROCESSABLE_ENTITY", "423 LOCKED", "424 FAILED_DEPENDENCY", "426 UPGRADE_REQUIRED", "428 PRECONDITION_REQUIRED", "429 TOO_MANY_REQUESTS", "431 REQUEST_HEADER_FIELDS_TOO_LARGE", "451 UNAVAILABLE_FOR_LEGAL_REASONS", "500 INTERNAL_SERVER_ERROR", "501 NOT_IMPLEMENTED", "502 BAD_GATEWAY", "503 SERVICE_UNAVAILABLE", "504 GATEWAY_TIMEOUT", "505 HTTP_VERSION_NOT_SUPPORTED", "506 VARIANT_ALSO_NEGOTIATES", "507 INSUFFICIENT_STORAGE", "508 LOOP_DETECTED", "509 BANDWIDTH_LIMIT_EXCEEDED", "510 NOT_EXTENDED", "511 NETWORK_AUTHENTICATION_REQUIRED" ]
+        },
+        "statusCodeValue" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      },
+      "title" : "ResponseEntity"
+    },
+    "View" : {
+      "type" : "object",
+      "properties" : {
+        "contentType" : {
+          "type" : "string"
+        }
+      },
+      "title" : "View"
+    }
+  }
+}
