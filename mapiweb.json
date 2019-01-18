@@ -1,0 +1,479 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "API Reference about mapi services, the principal purpose of this api is intercept a bot and start sending messages, contacts, files and to set the bot configuration.",
+    "version" : "0.0.1",
+    "title" : "Messaging API Reference",
+    "contact" : {
+      "name" : "Vertical Technologies",
+      "url" : "http://www.vertical.com.co",
+      "email" : "mail@vertical.com.co"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "https://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host" : "mapi.test.vertical.com.co",
+  "basePath" : "/api/v1/",
+  "tags" : [ {
+    "name" : "Authentication resources",
+    "description" : "Api that handles the authenticacion for the mapi web services"
+  }, {
+    "name" : "Messaging resources",
+    "description" : "This resource allows to you, send, receive and query sessions just to send messages"
+  }, {
+    "name" : "Configuration resources",
+    "description" : "This resource handle the configuration for the bot like setting the webhook, custimizing the profile bot picture"
+  }, {
+    "name" : "Webhook setup",
+    "description" : "this section shows how to configure propertly a webhook that receives the messages sent by the users"
+  } ],
+  "paths" : {
+    "/--/--" : {
+      "post" : {
+        "tags" : [ "Webhook setup" ],
+        "summary" : "Abstract endpoint developed by your side to receive the incoming messages for all the bot channels",
+        "operationId" : "abstractWebhookDocumentation",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "authRequest",
+          "description" : "authRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Webhook"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        }
+      }
+    },
+    "/configuration/webhook" : {
+      "post" : {
+        "tags" : [ "Configuration resources" ],
+        "summary" : "The endpoint allow to change the api webhook to receive incoming messages from the users",
+        "operationId" : "updateWebhookWithpost",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "authRequest",
+          "description" : "authRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/Webhook"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "description" : "Conflict"
+          }
+        },
+        "security" : [ {
+          "BEARER TOKEN" : [ ]
+        } ],
+        "deprecated" : false
+      }
+    },
+    "/configuration/profile/picture" : {
+      "post" : {
+        "tags" : [ "Configuration resources" ],
+        "summary" : "This resource allow to update the channel profile picture",
+        "operationId" : "updateProfilePicturePost",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "authRequest",
+          "description" : "authRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ProfilePictureConfiguration"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "409" : {
+            "description" : "Conflict"
+          }
+        },
+        "security" : [ {
+          "BEARER TOKEN" : [ ]
+        } ],
+        "deprecated" : false
+      }
+    },
+    "/auth/login" : {
+      "post" : {
+        "tags" : [ "Authentication resources" ],
+        "summary" : "Request the token for the given user, as aditional note every client has a determinated bot assosiated implicitly",
+        "operationId" : "loginOnUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "authRequest",
+          "description" : "authRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/AuthRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/AuthResponse"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "deprecated" : false
+      }
+    },
+    "/messages/channels" : {
+      "get" : {
+        "tags" : [ "Messaging resources" ],
+        "summary" : "This resource is user to get all the channels information for a bot",
+        "operationId" : "getChannelsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Channel"
+              }
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "security" : [ {
+          "BEARER TOKEN" : [ ]
+        } ],
+        "deprecated" : false
+      }
+    },
+    "/messages/channels/{id}" : {
+      "get" : {
+        "tags" : [ "Messaging resources" ],
+        "summary" : "This resource can be used to get the channel information, channel id and its active sessions",
+        "operationId" : "getChannelUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "Number or username of the line",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "name",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/Channel"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "security" : [ {
+          "BEARER TOKEN" : [ ]
+        } ],
+        "deprecated" : false
+      }
+    },
+    "/messages/composite" : {
+      "post" : {
+        "tags" : [ "Messaging resources" ],
+        "summary" : "Request this resource to send a message of text or image type, if the message type is \"image\" or \"audio\" its mandatory include the \"url\" or \"payload\" param to the json body and optional the \"text\" parameter for \"image\" type only, otherwise if the type is \"text\" its mantatory to include the \"text\" property in the json body. \n the messages delivered by this resource arrive in delivery order",
+        "operationId" : "sendCompositeMessageUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "mediaMessage",
+          "description" : "mediaMessage",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/MediaMessage"
+          }
+        } ],
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          },
+          "202" : {
+            "description" : "Accepted"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "security" : [ {
+          "BEARER TOKEN" : [ ]
+        } ],
+        "deprecated" : false
+      }
+    },
+    "/messages/contact" : {
+      "post" : {
+        "tags" : [ "Messaging resources" ],
+        "summary" : "this resource ables to you the send of a contact fot a determinated user",
+        "operationId" : "sendContactUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "contact",
+          "description" : "contact",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/ContactBase"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        },
+        "security" : [ {
+          "BEARER TOKEN" : [ ]
+        } ],
+        "deprecated" : true
+      }
+    }
+  },
+  "securityDefinitions" : {
+    "BEARER TOKEN" : {
+      "description" : "Jwt token that is passed in the request header as Authorization, just have to put the word Bearer before the token value.</br><strong>NOTE:</strong> This JWT token is passed out by the authentication API </br> <strong>Example:</strong> Bearer &#8810;JWT&#8811;",
+      "type" : "apiKey",
+      "name" : "Authorization",
+      "in" : "header"
+    }
+  },
+  "definitions" : {
+    "AuthRequest" : {
+      "type" : "object",
+      "properties" : {
+        "client" : {
+          "type" : "string",
+          "description" : "given user name"
+        },
+        "secret" : {
+          "type" : "string",
+          "description" : "given password for the user"
+        }
+      },
+      "title" : "AuthRequest",
+      "description" : "Authentication request body"
+    },
+    "AuthResponse" : {
+      "type" : "object",
+      "properties" : {
+        "token" : {
+          "type" : "string",
+          "description" : "Bearer token"
+        }
+      },
+      "title" : "AuthResponse",
+      "description" : "JWT token for include in the authentication header"
+    },
+    "Channel" : {
+      "type" : "object",
+      "properties" : {
+        "activeChatId" : {
+          "type" : "array",
+          "description" : "Active sessions in a channel, those sessions or chatId's contains the available users for message sending",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "id" : {
+          "type" : "string",
+          "description" : "given channel id"
+        }
+      },
+      "title" : "Channel",
+      "description" : "Asossiated bot channel"
+    },
+    "ContactBase" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "number" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ContactBase",
+      "description" : "Contact base"
+    },
+    "MediaMessage" : {
+      "type" : "object",
+      "required" : [ "channelId", "chatId" ],
+      "properties" : {
+        "channelId" : {
+          "type" : "string",
+          "description" : "Source number or username"
+        },
+        "chatId" : {
+          "type" : "string",
+          "description" : "Destination number or username"
+        },
+        "payload" : {
+          "type" : "string",
+          "description" : "base 64 string for image payload"
+        },
+        "text" : {
+          "type" : "string",
+          "description" : "Text in the message"
+        },
+        "type" : {
+          "type" : "string",
+          "description" : "value for \"text\" ,\"image\" or \"audio\" messages"
+        },
+        "url" : {
+          "type" : "string",
+          "description" : "Image url i case that the message type is image"
+        }
+      },
+      "title" : "MediaMessage",
+      "description" : "Composite message body"
+    },
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "client" : {
+          "type" : "string"
+        },
+        "enabled" : {
+          "type" : "boolean"
+        },
+        "force" : {
+          "type" : "boolean"
+        },
+        "secret" : {
+          "type" : "string"
+        },
+        "webhook" : {
+          "type" : "string"
+        }
+      },
+      "title" : "User",
+      "description" : "User model property"
+    },
+    "Webhook" : {
+      "type" : "object",
+      "properties" : {
+        "webhook" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Webhook",
+      "description" : "Webhook model property"
+    },
+    "WebhookIncomingMessage" : {
+      "type" : "object",
+      "properties" : {
+        "webhook" : {
+          "type" : "string"
+        }
+      },
+      "title" : "Webhook",
+      "description" : "Webhook model property"
+    },
+    "ProfilePictureConfiguration" : {
+      "type" : "object",
+      "properties" : {
+        "channelId" : {
+          "type" : "string"
+        },
+        "pictureUrl" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ProfilePictureConfiguration",
+      "description" : "Body for profile picture configuration"
+    }
+  }
+}
