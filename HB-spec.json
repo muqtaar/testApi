@@ -1,0 +1,2582 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Public API.",
+    "version" : "V1",
+    "title" : "HomeBee REST API",
+    "termsOfService" : "Terms of service",
+    "contact" : {
+      "name" : "HomeBee"
+    },
+    "license" : { }
+  },
+  "host" : "localhost:8081",
+  "basePath" : "/homebee",
+  "tags" : [ {
+    "name" : "auth-controller",
+    "description" : "Auth Controller"
+  }, {
+    "name" : "branch-location-controller",
+    "description" : "Branch Location Controller"
+  }, {
+    "name" : "bucket-controller",
+    "description" : "Bucket Controller"
+  }, {
+    "name" : "domain-controller",
+    "description" : "Domain Controller"
+  }, {
+    "name" : "employee-controller",
+    "description" : "Employee Controller"
+  }, {
+    "name" : "mobile-user-controller",
+    "description" : "Mobile User Controller"
+  }, {
+    "name" : "order-controller",
+    "description" : "Order Controller"
+  }, {
+    "name" : "package-details-controller",
+    "description" : "Package Details Controller"
+  }, {
+    "name" : "service-location-controller",
+    "description" : "Service Location Controller"
+  }, {
+    "name" : "user-controller",
+    "description" : "User Controller"
+  } ],
+  "paths" : {
+    "/addUser" : {
+      "post" : {
+        "tags" : [ "mobile-user-controller" ],
+        "summary" : "addUser",
+        "operationId" : "addUserUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "dto",
+          "description" : "dto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/api/auth/login" : {
+      "post" : {
+        "tags" : [ "auth-controller" ],
+        "summary" : "authenticateUser",
+        "operationId" : "authenticateUserUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "loginRequest",
+          "description" : "loginRequest",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/LoginRequest"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "type" : "object"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/api/authorization" : {
+      "get" : {
+        "tags" : [ "user-controller" ],
+        "summary" : "getUserDetails",
+        "operationId" : "getUserDetailsUsingGET",
+        "produces" : [ "*/*" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«SecUserDTO»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/asignEmployeeToOrder" : {
+      "put" : {
+        "tags" : [ "order-controller" ],
+        "summary" : "asignEmployeeToOrder",
+        "operationId" : "asignEmployeeToOrderUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "orderId",
+          "in" : "query",
+          "description" : "orderId",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "employeeId",
+          "in" : "query",
+          "description" : "employeeId",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/branchlocation" : {
+      "get" : {
+        "tags" : [ "branch-location-controller" ],
+        "summary" : "getOrders",
+        "operationId" : "getOrdersUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "status",
+          "in" : "query",
+          "description" : "status",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "latitude",
+          "in" : "query",
+          "description" : "latitude",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "longitude",
+          "in" : "query",
+          "description" : "longitude",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«List«BranchLocationDTO»»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/changeApplicationStatus" : {
+      "put" : {
+        "tags" : [ "employee-controller" ],
+        "summary" : "changeApplicationStatus",
+        "operationId" : "changeApplicationStatusUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "employeeAppId",
+          "in" : "query",
+          "description" : "employeeAppId",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "status",
+          "in" : "query",
+          "description" : "status",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/changeorderstatus" : {
+      "put" : {
+        "tags" : [ "order-controller" ],
+        "summary" : "changeOrderStatus",
+        "operationId" : "changeOrderStatusUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "orderId",
+          "in" : "query",
+          "description" : "orderId",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "orderStatusId",
+          "in" : "query",
+          "description" : "orderStatusId",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/deleteFile" : {
+      "delete" : {
+        "tags" : [ "bucket-controller" ],
+        "summary" : "deleteFile",
+        "operationId" : "deleteFileUsingDELETE",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "formData",
+          "name" : "fileUrl",
+          "description" : "fileUrl",
+          "required" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        }
+      }
+    },
+    "/domain/create/{entityName}" : {
+      "post" : {
+        "tags" : [ "domain-controller" ],
+        "summary" : "handleCreateRequest",
+        "operationId" : "handleCreateRequestUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "entityName",
+          "in" : "path",
+          "description" : "entityName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "wrappedRequestBody",
+          "description" : "wrappedRequestBody",
+          "required" : true,
+          "schema" : {
+            "type" : "object"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/domain/delete/{entityName}" : {
+      "delete" : {
+        "tags" : [ "domain-controller" ],
+        "summary" : "handleDeleteRequest",
+        "operationId" : "handleDeleteRequestUsingDELETE",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "entityName",
+          "in" : "path",
+          "description" : "entityName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "params",
+          "in" : "query",
+          "description" : "params",
+          "required" : true,
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "204" : {
+            "description" : "No Content"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          }
+        }
+      }
+    },
+    "/domain/get/{entityName}" : {
+      "get" : {
+        "tags" : [ "domain-controller" ],
+        "summary" : "handleGetRequest",
+        "operationId" : "handleGetRequestUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "entityName",
+          "in" : "path",
+          "description" : "entityName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "params",
+          "in" : "query",
+          "description" : "params",
+          "required" : true,
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/domain/list/{entityName}" : {
+      "get" : {
+        "tags" : [ "domain-controller" ],
+        "summary" : "handleListResult",
+        "operationId" : "handleListResultUsingGET",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "entityName",
+          "in" : "path",
+          "description" : "entityName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "params",
+          "in" : "query",
+          "description" : "params",
+          "required" : true,
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/domain/update/{entityName}" : {
+      "put" : {
+        "tags" : [ "domain-controller" ],
+        "summary" : "handleUpdateRequest",
+        "operationId" : "handleUpdateRequestUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "entityName",
+          "in" : "path",
+          "description" : "entityName",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "body",
+          "name" : "wrappedRequestBody",
+          "description" : "wrappedRequestBody",
+          "required" : true,
+          "schema" : {
+            "type" : "object"
+          }
+        }, {
+          "name" : "params",
+          "in" : "query",
+          "description" : "params",
+          "required" : true,
+          "items" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/employeeApplications" : {
+      "get" : {
+        "tags" : [ "employee-controller" ],
+        "summary" : "getEmployeeApplications",
+        "operationId" : "getEmployeeApplicationsUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "status",
+          "in" : "query",
+          "description" : "status",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«List«EmployeeApplicationDTO»»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/employeeapplication" : {
+      "post" : {
+        "tags" : [ "employee-controller" ],
+        "summary" : "addEmployeeApplication",
+        "operationId" : "addEmployeeApplicationUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "employeeApplicationDTO",
+          "description" : "employeeApplicationDTO",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EmployeeApplicationDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/employeedetails" : {
+      "post" : {
+        "tags" : [ "employee-controller" ],
+        "summary" : "addEmployeeDetails",
+        "operationId" : "addEmployeeDetailsUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "employeeDTO",
+          "description" : "employeeDTO",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/EmployeeDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/employeesfororder" : {
+      "get" : {
+        "tags" : [ "employee-controller" ],
+        "summary" : "getEmployeeForOrders",
+        "operationId" : "getEmployeeForOrdersUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "status",
+          "in" : "query",
+          "description" : "status",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "serviceLocationId",
+          "in" : "query",
+          "description" : "serviceLocationId",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«List«EmployeeDTO»»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/forgetPassword/{mobileNumber}" : {
+      "get" : {
+        "tags" : [ "mobile-user-controller" ],
+        "summary" : "forgetPassword",
+        "operationId" : "forgetPasswordUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "mobileNumber",
+          "in" : "path",
+          "description" : "mobileNumber",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/orders" : {
+      "get" : {
+        "tags" : [ "order-controller" ],
+        "summary" : "getOrders",
+        "operationId" : "getOrdersUsingGET_1",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "status",
+          "in" : "query",
+          "description" : "status",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "description" : "userId",
+          "required" : false,
+          "type" : "integer",
+          "format" : "int64"
+        }, {
+          "name" : "orderStatus",
+          "in" : "query",
+          "description" : "orderStatus",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«List«OrderDTO»»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "order-controller" ],
+        "summary" : "addOrder",
+        "operationId" : "addOrderUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "dto",
+          "description" : "dto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/OrderDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/packagedetails" : {
+      "post" : {
+        "tags" : [ "package-details-controller" ],
+        "summary" : "addPackageDetails",
+        "operationId" : "addPackageDetailsUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "packageDetailsDTO",
+          "description" : "packageDetailsDTO",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/PackageDetailsDTO"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/resetPassword" : {
+      "post" : {
+        "tags" : [ "mobile-user-controller" ],
+        "summary" : "resetPassword",
+        "operationId" : "resetPasswordUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "dto",
+          "description" : "dto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/sendNotification/{id}" : {
+      "get" : {
+        "tags" : [ "mobile-user-controller" ],
+        "summary" : "sendNotification",
+        "operationId" : "sendNotificationUsingGET",
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "description" : "id",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/servicelocation" : {
+      "post" : {
+        "tags" : [ "service-location-controller" ],
+        "summary" : "addServiceLocation",
+        "operationId" : "addServiceLocationUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "serviceLocationDTO",
+          "description" : "serviceLocationDTO",
+          "required" : true,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/ServiceLocationDTO"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/updateFcmToken" : {
+      "post" : {
+        "tags" : [ "mobile-user-controller" ],
+        "summary" : "updateFcmToken",
+        "operationId" : "updateFcmTokenUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "dto",
+          "description" : "dto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/updateUser" : {
+      "put" : {
+        "tags" : [ "mobile-user-controller" ],
+        "summary" : "updateUser",
+        "operationId" : "updateUserUsingPUT",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "dto",
+          "description" : "dto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/uploadFile" : {
+      "post" : {
+        "tags" : [ "bucket-controller" ],
+        "summary" : "uploadFile",
+        "operationId" : "uploadFileUsingPOST",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "name" : "file",
+          "in" : "formData",
+          "description" : "file",
+          "required" : true,
+          "type" : "file"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    },
+    "/validateOtp" : {
+      "post" : {
+        "tags" : [ "mobile-user-controller" ],
+        "summary" : "validateOtp",
+        "operationId" : "validateOtpUsingPOST",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "*/*" ],
+        "parameters" : [ {
+          "in" : "body",
+          "name" : "dto",
+          "description" : "dto",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/UserDTO"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "schema" : {
+              "$ref" : "#/definitions/ApiResponse«object»"
+            }
+          },
+          "201" : {
+            "description" : "Created"
+          },
+          "401" : {
+            "description" : "Unauthorized"
+          },
+          "403" : {
+            "description" : "Forbidden"
+          },
+          "404" : {
+            "description" : "Not Found"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "AddressTypeDTO" : {
+      "type" : "object",
+      "properties" : {
+        "addressTypeId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "addressTypeName" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "AddressTypeDTO"
+    },
+    "ApiResponse«List«BranchLocationDTO»»" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BranchLocationDTO"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "paginated" : {
+          "type" : "boolean"
+        },
+        "statusCode" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "success" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ApiResponse«List«BranchLocationDTO»»"
+    },
+    "ApiResponse«List«EmployeeApplicationDTO»»" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EmployeeApplicationDTO"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "paginated" : {
+          "type" : "boolean"
+        },
+        "statusCode" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "success" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ApiResponse«List«EmployeeApplicationDTO»»"
+    },
+    "ApiResponse«List«EmployeeDTO»»" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EmployeeDTO"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "paginated" : {
+          "type" : "boolean"
+        },
+        "statusCode" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "success" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ApiResponse«List«EmployeeDTO»»"
+    },
+    "ApiResponse«List«OrderDTO»»" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrderDTO"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "paginated" : {
+          "type" : "boolean"
+        },
+        "statusCode" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "success" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ApiResponse«List«OrderDTO»»"
+    },
+    "ApiResponse«SecUserDTO»" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "$ref" : "#/definitions/SecUserDTO"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "paginated" : {
+          "type" : "boolean"
+        },
+        "statusCode" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "success" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ApiResponse«SecUserDTO»"
+    },
+    "ApiResponse«object»" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "object"
+        },
+        "message" : {
+          "type" : "string"
+        },
+        "paginated" : {
+          "type" : "boolean"
+        },
+        "statusCode" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "success" : {
+          "type" : "boolean"
+        }
+      },
+      "title" : "ApiResponse«object»"
+    },
+    "BranchLocationDTO" : {
+      "type" : "object",
+      "properties" : {
+        "address" : {
+          "type" : "string"
+        },
+        "branchLocationId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "latitude" : {
+          "type" : "string"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "longitude" : {
+          "type" : "string"
+        },
+        "radius" : {
+          "type" : "integer"
+        }
+      },
+      "title" : "BranchLocationDTO"
+    },
+    "EmpAppEducationDTO" : {
+      "type" : "object",
+      "properties" : {
+        "address" : {
+          "type" : "string"
+        },
+        "attachment" : {
+          "type" : "string"
+        },
+        "board" : {
+          "type" : "string"
+        },
+        "course" : {
+          "type" : "string"
+        },
+        "createdDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "empAppEducationId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "employeeAppId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "gradeClassSecured" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "majorSubjects" : {
+          "type" : "string"
+        },
+        "medium" : {
+          "type" : "string"
+        },
+        "modeOfStudy" : {
+          "type" : "string"
+        },
+        "nameOfInstitution" : {
+          "type" : "string"
+        },
+        "precentage" : {
+          "type" : "number"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "updatedDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "yearOfCompletion" : {
+          "type" : "string"
+        }
+      },
+      "title" : "EmpAppEducationDTO"
+    },
+    "EmpAppExperienceDTO" : {
+      "type" : "object",
+      "properties" : {
+        "attachment" : {
+          "type" : "string"
+        },
+        "createdDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "designation" : {
+          "type" : "string"
+        },
+        "empAppExperienceId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "employeeAppId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "experienceDetail" : {
+          "type" : "string"
+        },
+        "experienceMonth" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "experienceYear" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "fromYrMonth" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "prevoiusOrganization" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "toYrMonth" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "EmpAppExperienceDTO"
+    },
+    "EmpEducationDTO" : {
+      "type" : "object",
+      "properties" : {
+        "address" : {
+          "type" : "string"
+        },
+        "attachment" : {
+          "type" : "string"
+        },
+        "board" : {
+          "type" : "string"
+        },
+        "course" : {
+          "type" : "string"
+        },
+        "createdDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "empEducationId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "employeeId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "gradeClassSecured" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "majorSubjects" : {
+          "type" : "string"
+        },
+        "medium" : {
+          "type" : "string"
+        },
+        "modeOfStudy" : {
+          "type" : "string"
+        },
+        "nameOfInstitution" : {
+          "type" : "string"
+        },
+        "precentage" : {
+          "type" : "number"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "updatedDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "yearOfCompletion" : {
+          "type" : "string"
+        }
+      },
+      "title" : "EmpEducationDTO"
+    },
+    "EmpExperienceDTO" : {
+      "type" : "object",
+      "properties" : {
+        "attachment" : {
+          "type" : "string"
+        },
+        "createdDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "designation" : {
+          "type" : "string"
+        },
+        "empExperienceId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "employeeId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "experienceDetail" : {
+          "type" : "string"
+        },
+        "experienceMonth" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "experienceYear" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "fromYrMonth" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "prevoiusOrganization" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "toYrMonth" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "EmpExperienceDTO"
+    },
+    "EmployeeApplicationDTO" : {
+      "type" : "object",
+      "properties" : {
+        "address" : {
+          "type" : "string"
+        },
+        "alternateMobileNumber" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "empAppEducations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EmpAppEducationDTO"
+          }
+        },
+        "empAppExperiences" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EmpAppExperienceDTO"
+          }
+        },
+        "employeeAppId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "gender" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "maritalStatus" : {
+          "type" : "string"
+        },
+        "mobileNumber" : {
+          "type" : "string"
+        },
+        "nationality" : {
+          "type" : "string"
+        },
+        "photo" : {
+          "type" : "string"
+        },
+        "pincode" : {
+          "type" : "string"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "status" : {
+          "type" : "string"
+        },
+        "street" : {
+          "type" : "string"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "EmployeeApplicationDTO"
+    },
+    "EmployeeDTO" : {
+      "type" : "object",
+      "properties" : {
+        "address" : {
+          "type" : "string"
+        },
+        "alternateMobileNumber" : {
+          "type" : "string"
+        },
+        "country" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "empEducations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EmpEducationDTO"
+          }
+        },
+        "empExperiences" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EmpExperienceDTO"
+          }
+        },
+        "employeeId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "gender" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "maritalStatus" : {
+          "type" : "string"
+        },
+        "mobileNumber" : {
+          "type" : "string"
+        },
+        "nationality" : {
+          "type" : "string"
+        },
+        "photo" : {
+          "type" : "string"
+        },
+        "pincode" : {
+          "type" : "string"
+        },
+        "resetPasswordCode" : {
+          "type" : "string"
+        },
+        "secUserId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "street" : {
+          "type" : "string"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "userName" : {
+          "type" : "string"
+        }
+      },
+      "title" : "EmployeeDTO"
+    },
+    "HourPlanDTO" : {
+      "type" : "object",
+      "properties" : {
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "discountApplicable" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "grossAmount" : {
+          "type" : "number"
+        },
+        "hourPlanId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "hoursPlanName" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "netAmount" : {
+          "type" : "number"
+        },
+        "packageId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "pricePerHour" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedDt" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      },
+      "title" : "HourPlanDTO"
+    },
+    "LoginRequest" : {
+      "type" : "object",
+      "properties" : {
+        "password" : {
+          "type" : "string"
+        },
+        "usernameOrEmail" : {
+          "type" : "string"
+        }
+      },
+      "title" : "LoginRequest"
+    },
+    "OrderDTO" : {
+      "type" : "object",
+      "properties" : {
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "discountAmount" : {
+          "type" : "number"
+        },
+        "employeeFirstName" : {
+          "type" : "string"
+        },
+        "employeeId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "employeeLastName" : {
+          "type" : "string"
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "grossAmount" : {
+          "type" : "number"
+        },
+        "increaseAmount" : {
+          "type" : "number"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "muserId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "netAmount" : {
+          "type" : "number"
+        },
+        "orderDeliveryAddresses" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrderDeliveryAddressDTO"
+          }
+        },
+        "orderId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "orderNumber" : {
+          "type" : "string"
+        },
+        "orderRatings" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrderRatingDTO"
+          }
+        },
+        "orderStatus" : {
+          "type" : "string"
+        },
+        "orderStatusId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "orderSummary" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OrderSummaryDTO"
+          }
+        },
+        "refundAmount" : {
+          "type" : "number"
+        },
+        "serviceLocation" : {
+          "$ref" : "#/definitions/ServiceLocationDTO"
+        },
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "userFirstName" : {
+          "type" : "string"
+        },
+        "userLastName" : {
+          "type" : "string"
+        }
+      },
+      "title" : "OrderDTO"
+    },
+    "OrderDeliveryAddressDTO" : {
+      "type" : "object",
+      "properties" : {
+        "addressType" : {
+          "$ref" : "#/definitions/AddressTypeDTO"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "orderDeliveryAddId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "orderId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "userAddress" : {
+          "$ref" : "#/definitions/UserAddressDTO"
+        }
+      },
+      "title" : "OrderDeliveryAddressDTO"
+    },
+    "OrderRatingDTO" : {
+      "type" : "object",
+      "properties" : {
+        "comments" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "orderId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "orderRatingId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "ratings" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "title" : {
+          "type" : "string"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "OrderRatingDTO"
+    },
+    "OrderSummaryDTO" : {
+      "type" : "object",
+      "properties" : {
+        "amount" : {
+          "type" : "number"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "customHourPlan" : {
+          "type" : "string"
+        },
+        "customPakage" : {
+          "type" : "string"
+        },
+        "customShift" : {
+          "type" : "string"
+        },
+        "distance" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "hourPlanDetails" : {
+          "$ref" : "#/definitions/HourPlanDTO"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "isChanged" : {
+          "type" : "boolean"
+        },
+        "isHoliday" : {
+          "type" : "boolean"
+        },
+        "isRefund" : {
+          "type" : "boolean"
+        },
+        "isWeekend" : {
+          "type" : "boolean"
+        },
+        "orderId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "orderSummaryId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "packageDetails" : {
+          "$ref" : "#/definitions/PackageDetailsDTO"
+        },
+        "promotionDetails" : {
+          "$ref" : "#/definitions/PromotionDTO"
+        },
+        "shiftDetails" : {
+          "$ref" : "#/definitions/ShiftDTO"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "OrderSummaryDTO"
+    },
+    "PackageDetailsDTO" : {
+      "type" : "object",
+      "properties" : {
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "discountApplicable" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "hourPlan" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/HourPlanDTO"
+          }
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "packageId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "packageName" : {
+          "type" : "string"
+        },
+        "serviceId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "shift" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ShiftDTO"
+          }
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "PackageDetailsDTO"
+    },
+    "PromotionDTO" : {
+      "type" : "object",
+      "properties" : {
+        "amount" : {
+          "type" : "number"
+        },
+        "branchLocationId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "locationName" : {
+          "type" : "string"
+        },
+        "percentage" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "promoCode" : {
+          "type" : "string"
+        },
+        "promotionId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "PromotionDTO"
+    },
+    "SecUserDTO" : {
+      "type" : "object",
+      "properties" : {
+        "createdUser" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "isEditable" : {
+          "type" : "boolean"
+        },
+        "isReset" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "mobileNumber" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        },
+        "passwordAttempts" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "passwordExpDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "reason" : {
+          "type" : "string"
+        },
+        "resetPasswordCode" : {
+          "type" : "string"
+        },
+        "roleId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "secUserId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedUser" : {
+          "type" : "string"
+        },
+        "userName" : {
+          "type" : "string"
+        },
+        "userRole" : {
+          "type" : "string"
+        }
+      },
+      "title" : "SecUserDTO"
+    },
+    "ServiceDTO" : {
+      "type" : "object",
+      "properties" : {
+        "colorCode" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "imageUrl" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "serviceDescription" : {
+          "type" : "string"
+        },
+        "serviceId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "serviceName" : {
+          "type" : "string"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "ServiceDTO"
+    },
+    "ServiceLocationDTO" : {
+      "type" : "object",
+      "properties" : {
+        "branchLocationDetails" : {
+          "$ref" : "#/definitions/BranchLocationDTO"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "serviceDetails" : {
+          "$ref" : "#/definitions/ServiceDTO"
+        },
+        "serviceLocationId" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "ServiceLocationDTO"
+    },
+    "ShiftDTO" : {
+      "type" : "object",
+      "properties" : {
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "endTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "increasePercentage" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "packageId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "packageName" : {
+          "type" : "string"
+        },
+        "shiftId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "shiftName" : {
+          "type" : "string"
+        },
+        "startTime" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "title" : "ShiftDTO"
+    },
+    "UserAddressDTO" : {
+      "type" : "object",
+      "properties" : {
+        "address" : {
+          "type" : "string"
+        },
+        "alternateMobile" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "district" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "latitude" : {
+          "type" : "string"
+        },
+        "longitude" : {
+          "type" : "string"
+        },
+        "mandal" : {
+          "type" : "string"
+        },
+        "mobileNumber" : {
+          "type" : "string"
+        },
+        "muserId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "pincode" : {
+          "type" : "string"
+        },
+        "street" : {
+          "type" : "string"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "userAddressId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "userName" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserAddressDTO"
+    },
+    "UserDTO" : {
+      "type" : "object",
+      "properties" : {
+        "address" : {
+          "type" : "string"
+        },
+        "alternateMobileNumber" : {
+          "type" : "string"
+        },
+        "city" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "createdUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "district" : {
+          "type" : "string"
+        },
+        "email" : {
+          "type" : "string"
+        },
+        "fcmToken" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "gender" : {
+          "type" : "string"
+        },
+        "isActive" : {
+          "type" : "boolean"
+        },
+        "language" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "latitude" : {
+          "type" : "string"
+        },
+        "longitude" : {
+          "type" : "string"
+        },
+        "mandal" : {
+          "type" : "string"
+        },
+        "maritalStatus" : {
+          "type" : "string"
+        },
+        "mobileNumber" : {
+          "type" : "string"
+        },
+        "muserId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "otp" : {
+          "type" : "string"
+        },
+        "password" : {
+          "type" : "string"
+        },
+        "photo" : {
+          "type" : "string"
+        },
+        "pincode" : {
+          "type" : "string"
+        },
+        "resetPasswordCode" : {
+          "type" : "string"
+        },
+        "secUserId" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "street" : {
+          "type" : "string"
+        },
+        "updatedDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "updatedUser" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "userName" : {
+          "type" : "string"
+        }
+      },
+      "title" : "UserDTO"
+    }
+  }
+}
