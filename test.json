@@ -176,7 +176,7 @@
 				"description": "Gets a list of portals associated with the account.",
 				"operationId": "getPortals",
 				"parameters": [{
-					"name": "total",
+					"name": "limit",
 					"in": "query",
 					"description": "Filter the response by portal access URL. The URL must include the \".mediashuttle.com\" domain suffix.",
 					"required": false,
