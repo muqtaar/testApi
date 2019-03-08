@@ -1,0 +1,1831 @@
+{
+  "openapi" : "3.0.0",
+  "info" : {
+    "title" : "NetCapture Portal System Manager",
+    "description" : "A set of APIs to manage the entities involved in the NetCapture applications: Customers, Accounts, and Users.\n\nStep 1: x-rdc-apikey header value(s) and user(s) credentials will be provided by the contact at Finastra.\n\nStep 2: start-session request must be ran first so that a session is created. The response received to this request will contain json token. Use the token value as â€œBearerâ€œ in Authorization header in any API requests.\n\nStep 3: send API calls.\n\nStep 4: end session request must be sent in order to end the session.",
+    "contact" : {
+      "name" : "Finastra - NetCapture RDC",
+      "url" : "http://www.finastra.com/",
+      "email" : "psd.support@finastra.com"
+    },
+    "version" : "3.0.0"
+  },
+  "servers" : [ {
+    "url" : "TBD"
+  } ],
+  "security" : [ {
+    "BearerAuth" : [ ],
+    "ApiKeyAuth" : [ ]
+  } ],
+  "paths" : {
+    "/customers" : {
+      "post" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Creates a new customer.",
+        "description" : "A new Customer can be created under any Correspondent Bank that the administrator user, who is creating the new Customer, has access to.",
+        "operationId" : "createCustomer",
+        "requestBody" : {
+          "description" : "The object containing all attributes of the Customer that is to be created.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CustomerConstructor"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success! The Customer was created. The newly created Customer's Summary is provided with the response.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CustomerSummary"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/DuplicateCustomerName"
+                  }, {
+                    "$ref" : "#/components/schemas/InactiveParentOrg"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidParentOrg"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}" : {
+      "put" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Updates an existing Customer",
+        "description" : "???",
+        "operationId" : "updateCustomer",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "ID of a Customer",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The updated Customer",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/CustomerUpdate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success! The Customer was updated. The Customer's Summary is provided with the response.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/CustomerSummary"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/DuplicateCustomerName"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidCustomerId"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/accounts" : {
+      "post" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Creates a new account.",
+        "description" : "A new account can be created under any Customer the admin user has access to.",
+        "operationId" : "createAccount",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "ID of a Customer",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The object containing all attributes of an account that is to be created. Any considerations?",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AccountConstructor"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success! The Account was created. The newly created Account's Summary is provided with the response.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountSummary"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/DuplicateAccount"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidCustomerId"
+                  }, {
+                    "$ref" : "#/components/schemas/InactiveCustomer"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/{accountId}" : {
+      "put" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Updates an existing account.",
+        "description" : "???",
+        "operationId" : "updateAccount",
+        "parameters" : [ {
+          "name" : "accountId",
+          "in" : "path",
+          "description" : "ID of an Account",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The object containing updated properties of the Account.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AccountUpdate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success! The Account was updated. The Account's Summary is provided with the response.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccountSummary"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/DuplicateAccount"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidAccountId"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/customers/{customerId}/users" : {
+      "post" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Creates a new user.",
+        "description" : "A new user can be created under any Customer that the administrator user, who is creating the new user, has access to. If a user is being created under a Mobille organization, then the Mobile Preferences must be provided.",
+        "operationId" : "createUser",
+        "parameters" : [ {
+          "name" : "customerId",
+          "in" : "path",
+          "description" : "ID of a Customer",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The object containing all attributes of the user that is to be created; if the Organization the user is going to be created under is Mobile, then Mobile Preferences are required.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserConstructor"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success! The User was created. The newly created User's Summary is provided with the response.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserSummary"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/PasswordSecurityProfileMismatch"
+                  }, {
+                    "$ref" : "#/components/schemas/InactiveCustomer"
+                  }, {
+                    "$ref" : "#/components/schemas/DuplicateUsername"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidCustomerId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidSecurityProfileName"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidSecurityProfileForOrg"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}" : {
+      "put" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Updates an existing user",
+        "description" : "An existing User can be modified with updated parameters. All parameters involved in the creation of a User can be updated, except for the Parent Customer. User's status can be changed to Inactive. Inactive user can be activated again in the future.",
+        "operationId" : "updateUser",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "ID of a user",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The object containing updated attributes of an existing User.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserUpdate"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Success! The User was updated. The updated User's Summary is provided with the response.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UserSummary"
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/PasswordSecurityProfileMismatch"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidUserId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidSecurityProfileName"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidSecurityProfileForOrg"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/ActivateMobileRdcExpressUser" : {
+      "post" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Generate and send activation code for a Mobile RDC Express user.",
+        "description" : "An existing user that was created under a Mobile Customer (Mobile RDC Express) needs to be activated in order to be able to use the Mobile app. As a result of this request a new activation code will be generated and sent to the user's email address. This request must also be used when a user lost access to their Mobile app and needs to be re-activated. If user's mobile parameters, such as Phone Number or Email Address were modified, this request must be used as well to re-activate the user with the new parameters. In order for the user to be successfully activated or re-activated they must belong to a Mobile Org, which is configured with Mobile RDC Express, and they also must have Email Address and Phone Number specified, as well as a Remote User role assigned to them.",
+        "operationId" : "activateMobileUser",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "ID of a user",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "responses" : {
+          "204" : {
+            "description" : "Success! A new Activation code was generated and emailed to the User."
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/InvalidUserId"
+                  }, {
+                    "$ref" : "#/components/schemas/MobileUserNoEmail"
+                  }, {
+                    "$ref" : "#/components/schemas/MobileUserNoPhone"
+                  }, {
+                    "$ref" : "#/components/schemas/MobileUserNoRemoteRole"
+                  }, {
+                    "$ref" : "#/components/schemas/NonMobileOrg"
+                  }, {
+                    "$ref" : "#/components/schemas/NonRdcExpressOrg"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}/roles" : {
+      "post" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Assigns a role to an existing user.",
+        "description" : "An existing user can be assigned roles, which define the privileges the user will have to certain Accounts or Customers.",
+        "operationId" : "assignRole",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "ID of a user",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The object containing all attributes of the User Role assignment.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserRole"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "The role to the specified entity (Customer or Account) was successfully assigned to the User."
+          },
+          "400" : {
+            "description" : "This request could not be completed due to a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/ExecuteOrAssignFlagNotTrue"
+                  }, {
+                    "$ref" : "#/components/schemas/AccountLevelRoleFlags"
+                  }, {
+                    "$ref" : "#/components/schemas/IllegalInput"
+                  } ]
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/InvalidUserId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidRoleId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidCustomerId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidAccountId"
+                  }, {
+                    "$ref" : "#/components/schemas/InactiveCustomer"
+                  }, {
+                    "$ref" : "#/components/schemas/InactiveAccount"
+                  }, {
+                    "$ref" : "#/components/schemas/RoleIncompatibleWithAccount"
+                  }, {
+                    "$ref" : "#/components/schemas/RoleIncompatibleWithOrg"
+                  }, {
+                    "$ref" : "#/components/schemas/DuplicateRoleAssignment"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "SystemManager" ],
+        "summary" : "Deletes a role assignment from an existing user.",
+        "description" : "A role can be unassigned (deleted) from a user.",
+        "operationId" : "deleteRole",
+        "parameters" : [ {
+          "name" : "userId",
+          "in" : "path",
+          "description" : "ID of a user",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        } ],
+        "requestBody" : {
+          "description" : "The object containing all attributes of the role to be deleted.",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserRoleAssignment"
+              }
+            }
+          },
+          "required" : true
+        },
+        "responses" : {
+          "204" : {
+            "description" : "The role was successfully unassigned from the User."
+          },
+          "400" : {
+            "description" : "Something went wrong.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/IllegalInput"
+                }
+              }
+            }
+          },
+          "403" : {
+            "description" : "Access to the resource was denied.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AccessDenied"
+                }
+              }
+            }
+          },
+          "409" : {
+            "description" : "There was a problem with the provided data. Please review the error description and update the request accordingly.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/InactiveAccount"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidUserId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidRoleId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidCustomerId"
+                  }, {
+                    "$ref" : "#/components/schemas/InvalidAccountId"
+                  }, {
+                    "$ref" : "#/components/schemas/UserRoleNotFound"
+                  } ]
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "An unexpected error has occured.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UnexpectedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "AdminUserCredentials" : {
+        "type" : "object",
+        "properties" : {
+          "userName" : {
+            "maxLength" : 100,
+            "type" : "string",
+            "description" : "The name of this user.",
+            "nullable" : false
+          },
+          "password" : {
+            "maxLength" : 15,
+            "minLength" : 5,
+            "type" : "string",
+            "description" : "The password of this user.",
+            "format" : "password",
+            "nullable" : false
+          }
+        },
+        "description" : "The object containing the credentials of the user who is trying to open a session and acquire authorization token. Must be sent as a POST request to authentication/start-session endpoint."
+      },
+      "AuthorizationInformation" : {
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "type" : "string",
+            "description" : "The authorization <token> that the subsequent API calls must contain as \"Bearer <token>\"."
+          },
+          "privileges" : {
+            "type" : "array",
+            "description" : "The privileges that this user possesses.",
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "fullName" : {
+            "type" : "string",
+            "description" : "The full name of the user."
+          },
+          "lastSuccessfulLogin" : {
+            "type" : "string",
+            "description" : "The timestamp (date and time) of this user's last successful login.",
+            "format" : "date-time"
+          },
+          "sessionTimeoutMinutes" : {
+            "type" : "integer",
+            "description" : "The password of this user.",
+            "format" : "int32"
+          }
+        },
+        "description" : "The objects containing the authorization information. Sent in response to a start session API request."
+      },
+      "AccountCoreSharedProperties" : {
+        "type" : "object",
+        "properties" : {
+          "accountName" : {
+            "maxLength" : 50,
+            "type" : "string",
+            "description" : "The name of the account.",
+            "nullable" : false
+          }
+        },
+        "description" : "Information about the account."
+      },
+      "AccountExtraSharedProperties" : {
+        "type" : "object",
+        "properties" : {
+          "accountStatus" : {
+            "type" : "string",
+            "description" : "Status of the account - Inactive or Active.",
+            "nullable" : false,
+            "enum" : [ "INACTIVE", "ACTIVE" ]
+          },
+          "depositSlip" : {
+            "type" : "string",
+            "description" : "This settings defines whether Deposit Slips will be Required, Optional (Accepted but not required), or Not Used at this Account.",
+            "nullable" : false,
+            "enum" : [ "OPTIONAL", "NOT_USED", "REQUIRED" ]
+          },
+          "newAccountFlag" : {
+            "type" : "boolean",
+            "description" : "Flag indicating whether this is a New Account",
+            "nullable" : true
+          },
+          "clearNewAccountFlag" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "description" : "Defines in how many days after first deposit the New Account Flag will be cleared (0 means it will never expire). If the value is not provided, then the value will be 0 by default.",
+            "format" : "int32",
+            "nullable" : false
+          }
+        }
+      },
+      "AccountUsProperties" : {
+        "type" : "object",
+        "properties" : {
+          "routingNumber" : {
+            "maxLength" : 9,
+            "minLength" : 8,
+            "pattern" : "^(\\d{4}-\\d{4})|(\\d{8,9})$",
+            "type" : "string",
+            "description" : "Route/Transit (RT) number of the newly created account for US.",
+            "nullable" : false
+          },
+          "auxOnUsField" : {
+            "maxLength" : 18,
+            "minLength" : 1,
+            "pattern" : "^\\d+$",
+            "type" : "string",
+            "description" : "Aux On-Us of the newly created account.",
+            "nullable" : false
+          },
+          "accountNumber" : {
+            "maxLength" : 18,
+            "minLength" : 2,
+            "pattern" : "^\\d+$",
+            "type" : "string",
+            "description" : "Account number for this account (US format).",
+            "nullable" : false
+          }
+        },
+        "description" : "US Code line Fields."
+      },
+      "AccountUkProperties" : {
+        "type" : "object",
+        "properties" : {
+          "sortCode" : {
+            "maxLength" : 8,
+            "minLength" : 6,
+            "pattern" : "^(\\d{2}-\\d{2}-\\d{2})|(\\d{2}-\\d{4})|(\\d{6})$",
+            "type" : "string",
+            "description" : "Sort Code of the newly created account for UK.",
+            "nullable" : false
+          },
+          "virtualDepositStaticSerialNumber" : {
+            "maxLength" : 18,
+            "minLength" : 1,
+            "pattern" : "^\\d+$",
+            "type" : "string",
+            "description" : "For data integrity this field must be populated, it must not be empty. Serial Number on the Virtual Credit Slip field will be populated by this value.",
+            "nullable" : false
+          },
+          "accountNumber" : {
+            "maxLength" : 20,
+            "minLength" : 1,
+            "pattern" : "^\\d+$",
+            "type" : "string",
+            "description" : "The Account Number of the newly created account (UK format).",
+            "nullable" : false
+          }
+        },
+        "description" : "UK Code line Fields."
+      },
+      "AccountConstructor" : {
+        "type" : "object",
+        "description" : "Information about the account. Used when creating a new account.",
+        "allOf" : [ {
+          "oneOf" : [ {
+            "required" : [ "accountName", "accountNumber", "sortCode" ],
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AccountCoreSharedProperties"
+            }, {
+              "$ref" : "#/components/schemas/AccountUkProperties"
+            } ]
+          }, {
+            "required" : [ "accountName", "accountNumber", "routingNumber" ],
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AccountCoreSharedProperties"
+            }, {
+              "$ref" : "#/components/schemas/AccountUsProperties"
+            } ]
+          } ]
+        }, {
+          "type" : "object",
+          "properties" : {
+            "depositSlip" : {
+              "type" : "string",
+              "description" : "This settings defines whether Deposit Slips will be Required, Optional (Accepted but not required), or Not Used at this Account.",
+              "default" : "OPTIONAL",
+              "enum" : [ "OPTIONAL", "NOT_USED", "REQUIRED" ]
+            },
+            "newAccountFlag" : {
+              "type" : "boolean",
+              "description" : "Flag indicating whether this is a New Account",
+              "nullable" : true
+            },
+            "clearNewAccountFlag" : {
+              "minimum" : 0,
+              "type" : "integer",
+              "description" : "Defines in how many days after first deposit the New Account Flag will be cleared (0 means it will never expire). If the value is not provided, then the value will be 0 by default.",
+              "format" : "int32"
+            }
+          }
+        } ]
+      },
+      "AccountSummary" : {
+        "type" : "object",
+        "description" : "Information about the existing account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/AccountExtraSharedProperties"
+        }, {
+          "oneOf" : [ {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AccountCoreSharedProperties"
+            }, {
+              "$ref" : "#/components/schemas/AccountUkProperties"
+            } ]
+          }, {
+            "allOf" : [ {
+              "$ref" : "#/components/schemas/AccountCoreSharedProperties"
+            }, {
+              "$ref" : "#/components/schemas/AccountUsProperties"
+            } ]
+          } ]
+        }, {
+          "type" : "object",
+          "properties" : {
+            "accountId" : {
+              "type" : "integer",
+              "description" : "The numerical ID of this account.",
+              "format" : "int64"
+            },
+            "customerId" : {
+              "type" : "integer",
+              "description" : "The ID of the Customer the account belongs to.",
+              "format" : "int64"
+            }
+          }
+        } ]
+      },
+      "AccountUpdate" : {
+        "type" : "object",
+        "description" : "Updated information about an existing account.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/AccountCoreSharedProperties"
+        }, {
+          "$ref" : "#/components/schemas/AccountExtraSharedProperties"
+        }, {
+          "oneOf" : [ {
+            "$ref" : "#/components/schemas/AccountUsProperties"
+          }, {
+            "$ref" : "#/components/schemas/AccountUkProperties"
+          } ]
+        } ]
+      },
+      "CustomerConstructor" : {
+        "required" : [ "customerName", "parentOrganizationId" ],
+        "type" : "object",
+        "description" : "Information about the Customer. Used when creating a new Customer.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/CustomerCoreSharedProperties"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "parentOrganizationId" : {
+              "type" : "integer",
+              "description" : "ID of the parent organization the Customer is being created under.",
+              "format" : "int64",
+              "nullable" : false
+            },
+            "requireControlBalance" : {
+              "type" : "boolean",
+              "description" : "If the value is YES, then control balance is required.",
+              "default" : false
+            },
+            "checkDuplicatesFor" : {
+              "maximum" : 180,
+              "minimum" : 0,
+              "type" : "integer",
+              "description" : "Check duplicates on server for this number of days.",
+              "format" : "int32"
+            },
+            "imageQuality" : {
+              "type" : "string",
+              "description" : "Scanned checks image quality.",
+              "default" : "FRONT_IMAGE",
+              "enum" : [ "BOTH", "BACK_IMAGE", "FRONT_IMAGE", "NONE" ]
+            },
+            "imageFormat" : {
+              "type" : "string",
+              "description" : "Scanned checks image format.",
+              "default" : "TIFF",
+              "enum" : [ "TIFF", "JPEG" ]
+            },
+            "imageCarConfidenceThreshold" : {
+              "maximum" : 100,
+              "minimum" : 0,
+              "type" : "integer",
+              "description" : "It indicates the level at which you will accept the confidence value returned by the CAR (courtesy amount recognition) application in the Web Client.",
+              "format" : "int32"
+            },
+            "enterPayer" : {
+              "type" : "boolean",
+              "description" : "If YES is selected then the user will need to enter payer.",
+              "default" : false
+            },
+            "maskAccountNumber" : {
+              "type" : "string",
+              "description" : "This setting defines whether the account number will be masked or not.",
+              "default" : "USE_PARENT_SETTING",
+              "enum" : [ "true", "false", "USE_PARENT_SETTING" ]
+            },
+            "removeCustomerName" : {
+              "type" : "string",
+              "description" : "Determines how the customer name does not appear in the account selection, Deposit, and Item Detail screens in the application for users who are associated with this organization.",
+              "default" : "USE_PARENT_SETTING",
+              "enum" : [ "true", "false", "USE_PARENT_SETTING" ]
+            },
+            "removeReportDownload" : {
+              "type" : "string",
+              "description" : "It Determines whether reports can be downloaded or exported as .pdf or .csv files by users who are associated with this organization.",
+              "default" : "USE_PARENT_SETTING",
+              "enum" : [ "true", "false", "USE_PARENT_SETTING" ]
+            },
+            "disableScannerSprayText" : {
+              "type" : "boolean",
+              "description" : "if YES is selected, scanner spray text will be disabled.",
+              "default" : false
+            },
+            "disableVirtualEndorsement" : {
+              "type" : "boolean",
+              "description" : "if YES is selected, then virtual endorsmenet will be disabled.",
+              "default" : false
+            },
+            "mobileCustomer" : {
+              "type" : "boolean",
+              "description" : "If YES is selected, then this Customer is a Mobile Customer.",
+              "default" : false
+            }
+          }
+        } ]
+      },
+      "CustomerCoreSharedProperties" : {
+        "type" : "object",
+        "properties" : {
+          "customerName" : {
+            "maxLength" : 50,
+            "pattern" : "^[^:]+$",
+            "type" : "string",
+            "description" : "The name of this Customer.",
+            "nullable" : false,
+            "example" : "NameCustomerTest2"
+          },
+          "requiredPaymentDataEnforcement" : {
+            "type" : "string",
+            "description" : "This setting defines the type of Payment Data enforcement.",
+            "nullable" : false,
+            "enum" : [ "RELAXED_ENFORCEMENT", "STRICT_ENFORCEMENT" ]
+          },
+          "customData1" : {
+            "maxLength" : 100,
+            "type" : "string",
+            "description" : "Used to track any additional data about your customers.",
+            "nullable" : false
+          },
+          "customData2" : {
+            "maxLength" : 100,
+            "type" : "string",
+            "description" : "Used to track any additional data about your customers.",
+            "nullable" : false
+          },
+          "customData3" : {
+            "maxLength" : 100,
+            "type" : "string",
+            "description" : "Used to track any additional data about your customers.",
+            "nullable" : false
+          }
+        },
+        "description" : "Information about the Customer. Properties shared among Constructor, Update, and Summary objects."
+      },
+      "CustomerExtraSharedProperties" : {
+        "type" : "object",
+        "properties" : {
+          "customerStatus" : {
+            "type" : "string",
+            "description" : "Status of this Customer.",
+            "nullable" : false,
+            "enum" : [ "ACTIVE", "INACTIVE" ]
+          },
+          "requireControlBalance" : {
+            "type" : "boolean",
+            "description" : "If the value is YES, then control balance is required.",
+            "nullable" : false
+          },
+          "checkDuplicatesFor" : {
+            "maximum" : 180,
+            "minimum" : 0,
+            "type" : "integer",
+            "description" : "Check duplicates on server for this number of days.",
+            "format" : "int32",
+            "nullable" : false
+          },
+          "imageQuality" : {
+            "type" : "string",
+            "description" : "Scanned checks image quality.",
+            "nullable" : false,
+            "enum" : [ "BOTH", "BACK_IMAGE", "FRONT_IMAGE", "NONE" ]
+          },
+          "imageFormat" : {
+            "type" : "string",
+            "description" : "Scanned checks image format.",
+            "nullable" : false,
+            "enum" : [ "TIFF", "JPEG" ]
+          },
+          "imageCarConfidenceThreshold" : {
+            "maximum" : 100,
+            "minimum" : 0,
+            "type" : "integer",
+            "description" : "It indicates the level at which you will accept the confidence value returned by the CAR (courtesy amount recognition) application in the Web Client.",
+            "format" : "int32",
+            "nullable" : false
+          },
+          "enterPayer" : {
+            "type" : "boolean",
+            "description" : "If YES is selected then the user will need to enter payer.",
+            "nullable" : false
+          },
+          "maskAccountNumber" : {
+            "type" : "string",
+            "description" : "This setting defines whether the account number will be masked or not.",
+            "nullable" : false,
+            "enum" : [ "true", "false", "USE_PARENT_SETTING" ]
+          },
+          "removeCustomerName" : {
+            "type" : "string",
+            "description" : "Determines how the customer name does not appear in the account selection, Deposit, and Item Detail screens in the application for users who are associated with this organization.",
+            "nullable" : false,
+            "enum" : [ "true", "false", "USE_PARENT_SETTING" ]
+          },
+          "removeReportDownload" : {
+            "type" : "string",
+            "description" : "It Determines whether reports can be downloaded or exported as .pdf or .csv files by users who are associated with this organization.",
+            "nullable" : false,
+            "enum" : [ "true", "false", "USE_PARENT_SETTING" ]
+          },
+          "disableScannerSprayText" : {
+            "type" : "boolean",
+            "description" : "if YES is selected, scanner spray text will be disabled.",
+            "nullable" : false
+          },
+          "disableVirtualEndorsement" : {
+            "type" : "boolean",
+            "description" : "if YES is selected, then virtual endorsmenet will be disabled.",
+            "nullable" : false
+          },
+          "mobileCustomer" : {
+            "type" : "boolean",
+            "description" : "If YES is selected, then this Customer is a Mobile Customer.",
+            "nullable" : false
+          }
+        },
+        "description" : "Information about the Customer. Properties shared among Update and Summary objects."
+      },
+      "CustomerSummary" : {
+        "type" : "object",
+        "description" : "Summary of Customer properties. This object is returned in response to Create Customer and Update Customer API requests.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/CustomerCoreSharedProperties"
+        }, {
+          "$ref" : "#/components/schemas/CustomerExtraSharedProperties"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "customerId" : {
+              "type" : "integer",
+              "description" : "The ID of this Customer.",
+              "format" : "int64"
+            }
+          }
+        } ]
+      },
+      "CustomerUpdate" : {
+        "type" : "object",
+        "description" : "Updated information about the Customer. Used when updating a Customer.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/CustomerCoreSharedProperties"
+        }, {
+          "$ref" : "#/components/schemas/CustomerExtraSharedProperties"
+        } ]
+      },
+      "UserCoreSharedProperties" : {
+        "type" : "object",
+        "properties" : {
+          "firstName" : {
+            "maxLength" : 30,
+            "minLength" : 1,
+            "pattern" : "^(\\s*\\S+\\s*){1,}$",
+            "type" : "string",
+            "description" : "The first name of this user.",
+            "nullable" : false
+          },
+          "lastName" : {
+            "maxLength" : 30,
+            "minLength" : 1,
+            "pattern" : "^(\\s*\\S+\\s*){1,}$",
+            "type" : "string",
+            "description" : "The last name of this user.",
+            "nullable" : false
+          },
+          "securityProfileName" : {
+            "type" : "string",
+            "description" : "The name of the selected Security Profile. Users are assigned the Security Profile (which defines the restrictions that determine how and when applications can be accessed). This value is associated with the organization, under which the user is created (Parent Customer). If a value is not provided, then the user will automatically be assigned the default Security Profile for their Parent Customer.",
+            "nullable" : false
+          },
+          "email" : {
+            "maxLength" : 255,
+            "minLength" : 6,
+            "pattern" : "^[-_!&#=\\?\\+%*'A-Za-z0-9]+(\\.[-_!&#=\\?\\+%*'A-Za-z0-9]+)*@[-_!&#=\\?\\+%*'A-Za-z0-9]+(\\.[-_!&#=\\?\\+%*'A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$",
+            "type" : "string",
+            "description" : "User's email address (required for Mobile). Email and Phone Number are the required preferences for users of NetCapture Mobile. These 2 fields are required for users of the Mobile application and optional for users of other platforms.",
+            "nullable" : false
+          },
+          "phoneNumber" : {
+            "maxLength" : 25,
+            "pattern" : "^[0-9]{10,15}$",
+            "type" : "string",
+            "description" : "User's phone number (required for Mobile). Email and Phone Number are the required preferences for users of NetCapture Mobile. These 2 fields are required for users of the Mobile application and optional for users of other platforms.",
+            "nullable" : false
+          },
+          "scannerWorkflowType" : {
+            "type" : "string",
+            "description" : "Optional field indicating which Scanner Service workflow the user should use for Web Client, or if the user failed to upgrade from Scanner Applet to Scanner Service.",
+            "nullable" : true,
+            "enum" : [ "APPLET", "SERVICE", "FAILED", "DEFAULT" ]
+          }
+        },
+        "description" : "Shared properties among User related objects. used for User Creation and Update requests, as well as in User Summary - the object containing information about the existing user."
+      },
+      "UserExtraSharedProperties" : {
+        "type" : "object",
+        "properties" : {
+          "userStatus" : {
+            "type" : "string",
+            "description" : "The status of this user: Active or Inactive.",
+            "nullable" : false,
+            "enum" : [ "INACTIVE", "ACTIVE" ]
+          },
+          "depositAmountLimit" : {
+            "type" : "string",
+            "description" : "The deposit amount limit for this user.",
+            "format" : "money",
+            "nullable" : false,
+            "x-money-minimum" : "0.0",
+            "x-money-maximum" : "999999999.99"
+          },
+          "phoneType" : {
+            "type" : "string",
+            "description" : "User's phone type (required for Mobile).",
+            "nullable" : false,
+            "enum" : [ "IPHONE", "ANDROID" ]
+          },
+          "language" : {
+            "type" : "string",
+            "description" : "User's preferred language (required for Mobile).",
+            "nullable" : false,
+            "enum" : [ "ENGLISH", "SPANISH", "CHINESE" ]
+          }
+        },
+        "description" : "Additional shared properties of a User. User for Update User requests and in User Summary."
+      },
+      "UserConstructor" : {
+        "required" : [ "firstName", "lastName", "password", "userName" ],
+        "type" : "object",
+        "description" : "Information about the user. Used when creating a new user.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserCoreSharedProperties"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "userName" : {
+              "maxLength" : 100,
+              "minLength" : 1,
+              "pattern" : "^\\S+$",
+              "type" : "string",
+              "description" : "The name of this user.",
+              "nullable" : false
+            },
+            "password" : {
+              "maxLength" : 15,
+              "minLength" : 5,
+              "type" : "string",
+              "description" : "The password of this user.",
+              "format" : "password",
+              "nullable" : false
+            },
+            "depositAmountLimit" : {
+              "type" : "string",
+              "description" : "The deposit amount limit for this user.",
+              "format" : "money",
+              "default" : "99999999.99",
+              "x-money-minimum" : "0.00",
+              "x-money-maximum" : "999999999.99"
+            },
+            "phoneType" : {
+              "type" : "string",
+              "description" : "User's phone type (required for Mobile).",
+              "default" : "IPHONE",
+              "enum" : [ "IPHONE", "ANDROID" ]
+            },
+            "language" : {
+              "type" : "string",
+              "description" : "User's preferred language (required for Mobile).",
+              "default" : "ENGLISH",
+              "enum" : [ "ENGLISH", "SPANISH", "CHINESE" ]
+            }
+          },
+          "description" : "Information about the user. Used when creating a new user."
+        } ]
+      },
+      "UserSummary" : {
+        "type" : "object",
+        "description" : "Summary of a user.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserCoreSharedProperties"
+        }, {
+          "$ref" : "#/components/schemas/UserExtraSharedProperties"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "userId" : {
+              "maxLength" : 10,
+              "type" : "integer",
+              "description" : "The numerical ID of this user.",
+              "format" : "int64"
+            },
+            "userName" : {
+              "maxLength" : 100,
+              "minLength" : 1,
+              "pattern" : "^\\S+$",
+              "type" : "string",
+              "description" : "The name of this user.",
+              "nullable" : false
+            },
+            "parentCustomerId" : {
+              "type" : "integer",
+              "description" : "The Customer the user belongs to (Parent Customer).",
+              "format" : "int64"
+            }
+          }
+        } ]
+      },
+      "UserUpdate" : {
+        "type" : "object",
+        "description" : "The object containing all properties of a User that can be modified. Used when updating an existing User.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserCoreSharedProperties"
+        }, {
+          "$ref" : "#/components/schemas/UserExtraSharedProperties"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "password" : {
+              "maxLength" : 15,
+              "minLength" : 5,
+              "type" : "string",
+              "description" : "The password of this user.",
+              "format" : "password",
+              "nullable" : false
+            }
+          }
+        } ]
+      },
+      "UserRole" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/UserRoleAssignment"
+        }, {
+          "required" : [ "assign", "execute" ],
+          "type" : "object",
+          "properties" : {
+            "execute" : {
+              "type" : "boolean",
+              "description" : "This setting defines whether the user will be able to execute this role. When assigning a role at the Customer level, at least one of the two flags - Execute or Assign - must be True. If neither Execute nor Assign flag is True, then the role cannot be assigned to the user and an error will be returned. When assigning a role at the Account level, Execute flag must be True, Assign flag must be False, and Inherit flag may be False or not present in the request."
+            },
+            "assign" : {
+              "type" : "boolean",
+              "description" : "This setting defines whether this role will be assignable for this user. Assignable means that when a role is assigned to a user and flagged as Assign, the user has rights to assign that role to other users. Users can assign the role to any users associated with organizations for which they have that role. When assigning a role at the Customer level, at least one of the two flags - Execute or Assign - must be True. When assigning a role at the Account level, Execute flag must be True, Assign flag must be False, and Inherit flag may be False or not present in the request."
+            },
+            "inherit" : {
+              "type" : "boolean",
+              "description" : "This setting defines whether the role will be inheritable. Inheritable means that when a role is assigned to a user at a parent organization level and flagged as Inherit, this role will be inherited by the user for any of that organization's child organizations. When assigning a role at the Account level, Execute flag must be True, Assign flag must be False, and Inherit flag may be False or not present in the request.",
+              "default" : false
+            }
+          },
+          "description" : "The object containing all attributes of the role to be assigned to an existing User."
+        } ]
+      },
+      "UserRoleAssignment" : {
+        "type" : "object",
+        "description" : "The object containing all attributes of the role to be deleted. Customer ID, Account ID, and Role ID must be provided (along with the User ID, which must be provided in the request header) in order to delete an existing role assignment from a user.",
+        "allOf" : [ {
+          "required" : [ "roleId" ],
+          "type" : "object",
+          "properties" : {
+            "roleId" : {
+              "type" : "integer",
+              "description" : "For assign role request: ID of the role to be assigned to the user. For unassign role request: ID of the role to be unassigned from the user.",
+              "format" : "int64",
+              "example" : 33
+            }
+          }
+        }, {
+          "oneOf" : [ {
+            "required" : [ "customerId" ],
+            "type" : "object",
+            "properties" : {
+              "customerId" : {
+                "type" : "integer",
+                "description" : "For assign role request: ID of the Customer the role will be assigned to. For unassign role request: ID of the Customer the role is currently assigned to. ",
+                "format" : "int64"
+              }
+            }
+          }, {
+            "required" : [ "accountId" ],
+            "type" : "object",
+            "properties" : {
+              "accountId" : {
+                "type" : "integer",
+                "description" : "For assign role request: ID of the Account the role will be assigned to. When assigning a role at the Account level, Execute flag must be True, Assign flag must be False, and Inherit flag may be False or not present in the request. For unassign role request: ID of the Account the role is currently assigned to. ",
+                "format" : "int64"
+              }
+            }
+          } ]
+        } ]
+      },
+      "ErrorResponse" : {
+        "type" : "object",
+        "properties" : {
+          "errorCode" : {
+            "type" : "string",
+            "description" : "Error code indicating what kind of error occurred while sending the request."
+          },
+          "debugInformation" : {
+            "type" : "string",
+            "description" : "Information about the error that can be useful for debugging purposes."
+          }
+        },
+        "description" : "The format of all error responses."
+      },
+      "AccessDenied" : {
+        "type" : "object",
+        "description" : "Access to perform this operation is denied.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "AccountLevelRoleFlags" : {
+        "type" : "object",
+        "description" : "The flags for assigning a role at the Account level must be as follows: Execute = True, Assign = False, Inherit may be False or not present.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "DuplicateAccount" : {
+        "type" : "object",
+        "description" : "An Account must be created with a unique set of properties. An Account with this set of defining properties already exists. Please use a different unique set of paremeters.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "DuplicateCustomerName" : {
+        "type" : "object",
+        "description" : "A Customer must be created with a unique name throughout the system. An organization with this name already exists. Please use a different name.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "DuplicateRoleAssignment" : {
+        "type" : "object",
+        "description" : "This user already has this role assigned. Please select a different role and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "DuplicateUsername" : {
+        "type" : "object",
+        "description" : "User with this username already exists. Please select a different username and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "ExecuteOrAssignFlagNotTrue" : {
+        "type" : "object",
+        "description" : "Neither Execute nor Assign flag is TRUE. At least one of the two flags must be TRUE for a role to be assigned to the user. If neither Execute nor Assign flag is TRUE, then the role cannot be assigned. Please make sure that at least one of the flags is TRUE and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "IllegalInput" : {
+        "type" : "object",
+        "description" : "Illegal input for the operation.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InactiveAccount" : {
+        "type" : "object",
+        "description" : "The selecetd Account is inactive. Please select an active Account and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InactiveCustomer" : {
+        "type" : "object",
+        "description" : "The selected Customer is inactive. Please select an active Customer and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InactiveParentOrg" : {
+        "type" : "object",
+        "description" : "The selecetd Parent Organization is inactive. Please select an active Parent Organization and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InvalidAccountId" : {
+        "type" : "object",
+        "description" : "Account with this ID was not found. Please correct the ID and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InvalidCustomerId" : {
+        "type" : "object",
+        "description" : "Customer with this ID was not found. Please correct the ID and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InvalidParentOrg" : {
+        "type" : "object",
+        "description" : "A new Customer cannot be created under the selected Parent Org. Please provide an ID of an Org that can be a Parent for the new Customer and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InvalidRoleId" : {
+        "type" : "object",
+        "description" : "Role with this ID was not found. Please correct the ID and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InvalidSecurityProfileForOrg" : {
+        "type" : "object",
+        "description" : "This Security Profile cannot be assigned to a user under this Organization.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InvalidSecurityProfileName" : {
+        "type" : "object",
+        "description" : "Security Profile does not exist. Please correct the Security Profile and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "InvalidUserId" : {
+        "type" : "object",
+        "description" : "User with this ID was not found. Please correct the ID and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "MobileUserNoEmail" : {
+        "type" : "object",
+        "description" : "This user is mobile - mandatory parameters (email & phone number) must be provided.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "MobileUserNoPhone" : {
+        "type" : "object",
+        "description" : "This user is mobile - mandatory parameters (email & phone number) must be provided.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "MobileUserNoRemoteRole" : {
+        "type" : "object",
+        "description" : "This user does not have Check Capture Privileges",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "NonMobileOrg" : {
+        "type" : "object",
+        "description" : "This user does not belong to a Mobile Customer, the request cannot be executed.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "NonRdcExpressOrg" : {
+        "type" : "object",
+        "description" : "This user does not belong to a Customer configured with RDCExpress, the request cannot be executed.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "PasswordSecurityProfileMismatch" : {
+        "type" : "object",
+        "description" : "The provided password does not match the Security Profile elected for this User or their Parent Customer. Please update the password to match the Security Profile and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "RoleIncompatibleWithAccount" : {
+        "type" : "object",
+        "description" : "This role cannot be assigned at the Account level. If you wish to assign a role at the Account level, please select a role that can be assigned at the Account level and provide a valid Account ID. If you wish to assign this role at the Customer level instead, please provide a Customer ID instead.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "RoleIncompatibleWithOrg" : {
+        "type" : "object",
+        "description" : "This role cannot be assigned at the Customer level. If you wish to assign the role at the Account level instead, please select a role that can be assigned at the Account level and provide a valid Account ID. If you wish to assign this role at the Customer level,please select a role that can be assigned at the Customer level and provide a valid Customer ID.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "UserRoleNotFound" : {
+        "type" : "object",
+        "description" : "The provided combination of User, Account, Customer, and Role parameters was not found. Please correct the request and try again.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      },
+      "UnexpectedError" : {
+        "type" : "object",
+        "description" : "An unexpected error has occured.",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ErrorResponse"
+        } ]
+      }
+    },
+    "responses" : {
+      "IllegalInput" : {
+        "description" : "Something went wrong.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/IllegalInput"
+            }
+          }
+        }
+      },
+      "AccessDenied" : {
+        "description" : "Access to the resource was denied.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/AccessDenied"
+            }
+          }
+        }
+      },
+      "UnexpectedError" : {
+        "description" : "An unexpected error has occured.",
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/UnexpectedError"
+            }
+          }
+        }
+      }
+    },
+    "parameters" : {
+      "customerId" : {
+        "name" : "customerId",
+        "in" : "path",
+        "description" : "ID of a Customer",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "accountId" : {
+        "name" : "accountId",
+        "in" : "path",
+        "description" : "ID of an Account",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      },
+      "userId" : {
+        "name" : "userId",
+        "in" : "path",
+        "description" : "ID of a user",
+        "required" : true,
+        "style" : "simple",
+        "explode" : false,
+        "schema" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "securitySchemes" : {
+      "BearerAuth" : {
+        "type" : "http",
+        "scheme" : "bearer",
+        "bearerFormat" : "JWT"
+      },
+      "ApiKeyAuth" : {
+        "type" : "apiKey",
+        "name" : "X-RDC-APIKEY",
+        "in" : "header"
+      }
+    }
+  }
+}
