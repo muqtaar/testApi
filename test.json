@@ -85,7 +85,7 @@
 						"name": "size",
 						"in": "query",
 						"description": "Return a list of active transfers. All requests must include `state=active`.",
-						"required": true,
+						"required": false,
 						"type": "string"
 				}],
 				"responses": {
