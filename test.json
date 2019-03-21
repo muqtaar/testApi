@@ -82,11 +82,11 @@
 				"description": "Gets a list of storage locations associated with the account.",
 				"operationId": "listStorage",
 				"parameters": [{
-					"name": "installationKey",
-					"in": "query",
-					"description": "Use an installationKey value to filter the request.",
-					"required": false,
-					"type": "string"
+						"name": "size",
+						"in": "query",
+						"description": "Return a list of active transfers. All requests must include `state=active`.",
+						"required": true,
+						"type": "string"
 				}],
 				"responses": {
 					"200": {
